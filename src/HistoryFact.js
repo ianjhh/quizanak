@@ -1,0 +1,68 @@
+import Navapp from './Navapp';
+import LoggedInNav from './LoggedInNav';
+import { useEffect, useState } from 'react';
+import { Container, Button } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import Footer from './Footer';
+import axios from 'axios';
+
+function HistoryFact(){
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [historyFact, setHistoryFact] = useState([]);
+    const [title, setTitle] = useState('');
+    const location = useLocation();
+    const linkName = location.pathname.split('/')[2];
+    
+    const verifyToken = () =>{
+        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            setIsLoggedIn(true)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    const fetchRandomFact = () =>{
+        axios.post('/http://localhost:5000/fetchRandomFact', {link_name: linkName})
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            if (response.status === 200){
+                setHistoryFact(response.data.factsarr);
+                setTitle(response.data.title);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+
+    useEffect(()=>{verifyToken(); fetchRandomFact();}, [])
+
+    return(
+        <>
+            {isLoggedIn? <LoggedInNav /> : <Navapp />}
+            <div className='bg-warning'>
+                <br />
+                <Container>
+                    <Link to='/fakta-binatang' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Kembali</Button></Link>
+                    <div className='bg-white rounded p-1 mt-3'>
+                    <h2 className='mt-3 mb-4'>{title}</h2>
+                    <ol>
+                    {historyFact.map((item, idx) => (
+                        <li className='mb-4 fs-5'>{item[0]}<br/><img src={require(`./${item[1]}.jpg`)} height={200} /></li>
+                    ))}
+                    </ol>
+                    </div>
+                </Container>
+                <br /><br />
+            </div>
+            <Footer />
+        </>
+    );
+}
+
+export default HistoryFact;

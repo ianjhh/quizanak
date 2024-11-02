@@ -1,0 +1,362 @@
+const express = require('express');
+var mongodb = require('mongodb');
+const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
+var jwt = require('jsonwebtoken');
+app.use(bodyParser.json());
+const cookieParser = require("cookie-parser");
+const nodemailer = require("nodemailer");
+const bcrypt = require('bcrypt');
+const CryptoJS = require('crypto-js')
+app.use(cookieParser());
+app.use(cors())
+
+var MongoClient = require('mongodb').MongoClient;
+const client = new MongoClient("mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload");
+
+const database = client.db('imgupload');
+const credentials = database.collection('credentials');
+const quiz = database.collection('quiz');
+const game = database.collection('game');
+const animalFact = database.collection('animalFact');
+const spaceFact = database.collection('spaceFact');
+const historyFact = database.collection('historyFact');
+
+/* NODEMAILER */
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "ianjh.102@gmail.com",
+    pass: "wstl waad oxia gttw",
+  },
+});
+
+app.get('/http://localhost:5000', async (req, res) => {
+    
+})
+
+app.post('/http://localhost:5000/login', async (req, res) => {
+  try{
+    let result = await credentials.findOne({username: req.body.username});
+    if(!result){
+      res.status(404).send('Not found!');
+    }
+    else{
+    bcrypt.compare(req.body.password, result.password, function(err, result) {
+      if(result!==true){
+          res.status(404).send('Not found!')
+      }
+      else{
+          jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+            if(err) { 
+                res.status.send('Error!')
+            }
+          res.status(200).cookie('jwt', token).send('Successful!');
+      });
+      }
+    });
+  }
+}
+  catch(e){
+    console.log(e)
+    res.status(400).send('Error!')
+  }
+})
+
+app.post('/http://localhost:5000/register', async (req, res) => {
+    try{
+      let data = req.body;
+      let found = await credentials.findOne({username: data.username});
+
+      if (found){
+          res.status(404).send('User already registered!');
+      }
+          var text = data.username;
+          var key = CryptoJS.enc.Utf8.parse('b75524255a7f54d2726a951bb39204df');
+          var iv  = CryptoJS.enc.Utf8.parse('1583288699248111');
+
+          var enc_username= CryptoJS.AES.encrypt(text, key, {iv: iv});
+          enc_username = enc_username.toString();
+
+          const mailOptions = {
+            from: "ianjh.102@gmail.com",
+            to: req.body.email,
+            subject: "Verify your account for WebsiteName by clicking the link below",
+            text: `http://localhost:3000/verify?q=${enc_username}`
+          };
+    
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error("Error sending email: ", error);
+            } else {
+              console.log("Email sent: ", info.response);
+            }
+          })
+      
+      await credentials.insertOne(data);
+      res.status(200).json(data);
+    }
+    catch(e){
+      res.status(400).send('Error!')
+    }
+})
+
+app.get('/http://localhost:5000/homepage', async (req, res) => {
+    if(!req.cookies.jwt){
+      res.status(400).send('No valid authentication token, try logging in again')
+    }
+    else{
+        jwt.verify(req.cookies.jwt, 'privatekey', async (err, authorizedData) => {
+          if(err){
+              //If error send Forbidden (403)
+              console.log(err)
+              res.status(403);
+          } else {
+              let found = await credentials.findOne({username: authorizedData.username}, {verified:1, _id:0});
+              if(found){
+                  if(found.verified!== true){
+                      res.status(400).send('Not verified!');
+                  }
+                  else{
+                      console.log('verified!')
+                      //If token is successfully verified, we can send the authorized data 
+                        res.status(200).json({
+                          message: 'Successful log in',
+                          authorizedData
+                      });
+                  }
+              }
+          }
+        })
+    }
+})
+
+app.get('/http://localhost:5000/verifyToken', async (req, res) => {
+    if(!req.cookies.jwt){
+      res.status(400).send('error')
+    }
+    else{
+        jwt.verify(req.cookies.jwt, 'privatekey', (err, authorizedData) => {
+          if(err){
+              //If error send Forbidden (403)
+              console.log(err)
+              res.status(403).send('error');
+          } else {
+              //If token is successfully verified, we can send the authorized data 
+              res.status(200).json({
+                  message: 'Successful log in',
+                  authorizedData
+              });
+          }
+        })
+    }
+})
+
+app.post('/http://localhost:5000/fetchQuiz', async (req, res) => {
+    try{
+        let result = await quiz.findOne({name: req.body.name });
+        res.status(200).json(result);
+    }
+    catch(e){
+        console.log(e)
+        res.status(400).send('Error!')
+    }
+})
+
+app.get('/http://localhost:5000/fetchAnimalQuiz', async (req, res) => {
+  try{
+      let result = await quiz.find({category: 'animal'}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/fetchMathQuiz', async (req, res) => {
+  try{
+      let result = await quiz.find({category: 'math'}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/fetchMiscellaneousQuiz', async (req, res) => {
+  try{
+      let result = await quiz.find({category: 'miscellaneous'}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/fetchLanguageQuiz', async (req, res) => {
+  try{
+      let result = await quiz.find({category: 'language'}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/fetchAnimalFacts', async (req, res) => {
+  try{
+      let result = await animalFact.find({}).project({factsarr: 0}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.post('/http://localhost:5000/fetchAnimalFact', async (req, res) => {
+  try{
+      let result = await animalFact.findOne({link_name: req.body.link_name});
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/fetchSpaceFacts', async (req, res) => {
+  try{
+      let result = await spaceFact.find({}, {factsarr: 0}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.post('/http://localhost:5000/fetchSpaceFact', async (req, res) => {
+  try{
+      let result = await spaceFact.findOne({link_name: req.body.link_name});
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/fetchRandomFacts', async (req, res) => {
+  try{
+      let result = await historyFact.find({}, {factsarr: 0}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.post('/http://localhost:5000/fetchRandomFact', async (req, res) => {
+  try{
+      let result = await historyFact.findOne({link_name: req.body.link_name});
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.post('/http://localhost:5000/fetchHistory', async (req, res) => {
+  try{
+      let result = await credentials.findOne({username: req.body.username}, {"history":1, "_id":0});
+      res.status(200).json(result.history);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/fetchAllGames', async (req, res) => {
+  try{
+      let result = await game.find({}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.post('/http://localhost:5000/fetchGame', async (req, res) => {
+  try{
+      let result = await game.findOne({name: req.body.gameName});
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.post('/http://localhost:5000/setVerified', async (req, res) => {
+  try{
+      let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true},});
+      if(!result){
+        res.status(404).send('Not found!');
+      }
+      else{
+            jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+              if(err) { 
+                  res.status.send('Error!')
+              }
+            res.status(200).cookie('jwt', token).send('Successful!');
+        });
+      }
+  }   
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.get('/http://localhost:5000/logout', async (req, res) => {
+    try{
+        res.status(202).clearCookie('jwt').send('cookie cleared')
+    }
+    catch(e){
+        res.status(400).send('error')
+    }
+})
+
+app.post('/http://localhost:5000/quizHistory', async (req, res) => {
+  try{
+      let result = await credentials.updateOne({ username: req.body.username }, 
+        {$push: {
+            history: {
+                $each: [[req.body.quizname, req.body.score]],
+                $slice: 10
+            }
+        }});
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
+app.listen(5000, () => {
+  console.log(`App listening on port 5000`)
+})
