@@ -1,0 +1,198 @@
+import Navapp from './Navapp';
+import Footer from './Footer';
+import './Home.css';
+import { useEffect, useState, useReducer } from 'react';
+import LoggedInNav from './LoggedInNav';
+import axios from 'axios';
+import { Row, Container, Form, Button, Card, Table, Col } from 'react-bootstrap';
+import { useNavigate, Link } from "react-router-dom";
+import img1 from './binatang-laut1.jpg'
+import games_img from './games_img.jpg'
+
+function Home(props){
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [historyList, setHistoryList] = useState([]);
+    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+    const navigate = useNavigate();
+
+    const verifyToken = async () =>{
+        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            setIsLoggedIn(true)
+            setUsername(response.data.authorizedData.username)
+            fetchHistory(response.data.authorizedData.username)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    const handleLogin = async () =>{
+        axios.post('/http://localhost:5000/login', {
+            username: username,
+            password: password
+        })
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            window.location.reload()
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    const fetchHistory = async (username) =>{
+        axios.post('/http://localhost:5000/fetchHistory', {
+            username: username
+        })
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            if (response.status === 200){
+                setHistoryList(response.data.reverse())
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    useEffect(()=>{verifyToken();}, [])
+
+    return(
+        <>
+            {isLoggedIn? <LoggedInNav /> : <Navapp />}
+            <div className='bg-warning'>
+                <br />
+                <Container>
+                <Row>
+                    <div className='col-8'>
+                        <h1>Games dan Quiz untuk anak-anak! 🌴</h1>
+                        {/* --------------CARDS-------------- */}
+
+                        <Row xs={1} md={3} className="g-4">
+                        <Col>
+                            <Card>
+                                <Card.Img variant="top" src={img1} height={200} />
+                                <Card.Body>
+                                <Card.Title>Quiz</Card.Title>
+                                <Card.Text>
+                                    Quiz tentang binatang, matematika dan lebih!
+                                </Card.Text>
+                                <Button variant="primary" onClick={()=>{navigate('/quiz')}}>Mulai!</Button>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+
+                        <Col>
+                            <Card>
+                                <Card.Img variant="top" src={games_img} height={200} />
+                                <Card.Body>
+                                <Card.Title>Games</Card.Title>
+                                <Card.Text>
+                                  Permainan anak-anak klasik seperti Ular dan Pong
+                                </Card.Text>
+                                <Button variant="primary" onClick={()=>{navigate('/games')}}>Mulai!</Button>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+
+                        <Col>
+                            <Card>
+                                <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} height={200} />
+                                <Card.Body>
+                                <Card.Title>Fakta Binatang</Card.Title>
+                                <Card.Text>
+                                  Belajar tentang fakta-fakta binatang!
+                                </Card.Text>
+                                <Button variant="primary" onClick={()=>{navigate('/fakta-binatang')}}>Mulai!</Button>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+
+                        <Col>
+                            <Card>
+                                <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} height={200} />
+                                <Card.Body>
+                                <Card.Title>Fakta Angkasa</Card.Title>
+                                <Card.Text>
+                                  Belajar tentang fakta-fakta angkasa!
+                                </Card.Text>
+                                <Button variant="primary" onClick={()=>{navigate('/fakta-angkasa')}}>Mulai!</Button>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+
+                        <Col>
+                            <Card>
+                                <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} height={200} />
+                                <Card.Body>
+                                <Card.Title>Fakta Aneh Tapi Nyata</Card.Title>
+                                <Card.Text>
+                                  Belajar tentang fakta-fakta aneh tapi nyata!
+                                </Card.Text>
+                                <Button variant="primary" onClick={()=>{navigate('/fakta-sejarah')}}>Mulai!</Button>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                </Row>
+
+                    </div>
+                    {!isLoggedIn? <div className='col-4'>
+                        <div className="shadow-sm p-3 rounded bg-white">
+                            <h3 className="text-center">Login</h3>
+                            <br />
+                            <Form>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Label>Kata Sandi</Form.Label>
+                                <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                <Form.Check type="checkbox" label="Ingat Saya" />
+                            </Form.Group>
+                            <Button variant="primary" type="button" onClick={handleLogin}>
+                                Masuk
+                            </Button>
+                            </Form>
+                            <p className='mt-3'>Belum daftar? <Link to='/register' className='text-decoration-none'>Buat akun baru</Link></p>
+                        </div>
+                    </div> : 
+                        <div className='col-4'>
+                        <div className="shadow-sm p-3 rounded bg-white">
+                            <h3 className='fw-bold'>{username}</h3>
+                            <Table>
+                            <thead>
+                                <tr>
+                                    <th>Aktivitas Terbaru</th>
+                                    <th>Skor Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {historyList? historyList.map((item, idx)=>{
+                                return(
+                                <tr key={idx}>
+                                    <td>{item[0]}</td>
+                                    <td>{item[1]}</td>
+                                </tr>)
+                            }) : null}
+                            </tbody>
+                            </Table>
+                        </div></div>}
+                </Row>
+                </Container>
+                    
+                <br /><br />
+            </div>
+            <Footer />
+        </>
+    );
+}
+
+export default Home;
