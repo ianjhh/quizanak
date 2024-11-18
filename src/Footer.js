@@ -11,7 +11,7 @@ function Footer(props){
                 <li className="nav-item"><Link to='/sitemap' className="px-2 text-white text-decoration-none">sitemap</Link></li>
                 <li className="nav-item"><Link to='/about-us' className="px-2 text-white text-decoration-none">kebijakan privasi</Link></li>
             </ul>
-            <p className="text-center text-white">© 2024 QuizAnak, Inc</p>
+            <p className="text-center text-white">© 2024 KuisAnak, Inc</p>
         </footer>
         </>
     );
