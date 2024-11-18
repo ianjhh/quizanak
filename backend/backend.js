@@ -102,6 +102,7 @@ app.post('/api/register', async (req, res) => {
     }
     catch(e){
       res.status(400).send('Error!')
+      console.log(e)
     }
 })
 
