@@ -15,7 +15,7 @@ function HistoryFact(){
     const linkName = location.pathname.split('/')[2];
     
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
@@ -26,7 +26,7 @@ function HistoryFact(){
     }
 
     const fetchRandomFact = () =>{
-        axios.post('/http://localhost:5000/fetchRandomFact', {link_name: linkName})
+        axios.post('/api/fetchRandomFact', {link_name: linkName})
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){

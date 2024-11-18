@@ -10,7 +10,7 @@ function Login(props){
     const navigate = useNavigate();
 
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             navigate('/homepage')
@@ -21,7 +21,7 @@ function Login(props){
     }
 
     const handleLogin = () =>{
-        axios.post('/http://localhost:5000/login', {
+        axios.post('/api/login', {
             username: username,
             password: password
         })

@@ -43,7 +43,7 @@ function Quiz(props){
     }
 
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
@@ -55,7 +55,7 @@ function Quiz(props){
     }
 
     const fetchQuiz = () =>{
-        axios.post('/http://localhost:5000/fetchQuiz', {
+        axios.post('/api/fetchQuiz', {
             name: quizName
         })
         .then(function (response) {
@@ -105,7 +105,7 @@ function Quiz(props){
         setQuizEnded(true)
 
         /* store quiz result for user */
-        axios.post('/http://localhost:5000/quizHistory', {
+        axios.post('/api/quizHistory', {
             username: username,
             quizname: quizName,
             score: score

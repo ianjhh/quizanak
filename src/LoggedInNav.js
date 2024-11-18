@@ -9,7 +9,7 @@ import './Navapp.css';
 function LoggedInNav(props){
 
     const handleLogout = () =>{
-        axios.get('/http://localhost:5000/logout', { withCredentials: true })
+        axios.get('/api/logout', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
         })

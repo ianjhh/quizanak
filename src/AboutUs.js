@@ -9,7 +9,7 @@ function AboutUs(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
