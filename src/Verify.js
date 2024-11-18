@@ -17,7 +17,7 @@ function Verify(props){
     decrypted = decrypted.toString(CryptoJS.enc.Utf8)
 
     const verifyToken = () =>{
-        axios.post('/http://localhost:5000/setVerified', {username: decrypted})
+        axios.post('/api/setVerified', {username: decrypted})
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if(response.status===200){

@@ -21,7 +21,7 @@ function QuizList(props){
     const navigate = useNavigate();
 
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
@@ -32,7 +32,7 @@ function QuizList(props){
     }
 
     const handleLogin = () =>{
-        axios.post('/http://localhost:5000/login', {
+        axios.post('/api/login', {
             username: username,
             password: password
         })
@@ -46,7 +46,7 @@ function QuizList(props){
     }
 
     const fetchAnimalQuiz = () =>{
-        axios.get('/http://localhost:5000/fetchAnimalQuiz')
+        axios.get('/api/fetchAnimalQuiz')
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
@@ -59,7 +59,7 @@ function QuizList(props){
     }
 
     const fetchMathQuiz = () =>{
-        axios.get('/http://localhost:5000/fetchMathQuiz')
+        axios.get('/api/fetchMathQuiz')
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
@@ -72,7 +72,7 @@ function QuizList(props){
     }
 
     const fetchMiscellaneousQuiz = () =>{
-        axios.get('/http://localhost:5000/fetchMiscellaneousQuiz')
+        axios.get('/api/fetchMiscellaneousQuiz')
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
@@ -85,7 +85,7 @@ function QuizList(props){
     }
 
     const fetchLanguageQuiz = () =>{
-        axios.get('/http://localhost:5000/fetchLanguageQuiz')
+        axios.get('/api/fetchLanguageQuiz')
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){

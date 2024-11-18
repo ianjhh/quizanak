@@ -18,7 +18,7 @@ function Home(props){
     const navigate = useNavigate();
 
     const verifyToken = async () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
@@ -31,7 +31,7 @@ function Home(props){
     }
 
     const handleLogin = async () =>{
-        axios.post('/http://localhost:5000/login', {
+        axios.post('/api/login', {
             username: username,
             password: password
         })
@@ -45,7 +45,7 @@ function Home(props){
     }
 
     const fetchHistory = async (username) =>{
-        axios.post('/http://localhost:5000/fetchHistory', {
+        axios.post('/api/fetchHistory', {
             username: username
         })
         .then(function (response) {

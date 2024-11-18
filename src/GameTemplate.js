@@ -12,7 +12,7 @@ const GameName = () =>{
     const gameName = location.pathname.split('/')[2];
 
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
@@ -23,7 +23,7 @@ const GameName = () =>{
     }
 
     const fetchGame = () =>{
-        axios.post('/http://localhost:5000/fetchGame', {
+        axios.post('/api/fetchGame', {
             gameName: gameName
         })
         .then(function (response) {

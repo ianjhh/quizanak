@@ -10,7 +10,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const CryptoJS = require('crypto-js')
 app.use(cookieParser());
-app.use(cors())
+app.use(cors());
 
 var MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient("mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload");
@@ -35,11 +35,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.get('/http://localhost:5000', async (req, res) => {
-    
+app.get('/api/', async (req, res) => {
+    console.log('hello world')
 })
 
-app.post('/http://localhost:5000/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   try{
     let result = await credentials.findOne({username: req.body.username});
     if(!result){
@@ -67,7 +67,7 @@ app.post('/http://localhost:5000/login', async (req, res) => {
   }
 })
 
-app.post('/http://localhost:5000/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     try{
       let data = req.body;
       let found = await credentials.findOne({username: data.username});
@@ -105,7 +105,7 @@ app.post('/http://localhost:5000/register', async (req, res) => {
     }
 })
 
-app.get('/http://localhost:5000/homepage', async (req, res) => {
+app.get('/api/homepage', async (req, res) => {
     if(!req.cookies.jwt){
       res.status(400).send('No valid authentication token, try logging in again')
     }
@@ -135,7 +135,7 @@ app.get('/http://localhost:5000/homepage', async (req, res) => {
     }
 })
 
-app.get('/http://localhost:5000/verifyToken', async (req, res) => {
+app.get('/api/verifyToken', async (req, res) => {
     if(!req.cookies.jwt){
       res.status(400).send('error')
     }
@@ -156,7 +156,7 @@ app.get('/http://localhost:5000/verifyToken', async (req, res) => {
     }
 })
 
-app.post('/http://localhost:5000/fetchQuiz', async (req, res) => {
+app.post('/api/fetchQuiz', async (req, res) => {
     try{
         let result = await quiz.findOne({name: req.body.name });
         res.status(200).json(result);
@@ -167,7 +167,7 @@ app.post('/http://localhost:5000/fetchQuiz', async (req, res) => {
     }
 })
 
-app.get('/http://localhost:5000/fetchAnimalQuiz', async (req, res) => {
+app.get('/api/fetchAnimalQuiz', async (req, res) => {
   try{
       let result = await quiz.find({category: 'animal'}).toArray();
       res.status(200).json(result);
@@ -178,7 +178,7 @@ app.get('/http://localhost:5000/fetchAnimalQuiz', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/fetchMathQuiz', async (req, res) => {
+app.get('/api/fetchMathQuiz', async (req, res) => {
   try{
       let result = await quiz.find({category: 'math'}).toArray();
       res.status(200).json(result);
@@ -189,7 +189,7 @@ app.get('/http://localhost:5000/fetchMathQuiz', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/fetchMiscellaneousQuiz', async (req, res) => {
+app.get('/api/fetchMiscellaneousQuiz', async (req, res) => {
   try{
       let result = await quiz.find({category: 'miscellaneous'}).toArray();
       res.status(200).json(result);
@@ -200,7 +200,7 @@ app.get('/http://localhost:5000/fetchMiscellaneousQuiz', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/fetchLanguageQuiz', async (req, res) => {
+app.get('/api/fetchLanguageQuiz', async (req, res) => {
   try{
       let result = await quiz.find({category: 'language'}).toArray();
       res.status(200).json(result);
@@ -211,7 +211,7 @@ app.get('/http://localhost:5000/fetchLanguageQuiz', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/fetchAnimalFacts', async (req, res) => {
+app.get('/api/fetchAnimalFacts', async (req, res) => {
   try{
       let result = await animalFact.find({}).project({factsarr: 0}).toArray();
       res.status(200).json(result);
@@ -222,7 +222,7 @@ app.get('/http://localhost:5000/fetchAnimalFacts', async (req, res) => {
   }
 })
 
-app.post('/http://localhost:5000/fetchAnimalFact', async (req, res) => {
+app.post('/api/fetchAnimalFact', async (req, res) => {
   try{
       let result = await animalFact.findOne({link_name: req.body.link_name});
       res.status(200).json(result);
@@ -233,7 +233,7 @@ app.post('/http://localhost:5000/fetchAnimalFact', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/fetchSpaceFacts', async (req, res) => {
+app.get('/api/fetchSpaceFacts', async (req, res) => {
   try{
       let result = await spaceFact.find({}, {factsarr: 0}).toArray();
       res.status(200).json(result);
@@ -244,7 +244,7 @@ app.get('/http://localhost:5000/fetchSpaceFacts', async (req, res) => {
   }
 })
 
-app.post('/http://localhost:5000/fetchSpaceFact', async (req, res) => {
+app.post('/api/fetchSpaceFact', async (req, res) => {
   try{
       let result = await spaceFact.findOne({link_name: req.body.link_name});
       res.status(200).json(result);
@@ -255,7 +255,7 @@ app.post('/http://localhost:5000/fetchSpaceFact', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/fetchRandomFacts', async (req, res) => {
+app.get('/api/fetchRandomFacts', async (req, res) => {
   try{
       let result = await historyFact.find({}, {factsarr: 0}).toArray();
       res.status(200).json(result);
@@ -266,7 +266,7 @@ app.get('/http://localhost:5000/fetchRandomFacts', async (req, res) => {
   }
 })
 
-app.post('/http://localhost:5000/fetchRandomFact', async (req, res) => {
+app.post('/api/fetchRandomFact', async (req, res) => {
   try{
       let result = await historyFact.findOne({link_name: req.body.link_name});
       res.status(200).json(result);
@@ -277,7 +277,7 @@ app.post('/http://localhost:5000/fetchRandomFact', async (req, res) => {
   }
 })
 
-app.post('/http://localhost:5000/fetchHistory', async (req, res) => {
+app.post('/api/fetchHistory', async (req, res) => {
   try{
       let result = await credentials.findOne({username: req.body.username}, {"history":1, "_id":0});
       res.status(200).json(result.history);
@@ -288,7 +288,7 @@ app.post('/http://localhost:5000/fetchHistory', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/fetchAllGames', async (req, res) => {
+app.get('/api/fetchAllGames', async (req, res) => {
   try{
       let result = await game.find({}).toArray();
       res.status(200).json(result);
@@ -299,7 +299,7 @@ app.get('/http://localhost:5000/fetchAllGames', async (req, res) => {
   }
 })
 
-app.post('/http://localhost:5000/fetchGame', async (req, res) => {
+app.post('/api/fetchGame', async (req, res) => {
   try{
       let result = await game.findOne({name: req.body.gameName});
       res.status(200).json(result);
@@ -310,7 +310,7 @@ app.post('/http://localhost:5000/fetchGame', async (req, res) => {
   }
 })
 
-app.post('/http://localhost:5000/setVerified', async (req, res) => {
+app.post('/api/setVerified', async (req, res) => {
   try{
       let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true},});
       if(!result){
@@ -331,7 +331,7 @@ app.post('/http://localhost:5000/setVerified', async (req, res) => {
   }
 })
 
-app.get('/http://localhost:5000/logout', async (req, res) => {
+app.get('/api/logout', async (req, res) => {
     try{
         res.status(202).clearCookie('jwt').send('cookie cleared')
     }
@@ -340,7 +340,7 @@ app.get('/http://localhost:5000/logout', async (req, res) => {
     }
 })
 
-app.post('/http://localhost:5000/quizHistory', async (req, res) => {
+app.post('/api/quizHistory', async (req, res) => {
   try{
       let result = await credentials.updateOne({ username: req.body.username }, 
         {$push: {

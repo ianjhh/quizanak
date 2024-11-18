@@ -27,7 +27,7 @@ function Register(props){
         return bcrypt.hash(password, salt)
       })
       .then(hash => {
-        axios.post('/http://localhost:5000/register', {
+        axios.post('/api/register', {
             username: username,
             password: hash,
             email: email,

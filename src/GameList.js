@@ -18,7 +18,7 @@ function GameList(props){
     const navigate = useNavigate();
 
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
@@ -29,7 +29,7 @@ function GameList(props){
     }
 
     const handleLogin = () =>{
-        axios.post('/http://localhost:5000/login', {
+        axios.post('/api/login', {
             username: username,
             password: password
         })
@@ -43,7 +43,7 @@ function GameList(props){
     }
 
     const fetchAllGames = () =>{
-        axios.get('/http://localhost:5000/fetchAllGames')
+        axios.get('/api/fetchAllGames')
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
