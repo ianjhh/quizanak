@@ -83,7 +83,7 @@ app.post('/api/register', async (req, res) => {
           enc_username = enc_username.toString();
 
           const mailOptions = {
-            from: "ianjh.102@gmail.com",
+            from: "ianjhh.102@gmail.com",
             to: req.body.email,
             subject: "Verify your account for WebsiteName by clicking the link below",
             text: `https://kuisanak.com/verify?q=${enc_username}`
