@@ -75,18 +75,19 @@ app.post('/api/register', async (req, res) => {
       if (found){
           res.status(404).send('User already registered!');
       }
-          var text = data.username;
+          var text = JSON.stringify(data.username +  "," + data.email + "," + data.password);
+          console.log(typeof(text))
           var key = CryptoJS.enc.Utf8.parse('b75524255a7f54d2726a951bb39204df');
           var iv  = CryptoJS.enc.Utf8.parse('1583288699248111');
 
-          var enc_username= CryptoJS.AES.encrypt(text, key, {iv: iv});
-          enc_username = enc_username.toString();
+          var enc_data= CryptoJS.AES.encrypt(text, key, {iv: iv});
+          enc_data = enc_data.toString();
 
           const mailOptions = {
-            from: "ianjhh.102@gmail.com",
+            from: "ianjh.102@gmail.com",
             to: req.body.email,
             subject: "Verify your account for WebsiteName by clicking the link below",
-            text: `https://kuisanak.com/verify?q=${enc_username}`
+            text: `http://localhost:3000/verify?q=${enc_data}`
           };
     
           transporter.sendMail(mailOptions, (error, info) => {
@@ -97,7 +98,6 @@ app.post('/api/register', async (req, res) => {
             }
           })
       
-      await credentials.insertOne(data);
       res.status(200).json(data);
     }
     catch(e){
@@ -312,7 +312,7 @@ app.post('/api/fetchGame', async (req, res) => {
 
 app.post('/api/setVerified', async (req, res) => {
   try{
-      let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true},});
+      let result = await credentials.insertOne(req.body);
       if(!result){
         res.status(404).send('Not found!');
       }
