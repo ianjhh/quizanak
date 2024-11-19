@@ -66,7 +66,7 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicPassword2">
                 <Form.Label>Ketik Ulang Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword2(e.target.value)}} value={password2} />
-                {(password === password2) || password2 === null? null : <Form.Text className="text-muted">Kata Sandi tidak cocok!</Form.Text>
+                {(password === password2) || password2 === ''? null : <Form.Text className="text-muted">Kata Sandi tidak cocok!</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
