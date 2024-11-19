@@ -138,13 +138,13 @@ function Quiz(props){
             <Container className='mt-4'>
                 <Row>
                 <div className='col-2'>
-                    <Link to='/quiz' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Quiz List</Button></Link>
+                    <Link to='/quiz' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </div>
                 
                 <div className='col-8 rounded quiz-container'>
                     {!quizStarted? 
                     <div className='text-center mt-3'>
-                        {quizProperty && quizImage? <><h1 className='mb-3'>Quiz {quizProperty}</h1><img width={300} height={300} src={require(`./${quizImage}.jpg`)} /></> : null}<br/><br/>
+                        {quizProperty && quizImage? <><h1 className='mb-3'>Kuis {quizProperty}</h1><img width={300} height={300} src={require(`./${quizImage}.jpg`)} /></> : null}<br/><br/>
                         <Button variant='primary' className='mb-4 fs-3'
                         onClick={startQuiz}>
                         Mulai
