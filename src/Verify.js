@@ -15,9 +15,13 @@ function Verify(props){
 
     let decrypted = CryptoJS.AES.decrypt(queryparam, key, {iv: iv});
     decrypted = decrypted.toString(CryptoJS.enc.Utf8)
+    let split_decrypted = decrypted.split(',')
+    const decrypted_username = split_decrypted[0];
+    const decrypted_email = split_decrypted[1];
+    const decrypted_password = split_decrypted[2];
 
     const verifyToken = () =>{
-        axios.post('/api/setVerified', {username: decrypted})
+        axios.post('/api/setVerified', {username: decrypted_username, email: decrypted_email, password: decrypted_password})
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if(response.status===200){
@@ -35,7 +39,7 @@ function Verify(props){
         <>
             {!verified && !error? <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
-            </Spinner> : (verified && !error? <h2>Account Verified!</h2> : <h2>ERROR</h2>)}
+            </Spinner> : (verified? <h2>Account Verified!</h2> : <h2>ERROR</h2>)}
         </>
     )
 }
