@@ -154,9 +154,6 @@ function Home(props){
                                 <Form.Label>Kata Sandi</Form.Label>
                                 <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Ingat Saya" />
-                            </Form.Group>
                             <Button variant="primary" type="button" onClick={handleLogin}>
                                 Masuk
                             </Button>
