@@ -35,7 +35,7 @@ function Register(props){
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            alert('Check your email for a verification link!')
+            alert('Link verifikasi akun telah dikirim kepada email anda!')
             navigate('/')
         })
         .catch(function (error) {
@@ -48,24 +48,25 @@ function Register(props){
     return(
         <Container className="w-25 mt-5">
         <div className="shadow-sm p-3 rounded bg-white">
-            <h3 className="text-center">Register</h3>
+            <h3 className="text-center">Registrasi akun</h3>
             <br />
             <Form>
             <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
-                {username.length < 6 && username? <Form.Text className="text-muted">Username length cannot be less than 6!</Form.Text> : null}
+                {username.length < 6 && username? <Form.Text className="text-muted">Panjang username tidak boleh kurang dari 6!</Form.Text> : null}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label>Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
-                {password.length < 8 && password? <Form.Text className="text-muted">Password length cannot be less than 8!</Form.Text> : null}
+                {password.length < 8 && password? <Form.Text className="text-muted">Panjang kata sandi tidak boleh kurang dari 8!</Form.Text> : null}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword2">
-                <Form.Label>Re-enter Password</Form.Label>
+                <Form.Label>Ketik Ulang Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword2(e.target.value)}} value={password2} />
+                {(password === password2) || password2 === null? null : <Form.Text className="text-muted">Kata Sandi tidak cocok!</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
