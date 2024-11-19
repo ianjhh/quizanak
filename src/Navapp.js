@@ -13,7 +13,7 @@ function Navapp(props){
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Navbar.Text><NavLink to='/quiz' className='text-white text-decoration-none nav-text'>Quiz</NavLink></Navbar.Text>&nbsp;&nbsp;
+                    <Navbar.Text><NavLink to='/quiz' className='text-white text-decoration-none nav-text'>Kuis</NavLink></Navbar.Text>&nbsp;&nbsp;
                     <Navbar.Text><NavLink to='/games' className='text-white text-decoration-none nav-text'>Games</NavLink></Navbar.Text>&nbsp;&nbsp;
                     <div className="dropdown mt-2">
                     <Navbar.Text className="dropbtn text-white text-decoration-none nav-text">Fakta</Navbar.Text>&nbsp;&nbsp;
