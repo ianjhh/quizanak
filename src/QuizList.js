@@ -132,7 +132,7 @@ function QuizList(props){
                 <br />
                 <Container>
                 <Link to='/' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Kembali</Button></Link>
-                <h3 className='mt-3'>Quiz Binatang</h3>
+                <h3 className='mt-3'>Kuis Binatang</h3>
                 <Row xs={1} md={5} className="g-4">
                     {animalQuiz.map((item, idx) => (
                             <Col key={idx}>
@@ -151,7 +151,7 @@ function QuizList(props){
                     ))}
                 </Row><br/><br/>
 
-                <h3>Quiz Matematika</h3>
+                <h3>Kuis Matematika</h3>
                 <Row xs={1} md={5} className="g-4">
                     {mathQuiz.map((item, idx) => (
                             <Col key={idx}>
@@ -170,7 +170,7 @@ function QuizList(props){
                     ))}
                 </Row><br/><br/>
 
-                <h3>Quiz Bahasa</h3>
+                <h3>Kuis Bahasa</h3>
                 <Row xs={1} md={5} className="g-4">
                     {languageQuiz.map((item, idx) => (
                             <Col key={idx}>
@@ -189,7 +189,7 @@ function QuizList(props){
                     ))}
                 </Row><br/><br/>
 
-                <h3>Quiz Lain</h3>
+                <h3>Kuis Lain</h3>
                 <Row xs={1} md={5} className="g-4">
                     {miscellaneousQuiz.map((item, idx) => (
                             <Col key={idx}>
