@@ -69,7 +69,7 @@ function Home(props){
                 <Container>
                 <Row>
                     <div className='col-8'>
-                        <h1>Games dan Quiz untuk anak-anak! 🌴</h1>
+                        <h1>Games dan Kuis untuk anak-anak! 🌴</h1>
                         {/* --------------CARDS-------------- */}
 
                         <Row xs={1} md={3} className="g-4">
@@ -79,7 +79,7 @@ function Home(props){
                                 <Card.Body>
                                 <Card.Title>Quiz</Card.Title>
                                 <Card.Text>
-                                    Quiz tentang binatang, matematika dan lebih!
+                                    Kuis tentang binatang, matematika dan lebih!
                                 </Card.Text>
                                 <Button variant="primary" onClick={()=>{navigate('/quiz')}}>Mulai!</Button>
                                 </Card.Body>
