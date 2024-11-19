@@ -73,10 +73,7 @@ function Register(props){
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} value={email} />
             </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Remember Me" />
-            </Form.Group>
+    
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
             </Form>
         </div>
