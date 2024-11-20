@@ -16,7 +16,7 @@ function Register(props){
         const saltRounds = 11;
         const staticText = 'Hf82c36rZnDKWa';
 
-        if (username.length < 6 || password.length < 8){
+        if (username.length < 3 || password.length < 8){
             alert('Invalid input!')
             return;
         }
@@ -54,7 +54,7 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
-                {username.length < 6 && username? <Form.Text className="text-muted">Panjang username tidak boleh kurang dari 6!</Form.Text> : null}
+                {username.length < 3 && username? <Form.Text className="text-muted">Panjang username tidak boleh kurang dari 3!</Form.Text> : null}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
