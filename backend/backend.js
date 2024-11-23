@@ -87,7 +87,7 @@ app.post('/api/register', async (req, res) => {
             from: "ianjh.102@gmail.com",
             to: req.body.email,
             subject: "Verify your account for WebsiteName by clicking the link below",
-            text: `https://kuisanak.com/verify?q=${enc_data}`
+            text: `https://kuisanak.com/api/verify?q=${enc_data}`
           };
     
           transporter.sendMail(mailOptions, (error, info) => {
