@@ -14,9 +14,8 @@ function Register(props){
 
     const handleRegister = () =>{
         const saltRounds = 11;
-        const staticText = 'Hf82c36rZnDKWa';
 
-        if (username.length < 3 || password.length < 8){
+        if (username.length < 6 || password.length < 8){
             alert('Invalid input!')
             return;
         }
