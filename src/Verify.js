@@ -14,14 +14,10 @@ function Verify(props){
     var iv  = CryptoJS.enc.Utf8.parse('1583288699248111');
 
     let decrypted = CryptoJS.AES.decrypt(queryparam, key, {iv: iv});
-    decrypted = decrypted.toString(CryptoJS.enc.Utf8)
-    let split_decrypted = decrypted.split(',')
-    const decrypted_username = split_decrypted[0];
-    const decrypted_email = split_decrypted[1];
-    const decrypted_password = split_decrypted[2];
+    decrypted = decrypted.toString(CryptoJS.enc.Utf8);
 
     const verifyToken = () =>{
-        axios.post('/api/setVerified', {username: decrypted_username, email: decrypted_email, password: decrypted_password})
+        axios.post('/api/setVerified', {username: decrypted})
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if(response.status===200){
