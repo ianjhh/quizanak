@@ -30,7 +30,8 @@ function Register(props){
             username: username,
             password: hash,
             email: email,
-            verified: false
+            verified: false,
+            createdAt: new Date(),
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
