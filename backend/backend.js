@@ -89,11 +89,16 @@ app.get('/api/', async (req, res) => {
     console.log('hello world')
 })
 
-app.get('/api/fetchBloomFilter', async (req, res) => {
+app.get('/api/validateEmail', async (req, res) => {
   try{
-      
-      res.status(200).send(cluster.bf)
-      console.log(cluster.bf)
+      /* check whether email exists in bloom filter */
+      const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
+      if(emailExists){
+          res.status(409).send('Email exists already!');
+      }
+      else{
+          res.status(200).send('Email does not exist! You can use that email!');
+      }
   }
   catch(e){
     console.log(e)
