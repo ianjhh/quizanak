@@ -49,8 +49,6 @@ const createBloomFilter = async () =>{
 
         // Add multiple items to Bloom Filter at once with BF.MADD command
         await cluster.bf.mAdd('emailBloom', usernamesArr);
-
-        await cluster.close();
     } 
     catch (e) {
         if (e.message.endsWith('item exists')) {
@@ -93,10 +91,9 @@ app.get('/api/', async (req, res) => {
 
 app.get('/api/fetchBloomFilter', async (req, res) => {
   try{
-      await cluster.connect();
+      
       res.status(200).send(cluster.bf)
       console.log(cluster.bf)
-      await cluster.close();
   }
   catch(e){
     console.log(e)
