@@ -312,7 +312,7 @@ app.post('/api/fetchGame', async (req, res) => {
 
 app.post('/api/setVerified', async (req, res) => {
   try{
-      let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true}, $unset: {createdAt: ""});
+      let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true}, $unset: {createdAt: ""}});
       if(!result){
         res.status(404).send('Not found!');
       }
