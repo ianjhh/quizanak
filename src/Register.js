@@ -52,6 +52,7 @@ function Register(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
                 setBloomFilter(response.data);
+                console.log(response.data)
             }
         })
         .catch(function (error) {
