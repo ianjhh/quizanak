@@ -46,14 +46,14 @@ function Register(props){
       .catch(err => console.error(err.message))
     }
 
-    const getBloomFilter = () =>{
-        axios.get('/api/fetchBloomFilter')
+    const validateEmail = (email) =>{
+        axios.post('/api/validateEmail', {
+            email: email,
+        })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
-                setBloomFilter(response.data);
-                console.log(response.data)
-                console.log('naisu, response.status is 200!')
+                console.log('email is valid!')
             }
         })
         .catch(function (error) {
@@ -89,7 +89,7 @@ function Register(props){
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} value={email} />
+                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onKeyUp={()=>{validateEmail(email)}} value={email} />
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
