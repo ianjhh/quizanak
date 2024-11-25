@@ -8,9 +8,60 @@ app.use(bodyParser.json());
 const cookieParser = require("cookie-parser");
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
+var redis = require("redis")
 const CryptoJS = require('crypto-js')
 app.use(cookieParser());
 app.use(cors());
+
+const cluster = redis.createCluster({
+  rootNodes: [
+      {
+          url: 'redis://ianjhh:ijh21999@localhost:7379'
+      },
+      {
+          url: 'redis://ianjhh:ijh21999@localhost:7380'
+      },
+      {
+          url: 'redis://ianjhh:ijh21999@localhost:7381'
+      },
+      // ...
+  ],
+  useReplicas: true,
+  minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections.
+  defaults: {
+      username: 'ianjhh',
+      password: 'ijh21999'
+  }
+}).on('error', (err) => console.log('Redis Cluster Error', err));
+
+const createBloomFilter = async () =>{
+    let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
+
+    try {
+        await cluster.connect();
+
+        // Delete any pre-existing Bloom Filter
+        await cluster.del('emailBloom');
+
+        // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
+        await cluster.bf.reserve('emailBloom', 0.01, 1000);
+        console.log('Reserved Bloom Filter.');
+
+        // Add multiple items to Bloom Filter at once with BF.MADD command
+        await cluster.bf.mAdd('emailBloom', usernamesArr);
+
+        await cluster.close();
+    } 
+    catch (e) {
+        if (e.message.endsWith('item exists')) {
+            console.log('Bloom Filter already reserved.');
+        } 
+        else {
+            console.log('Error, maybe RedisBloom is not installed?:');
+            console.log(e);
+        }
+    }
+}
 
 var MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient("mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload");
@@ -22,6 +73,7 @@ const game = database.collection('game');
 const animalFact = database.collection('animalFact');
 const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
+createBloomFilter();
 
 /* NODEMAILER */
 const transporter = nodemailer.createTransport({
@@ -37,6 +89,19 @@ const transporter = nodemailer.createTransport({
 
 app.get('/api/', async (req, res) => {
     console.log('hello world')
+})
+
+app.get('/api/fetchBloomFilter', async (req, res) => {
+  try{
+      await cluster.connect();
+      res.status(200).send(cluster.bf)
+      console.log(cluster.bf)
+      await cluster.close();
+  }
+  catch(e){
+    console.log(e)
+    res.status(400).send('Error!')
+  }
 })
 
 app.post('/api/login', async (req, res) => {
