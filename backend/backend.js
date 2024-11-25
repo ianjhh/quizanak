@@ -31,7 +31,6 @@ const cluster = redis.createCluster({
   defaults: {
       username: 'ianjhh',
       password: 'ijh21999',
-      socket: { tls: true }
   }
 }).on('error', (err) => console.log('Redis Cluster Error', err));
 
