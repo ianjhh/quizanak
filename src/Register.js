@@ -10,6 +10,7 @@ function Register(props){
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [email, setEmail] = useState("");
+    const [bloomFilter, setBloomFilter] = useState(null);
     const navigate = useNavigate();
 
     const handleRegister = () =>{
@@ -44,6 +45,21 @@ function Register(props){
       })
       .catch(err => console.error(err.message))
     }
+
+    const getBloomFilter = () =>{
+        axios.get('/http://localhost:5000/fetchBloomFilter')
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            if (response.status === 200){
+                setBloomFilter(response.data);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    useEffect(()=>{getBloomFilter()}, []);
 
     return(
         <Container className="w-25 mt-5">
