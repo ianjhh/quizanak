@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import { Form,Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import bcrypt from 'bcryptjs';
@@ -60,9 +60,7 @@ function Register(props){
             console.log(error);
         });
     }
-
-    useEffect(()=>{getBloomFilter()}, []);
-
+    
     return(
         <Container className="w-25 mt-5">
         <div className="shadow-sm p-3 rounded bg-white">
