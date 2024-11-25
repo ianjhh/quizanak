@@ -47,7 +47,7 @@ function Register(props){
     }
 
     const getBloomFilter = () =>{
-        axios.get('api/fetchBloomFilter')
+        axios.get('/api/fetchBloomFilter')
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
