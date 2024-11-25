@@ -16,13 +16,13 @@ app.use(cors());
 const cluster = redis.createCluster({
   rootNodes: [
       {
-          url: 'redis://ianjhh:ijh21999@localhost:7379'
+          url: 'redis://localhost:7379'
       },
       {
-          url: 'redis://ianjhh:ijh21999@localhost:7380'
+          url: 'redis://localhost:7380'
       },
       {
-          url: 'redis://ianjhh:ijh21999@localhost:7381'
+          url: 'redis://localhost:7381'
       },
       // ...
   ],
@@ -31,6 +31,7 @@ const cluster = redis.createCluster({
   defaults: {
       username: 'ianjhh',
       password: 'ijh21999',
+      socket: { tls: true }
   }
 }).on('error', (err) => console.log('Redis Cluster Error', err));
 
