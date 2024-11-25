@@ -30,7 +30,8 @@ const cluster = redis.createCluster({
   minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections.
   defaults: {
       username: 'ianjhh',
-      password: '***REMOVED***'
+      password: '***REMOVED***',
+      socket: { tls: true }
   }
 }).on('error', (err) => console.log('Redis Cluster Error', err));
 
