@@ -53,6 +53,7 @@ function Register(props){
             if (response.status === 200){
                 setBloomFilter(response.data);
                 console.log(response.data)
+                console.log('naisu, response.status is 200!')
             }
         })
         .catch(function (error) {
