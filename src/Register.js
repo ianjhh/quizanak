@@ -53,7 +53,7 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
-                console.log('email is valid!')
+                alert('email is valid!')
             }
         })
         .catch(function (error) {
