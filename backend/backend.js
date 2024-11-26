@@ -41,39 +41,6 @@ app.use(cors());
 
 
 const createBloomFilter = async () =>{
-    try {
-        let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
-        const cluster = redis.createClient()
-        await cluster.connect();
-
-        // Delete any pre-existing Bloom Filter
-        await cluster.del('emailBloom');
-
-        // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
-        await cluster.bf.reserve('emailBloom', 0.01, 1000);
-        console.log('Reserved Bloom Filter.');
-
-        // Add multiple items to Bloom Filter at once with BF.MADD command
-        await cluster.bf.mAdd('emailBloom', usernamesArr);
-
-      const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
-      console.log(emailExists)
-      if(emailExists){
-          res.status(409).send('Email exists already!');
-      }
-      else{
-          res.status(200).send('Email does not exist! You can use that email!');
-      }
-    } 
-    catch (e) {
-        if (e.message.endsWith('item exists')) {
-            console.log('Bloom Filter already reserved.');
-        } 
-        else {
-            console.log('Error, maybe RedisBloom is not installed?:');
-            console.log(e);
-        }
-    }
 }
 
 var MongoClient = require('mongodb').MongoClient;
@@ -107,14 +74,38 @@ app.post('/api/validateEmail', async (req, res) => {
   try{
       /* check whether email exists in bloom filter */
     
-createBloomFilter();
+        let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
+        const cluster = redis.createClient()
+        await cluster.connect();
 
-      
-  }
-  catch(e){
-    console.log(e)
-    res.status(400).send(`Error!: ${e}`)
-  }
+        // Delete any pre-existing Bloom Filter
+        await cluster.del('emailBloom');
+
+        // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
+        await cluster.bf.reserve('emailBloom', 0.01, 1000);
+        console.log('Reserved Bloom Filter.');
+
+        // Add multiple items to Bloom Filter at once with BF.MADD command
+        await cluster.bf.mAdd('emailBloom', usernamesArr);
+
+        const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
+        console.log(emailExists)
+        if(emailExists){
+            res.status(409).send('Email exists already!');
+        }
+        else{
+            res.status(200).send('Email does not exist! You can use that email!');
+        }
+    }
+  catch (e) {
+        if (e.message.endsWith('item exists')) {
+            console.log('Bloom Filter already reserved.');
+        } 
+        else {
+            console.log('Error, maybe RedisBloom is not installed?:');
+            console.log(e);
+        }
+    }
 })
 
 app.post('/api/login', async (req, res) => {
