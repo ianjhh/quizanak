@@ -57,6 +57,7 @@ const createBloomFilter = async () =>{
         await cluster.bf.mAdd('emailBloom', usernamesArr);
 
       const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
+      console.log(emailExists)
       if(emailExists){
           res.status(409).send('Email exists already!');
       }
