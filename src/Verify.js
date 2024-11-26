@@ -35,7 +35,7 @@ function Verify(props){
         <>
             {!verified && !error? <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
-            </Spinner> : (verified? <h2>Account Verified!</h2> : <h2>ERROR</h2>)}
+            </Spinner> : (verified? <h2>Akun diverifikasi!</h2> : <h2>ERROR</h2>)}
         </>
     )
 }
