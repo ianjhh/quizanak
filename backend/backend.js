@@ -31,12 +31,11 @@ app.use(cors());
   socket:{
       
   },
-  /*
+  
   defaults: {
       username: 'ianjhh',
       password: 'ijh21999',
   } 
-  */
 }).on('error', (err) => console.log('Redis Cluster Error', err)); */
 
 const cluster = redis.createClient()
