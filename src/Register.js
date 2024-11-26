@@ -55,6 +55,9 @@ function Register(props){
             if (response.status === 200){
                 alert('email is valid!')
             }
+            else if (response.status === 409){
+                alert('email exists already!')
+            }
         })
         .catch(function (error) {
             console.log(error);
