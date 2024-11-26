@@ -41,10 +41,9 @@ app.use(cors());
 
 
 const createBloomFilter = async () =>{
-  const cluster = redis.createClient()
-    let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
-
     try {
+        let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
+        const cluster = redis.createClient()
         await cluster.connect();
 
         // Delete any pre-existing Bloom Filter
