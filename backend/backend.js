@@ -26,7 +26,7 @@ const cluster = redis.createCluster({
       },
       // ...
   ],
-  useReplicas: true,
+  useReplicas: false,
   minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections.
   socket:{
       
