@@ -74,7 +74,7 @@ app.post('/api/validateEmail', async (req, res) => {
   try{
       /* check whether email exists in bloom filter */
     
-        let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
+        let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
         const cluster = redis.createClient()
         await cluster.connect();
 
@@ -86,7 +86,7 @@ app.post('/api/validateEmail', async (req, res) => {
         console.log('Reserved Bloom Filter.');
 
         // Add multiple items to Bloom Filter at once with BF.MADD command
-        await cluster.bf.mAdd('emailBloom', usernamesArr);
+        await cluster.bf.mAdd('emailBloom', ['ianjhhhhh@gmail.com']);
 
         const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
         console.log(emailExists)
