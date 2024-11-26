@@ -38,7 +38,7 @@ app.use(cors());
   } 
 }).on('error', (err) => console.log('Redis Cluster Error', err)); */
 
-const cluster = redis.createClient()
+
 
 const createBloomFilter = async () =>{
     let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
@@ -77,7 +77,6 @@ const game = database.collection('game');
 const animalFact = database.collection('animalFact');
 const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
-createBloomFilter();
 
 /* NODEMAILER */
 const transporter = nodemailer.createTransport({
@@ -98,6 +97,9 @@ app.get('/api/', async (req, res) => {
 app.post('/api/validateEmail', async (req, res) => {
   try{
       /* check whether email exists in bloom filter */
+    const cluster = redis.createClient()
+createBloomFilter();
+
       const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
       if(emailExists){
           res.status(409).send('Email exists already!');
