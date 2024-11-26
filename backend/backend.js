@@ -41,6 +41,7 @@ app.use(cors());
 
 
 const createBloomFilter = async () =>{
+  const cluster = redis.createClient()
     let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
 
     try {
@@ -97,7 +98,7 @@ app.get('/api/', async (req, res) => {
 app.post('/api/validateEmail', async (req, res) => {
   try{
       /* check whether email exists in bloom filter */
-    const cluster = redis.createClient()
+    
 createBloomFilter();
 
       const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
