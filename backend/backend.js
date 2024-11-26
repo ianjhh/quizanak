@@ -13,7 +13,7 @@ const CryptoJS = require('crypto-js')
 app.use(cookieParser());
 app.use(cors());
 
-const cluster = redis.createCluster({
+/* const cluster = redis.createCluster({
   rootNodes: [
       {
           url: 'redis://127.0.0.1:7379'
@@ -37,7 +37,9 @@ const cluster = redis.createCluster({
       password: 'ijh21999',
   } 
   */
-}).on('error', (err) => console.log('Redis Cluster Error', err));
+}).on('error', (err) => console.log('Redis Cluster Error', err)); */
+
+const cluster = createClient()
 
 const createBloomFilter = async () =>{
     let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
