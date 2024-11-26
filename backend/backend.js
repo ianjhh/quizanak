@@ -75,7 +75,31 @@ app.post('/api/validateEmail', async (req, res) => {
       /* check whether email exists in bloom filter */
     
         let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
-        const cluster = redis.createClient()
+        const cluster = redis.createCluster({
+          rootNodes: [
+              {
+                  url: 'redis://127.0.0.1:7379'
+              },
+              {
+                  url: 'redis://127.0.0.1:7380'
+              },
+              {
+                  url: 'redis://127.0.0.1:7381'
+              },
+              // ...
+          ],
+          useReplicas: true,
+          minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections.
+          socket:{
+              
+          },
+          
+          defaults: {
+              username: 'ianjhh',
+              password: 'ijh21999',
+          } 
+        }).on('error', (err) => console.log('Redis Cluster Error', err));
+    
         await cluster.connect();
 
         // Delete any pre-existing Bloom Filter
