@@ -39,7 +39,7 @@ app.use(cors());
   */
 }).on('error', (err) => console.log('Redis Cluster Error', err)); */
 
-const cluster = createClient()
+const cluster = redis.createClient()
 
 const createBloomFilter = async () =>{
     let usernamesArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
