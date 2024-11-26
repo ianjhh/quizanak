@@ -16,22 +16,24 @@ app.use(cors());
 const cluster = redis.createCluster({
   rootNodes: [
       {
-          url: 'redis://localhost:7379'
+          url: 'redis://127.0.0.1:7379'
       },
       {
-          url: 'redis://localhost:7380'
+          url: 'redis://127.0.0.1:7380'
       },
       {
-          url: 'redis://localhost:7381'
+          url: 'redis://127.0.0.1:7381'
       },
       // ...
   ],
+  /*
   useReplicas: true,
   minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections.
-  /*defaults: {
+  defaults: {
       username: 'ianjhh',
       password: 'ijh21999',
-  } */
+  } 
+  */
 }).on('error', (err) => console.log('Redis Cluster Error', err));
 
 const createBloomFilter = async () =>{
