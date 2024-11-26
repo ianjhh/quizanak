@@ -16,13 +16,13 @@ app.use(cors());
 /* const cluster = redis.createCluster({
   rootNodes: [
       {
-          url: 'redis://127.0.0.1:7379'
+          url: 'redis://127.0.0.1:7000'
       },
       {
-          url: 'redis://127.0.0.1:7380'
+          url: 'redis://127.0.0.1:7001'
       },
       {
-          url: 'redis://127.0.0.1:7381'
+          url: 'redis://127.0.0.1:7002'
       },
       // ...
   ],
@@ -78,13 +78,13 @@ app.post('/api/validateEmail', async (req, res) => {
         const cluster = redis.createCluster({
           rootNodes: [
               {
-                  url: 'redis://127.0.0.1:7379'
+                  url: 'redis://127.0.0.1:7000'
               },
               {
-                  url: 'redis://127.0.0.1:7380'
+                  url: 'redis://127.0.0.1:7001'
               },
               {
-                  url: 'redis://127.0.0.1:7381'
+                  url: 'redis://127.0.0.1:7002'
               },
               // ...
           ],
