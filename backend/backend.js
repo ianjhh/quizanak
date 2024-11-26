@@ -55,6 +55,14 @@ const createBloomFilter = async () =>{
 
         // Add multiple items to Bloom Filter at once with BF.MADD command
         await cluster.bf.mAdd('emailBloom', usernamesArr);
+
+      const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
+      if(emailExists){
+          res.status(409).send('Email exists already!');
+      }
+      else{
+          res.status(200).send('Email does not exist! You can use that email!');
+      }
     } 
     catch (e) {
         if (e.message.endsWith('item exists')) {
@@ -100,13 +108,7 @@ app.post('/api/validateEmail', async (req, res) => {
     
 createBloomFilter();
 
-      const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
-      if(emailExists){
-          res.status(409).send('Email exists already!');
-      }
-      else{
-          res.status(200).send('Email does not exist! You can use that email!');
-      }
+      
   }
   catch(e){
     console.log(e)
