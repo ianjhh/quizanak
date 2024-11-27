@@ -58,12 +58,10 @@ function Register(props){
             else if (response.status === 409){
                 alert('email exists already!')
             }
-            else{
-                alert(response.status)
-            }
         })
         .catch(function (error) {
             console.log(error);
+            alert(error)
         });
     }
     
