@@ -94,10 +94,10 @@ app.post('/api/validateEmail', async (req, res) => {
               
           },
           
-          defaults: {
+          /* defaults: {
               username: 'ianjhh',
               password: '***REMOVED***',
-          } 
+          } */
         }).on('error', (err) => console.log('Redis Cluster Error', err));
     
         await cluster.connect();
