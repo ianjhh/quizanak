@@ -43,7 +43,6 @@ const game = database.collection('game');
 const animalFact = database.collection('animalFact');
 const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
-let bloomFilter = initBloomFilter();
 
 const createEmailArr = async () =>{
     try{
