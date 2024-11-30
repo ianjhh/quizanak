@@ -46,6 +46,8 @@ const initBloomFilter = async () =>{
     
     // Add multiple items to Bloom Filter at once with BF.MADD command
     await cluster.bf.mAdd('emailBloom', emailArr);
+
+    return cluster;
 }
 
 var MongoClient = require('mongodb').MongoClient;
@@ -58,7 +60,7 @@ const game = database.collection('game');
 const animalFact = database.collection('animalFact');
 const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
-initBloomFilter();
+let cluster = initBloomFilter();
 
 /* NODEMAILER */
 const transporter = nodemailer.createTransport({
