@@ -51,20 +51,19 @@ app.post('/api/validateEmail', async (req, res) => {
         const cluster = redis.createCluster({
           rootNodes: [
               {
-                  url: 'redis://redis:***REMOVED***@127.0.0.1:7000'
+                  url: 'redis://***REMOVED***@127.0.0.1:7000'
               },
               {
-                  url: 'redis://redis:***REMOVED***@127.0.0.1:7001'
+                  url: 'redis://***REMOVED***@127.0.0.1:7001'
               },
               {
-                  url: 'redis://redis:***REMOVED***@127.0.0.1:7002'
+                  url: 'redis://***REMOVED***@127.0.0.1:7002'
               },
               // ...
           ],
           useReplicas: true,
           minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections.
           defaults: {
-              username: 'redis',
               password: '***REMOVED***',
           },
         }).on('error', (err) => console.log('Redis Cluster Error', err));
