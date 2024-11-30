@@ -62,7 +62,10 @@ app.post('/api/validateEmail', async (req, res) => {
               // ...
           ],
           useReplicas: true,
-          minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections.
+          /* minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections. */
+          defaults: {
+            password: 'ijh21999ijh21999!'
+          }
         }).on('error', (err) => console.log('Redis Cluster Error', err));
     
         await cluster.connect();
