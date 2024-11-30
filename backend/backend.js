@@ -12,43 +12,26 @@ var redis = require("redis")
 const CryptoJS = require('crypto-js')
 app.use(cookieParser());
 app.use(cors());
-const initBloomFilter = async () =>{
-    let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
-    const cluster = redis.createCluster({
-        rootNodes: [
-            {
-                url: 'redis://127.0.0.1:7000'
-            },
-            {
-                url: 'redis://127.0.0.1:7001'
-            },
-            {
-                url: 'redis://127.0.0.1:7002'
-            },
-            // ...
-        ],
-        useReplicas: true,
-        /* minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections. */
-        defaults: {
-              password: 'ijh21999ijh21999!'
-        }
-        }).on('error', (err) => console.log('Redis Cluster Error', err));
-        
-    await cluster.connect();
     
-    // Delete any pre-existing Bloom Filter
-    await cluster.del('emailBloom');
-    
-    // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
-    await cluster.bf.reserve('emailBloom', 0.01, 1000);
-    console.log('Reserved Bloom Filter.');
-    
-    
-    // Add multiple items to Bloom Filter at once with BF.MADD command
-    await cluster.bf.mAdd('emailBloom', emailArr);
-
-    return cluster.bf;
-}
+const cluster = redis.createCluster({
+    rootNodes: [
+        {
+            url: 'redis://127.0.0.1:7000'
+        },
+        {
+            url: 'redis://127.0.0.1:7001'
+        },
+        {
+            url: 'redis://127.0.0.1:7002'
+        },
+        // ...
+    ],
+    useReplicas: true,
+    /* minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections. */
+    defaults: {
+        password: 'ijh21999ijh21999!'
+    }
+    }).on('error', (err) => console.log('Redis Cluster Error', err));
 
 var MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient("mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload");
@@ -61,6 +44,34 @@ const animalFact = database.collection('animalFact');
 const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
 let bloomFilter = initBloomFilter();
+
+const createEmailArr = () =>{
+    try{
+        let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
+        return emailArr;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+let emailArr = createEmailArr();
+
+const initBloomFilter = () => {
+    await cluster.connect();
+    
+    // Delete any pre-existing Bloom Filter
+    await cluster.del('emailBloom');
+        
+    // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
+    await cluster.bf.reserve('emailBloom', 0.01, 1000);
+    console.log('Reserved Bloom Filter.');
+        
+    // Add multiple items to Bloom Filter at once with BF.MADD command
+    await cluster.bf.mAdd('emailBloom', emailArr);
+
+    await cluster.close();
+}
+initBloomFilter();
 
 /* NODEMAILER */
 const transporter = nodemailer.createTransport({
@@ -80,21 +91,27 @@ app.get('/api/', async (req, res) => {
 
 app.post('/api/validateEmail', async (req, res) => {
   try{
+        await cluster.connect();
+      
         /* check whether email exists in bloom filter */
         const emailExists = await bloomFilter.exists('emailBloom', req.body.email);
-        console.log(emailExists)
+        
         if(emailExists){
+            await cluster.close();
             res.status(409).send('Email exists already!');
         }
         else{
+            await cluster.close();
             res.status(200).send('Email does not exist! You can use that email!');
         }
     }
   catch (e) {
         if (e.message.endsWith('item exists')) {
+            await cluster.close();
             console.log('Bloom Filter already reserved.');
         } 
         else {
+            await cluster.close();
             console.log('Error, maybe RedisBloom is not installed?:');
             console.log(e);
         }
