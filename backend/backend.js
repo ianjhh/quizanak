@@ -45,7 +45,7 @@ const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
 let bloomFilter = initBloomFilter();
 
-const createEmailArr = () =>{
+const createEmailArr = async () =>{
     try{
         let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
         return emailArr;
