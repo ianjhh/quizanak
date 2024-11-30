@@ -56,7 +56,7 @@ const createEmailArr = async () =>{
 }
 let emailArr = createEmailArr();
 
-const initBloomFilter = () => {
+const initBloomFilter = async () => {
     await cluster.connect();
     
     // Delete any pre-existing Bloom Filter
