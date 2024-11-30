@@ -47,7 +47,7 @@ const initBloomFilter = async () =>{
     // Add multiple items to Bloom Filter at once with BF.MADD command
     await cluster.bf.mAdd('emailBloom', emailArr);
 
-    return cluster;
+    return cluster.bf;
 }
 
 var MongoClient = require('mongodb').MongoClient;
@@ -60,7 +60,7 @@ const game = database.collection('game');
 const animalFact = database.collection('animalFact');
 const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
-let cluster = initBloomFilter();
+let bloomFilter = initBloomFilter();
 
 /* NODEMAILER */
 const transporter = nodemailer.createTransport({
@@ -81,7 +81,7 @@ app.get('/api/', async (req, res) => {
 app.post('/api/validateEmail', async (req, res) => {
   try{
         /* check whether email exists in bloom filter */
-        const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
+        const emailExists = await bloomFilter.exists('emailBloom', req.body.email);
         console.log(emailExists)
         if(emailExists){
             res.status(409).send('Email exists already!');
