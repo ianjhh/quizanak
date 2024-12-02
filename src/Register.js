@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 import bcrypt from 'bcryptjs';
 
 function Register(props){
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [password2, setPassword2] = useState("");
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [password2, setPassword2] = useState(null);
+    const [email, setEmail] = useState(null);
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
     const navigate = useNavigate();
@@ -75,25 +75,26 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
-                {username.length < 3 && username? <Form.Text className="text-muted">Panjang username tidak boleh kurang dari 3!</Form.Text> : null}
+                {username.length < 3 && username!==null? <Form.Text className="text-muted">Panjang username tidak boleh kurang dari 3!</Form.Text> : null}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
-                {password.length < 8 && password? <Form.Text className="text-muted">Panjang kata sandi tidak boleh kurang dari 8!</Form.Text> : null}
+                {password.length < 8 && password!==null? <Form.Text className="text-muted">Panjang kata sandi tidak boleh kurang dari 8!</Form.Text> : null}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword2">
                 <Form.Label>Ketik Ulang Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword2(e.target.value)}} value={password2} />
-                {(password === password2) || password2 === ''? null : <Form.Text className="text-muted">Kata Sandi tidak cocok!</Form.Text>}
+                {(password === password2) || password2 === null? null : <Form.Text className="text-muted">Kata Sandi tidak cocok!</Form.Text>}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
-                {emailIsValid === true? <Form.Text className="text-muted ">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-muted">Email sudah diambil!</Form.Text> : null)}
+                {emailIsValid === true && email? <Form.Text className="text-muted ">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-muted">Email sudah diambil!</Form.Text> : null)}
+                {email===''? <Form.Text className="text-muted ">Email tidak boleh kosong!</Form.Text> : null}
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
