@@ -93,7 +93,7 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
-                {emailIsValid === true? <Form.Text className="text-muted ">Email bisa digunakan!</Form.Text> : (emailIsValid === false && email!==null? <Form.Text className="text-muted">Email sudah diambil!</Form.Text> : null)}
+                {emailIsValid === true? <Form.Text className="text-muted ">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-muted">Email sudah diambil!</Form.Text> : null)}
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
