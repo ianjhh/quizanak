@@ -9,7 +9,8 @@ function Register(props){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
-    const [password2Msg, setPassword2Msg] = useState("");
+    const [usernameMsg, setUsernameMsg] = useState(null);
+    const [password2Msg, setPassword2Msg] = useState(null);
     const [email, setEmail] = useState("");
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
@@ -66,6 +67,24 @@ function Register(props){
         });
     }
 
+    const validateUsername = (username) =>{
+        if(username.length < 3 && username){
+            setUsernameMsg('Panjang username tidak boleh kurang dari 3!')
+        }
+        else{
+            setUsernameMsg(null)
+        }
+    }
+
+    const validatePassword = (password) =>{
+        if(password.length < 8 && password){
+            setPasswordMsg('Panjang kata sandi tidak boleh kurang dari 8!')
+        }
+        else{
+            setPasswordMsg(null)
+        }
+    }
+
     const validateSamePassword = (password, password2) =>{
         if(password === password2 || password2 === ''){
             setPassword2Msg(null)
@@ -83,14 +102,13 @@ function Register(props){
             <Form>
             <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
-                {username.length < 3 && username? <Form.Text className="text-muted">Panjang username tidak boleh kurang dari 3!</Form.Text> : null}
+                <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} onBlur={()=>{validateUsername(username)}}  value={username} />
+                {usernameMsg}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Kata Sandi</Form.Label>
-                <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
-                {password.length < 8 && password? <Form.Text className="text-muted">Panjang kata sandi tidak boleh kurang dari 8!</Form.Text> : null}
+                <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} onBlur={()=>{validatePassword(password)}} value={password} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword2" onBlur={()=>{validateSamePassword(password, password2)}}>
