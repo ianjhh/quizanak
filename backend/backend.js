@@ -90,17 +90,13 @@ app.get('/api/', async (req, res) => {
 
 app.post('/api/validateEmail', async (req, res) => {
   try{
-        await cluster.connect();
-      
         /* check whether email exists in bloom filter */
         const emailExists = await bloomFilter.exists('emailBloom', req.body.email);
         
         if(emailExists){
-            await cluster.close();
             res.status(409).send('Email exists already!');
         }
         else{
-            await cluster.close();
             res.status(200).send('Email does not exist! You can use that email!');
         }
     }
