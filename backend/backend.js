@@ -44,18 +44,8 @@ const animalFact = database.collection('animalFact');
 const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
 
-const createEmailArr = async () =>{
-    try{
-        let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
-        return emailArr;
-    }
-    catch(e){
-        console.log(e)
-    }
-}
-let emailArr = createEmailArr();
-
 const initBloomFilter = async () => {
+    let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
     await cluster.connect();
     
     // Delete any pre-existing Bloom Filter
