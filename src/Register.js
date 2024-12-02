@@ -10,7 +10,9 @@ function Register(props){
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [usernameMsg, setUsernameMsg] = useState(null);
+    const [passwordMsg, setPasswordMsg] = useState(null);
     const [password2Msg, setPassword2Msg] = useState(null);
+    const [emailMsg, setEmailMsg] = useState(null);
     const [email, setEmail] = useState("");
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
@@ -93,6 +95,18 @@ function Register(props){
             setPassword2Msg('Kata Sandi tidak cocok!')
         }
     }
+
+    const validateEmail = (emailIsValid) =>{
+        if(emailIsValid === true){
+            setEmailMsg('Email bisa digunakan!')
+        }
+        else if (emailIsValid === false){
+            setEmailMsg('Email sudah diambil!')
+        }
+        else{
+            setEmailMsg(null)
+        }
+    }
     
     return(
         <Container className="w-25 mt-5">
@@ -109,6 +123,7 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} onBlur={()=>{validatePassword(password)}} value={password} />
+                {passwordMsg}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword2" onBlur={()=>{validateSamePassword(password, password2)}}>
@@ -119,8 +134,8 @@ function Register(props){
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
-                {emailIsValid === true? <Form.Text className="text-muted ">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-muted">Email sudah diambil!</Form.Text> : null)}
+                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(emailIsValid)}} value={email} />
+                {emailMsg}
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
