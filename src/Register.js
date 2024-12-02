@@ -66,16 +66,6 @@ function Register(props){
                 console.log('Oops ada error!')
             }
         });
-
-        if(emailIsValid === true){
-            setEmailMsg('Email bisa digunakan!')
-        }
-        else if (emailIsValid === false){
-            setEmailMsg('Email sudah diambil!')
-        }
-        else{
-            setEmailMsg(null)
-        }
     }
 
     const validateUsername = (username) =>{
