@@ -53,16 +53,15 @@ function Register(props){
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.status === 200){
-                setEmailIsValid(true)
-            }
-            else if (response.status === 409){
-                setEmailIsValid(false)
-            }
+            setEmailIsValid(true)
         })
         .catch(function (error) {
-            console.log(error);
-            alert(error)
+            if (response.status === 409){
+                setEmailIsValid(false)
+            }
+            else{
+                alert('Oops! Ada Error!')
+            }
         });
     }
     
