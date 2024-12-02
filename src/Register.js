@@ -93,7 +93,7 @@ function Register(props){
                 {password.length < 8 && password? <Form.Text className="text-muted">Panjang kata sandi tidak boleh kurang dari 8!</Form.Text> : null}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword2" onBlur={()=>{validateSamePassword(password)}}>
+            <Form.Group className="mb-3" controlId="formBasicPassword2" onBlur={()=>{validateSamePassword(password, password2)}}>
                 <Form.Label>Ketik Ulang Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword2(e.target.value)}} value={password2} />
                 {password2Msg}
