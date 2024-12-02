@@ -12,7 +12,6 @@ function Register(props){
     const [usernameMsg, setUsernameMsg] = useState(null);
     const [passwordMsg, setPasswordMsg] = useState(null);
     const [password2Msg, setPassword2Msg] = useState(null);
-    const [emailMsg, setEmailMsg] = useState(null);
     const [email, setEmail] = useState("");
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
@@ -133,7 +132,7 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
-                {emailMsg}
+                {emailIsValid === true? <Form.Text className="text-muted ">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-muted">Email sudah diambil!</Form.Text> : null)}
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
