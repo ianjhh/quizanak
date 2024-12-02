@@ -67,6 +67,16 @@ function Register(props){
                 console.log('Oops ada error!')
             }
         });
+
+        if(emailIsValid === true){
+            setEmailMsg('Email bisa digunakan!')
+        }
+        else if (emailIsValid === false){
+            setEmailMsg('Email sudah diambil!')
+        }
+        else{
+            setEmailMsg(null)
+        }
     }
 
     const validateUsername = (username) =>{
@@ -93,18 +103,6 @@ function Register(props){
         }
         else{
             setPassword2Msg('Kata Sandi tidak cocok!')
-        }
-    }
-
-    const validateEmailBrowser = (emailIsValid) =>{
-        if(emailIsValid === true){
-            setEmailMsg('Email bisa digunakan!')
-        }
-        else if (emailIsValid === false){
-            setEmailMsg('Email sudah diambil!')
-        }
-        else{
-            setEmailMsg(null)
         }
     }
     
@@ -134,7 +132,7 @@ function Register(props){
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmailBrowser(emailIsValid)}} value={email} />
+                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
                 {emailMsg}
             </Form.Group>
     
