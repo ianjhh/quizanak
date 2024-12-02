@@ -56,7 +56,12 @@ function Register(props){
             setEmailIsValid(true)
         })
         .catch(function (e) {
-            alert(e.status)
+            if(e.response && e.response.status === 409){
+                setEmailIsValid(false)
+            }
+            else{
+                console.log('Oops ada error!')
+            }
         });
     }
     
