@@ -45,7 +45,7 @@ const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
 
 const initBloomFilter = async () => {
-    let emailArr = await credentials.find({}, {_id: 0, email: 1}).toArray();
+    let emailArr = await credentials.find({}, {projection: {_id: 0, email: 1}}).toArray();
     await cluster.connect();
     
     // Delete any pre-existing Bloom Filter
