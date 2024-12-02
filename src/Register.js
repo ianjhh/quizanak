@@ -60,7 +60,7 @@ function Register(props){
                 setEmailIsValid(false)
             }
             else{
-                alert('Oops! Ada Error!)
+                alert('Oops! Ada Error!')
             }
         });
     }
