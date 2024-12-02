@@ -63,7 +63,7 @@ function Register(props){
                 setEmailIsValid(false)
             }
             else{
-                console.log('Oops ada error!')
+                alert('Oops ada error!')
             }
         });
     }
@@ -104,25 +104,25 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} onBlur={()=>{validateUsername(username)}}  value={username} />
-                {usernameMsg}
+                <Form.Text className="text-danger">{usernameMsg}</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} onBlur={()=>{validatePassword(password)}} value={password} />
-                {passwordMsg}
+                <Form.Text className="text-danger">{passwordMsg}</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword2" onBlur={()=>{validateSamePassword(password, password2)}}>
                 <Form.Label>Ketik Ulang Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword2(e.target.value)}} value={password2} />
-                {password2Msg}
+                <Form.Text className="text-danger">{password2Msg}</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
-                {emailIsValid === true? <Form.Text className="text-muted ">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-muted">Email sudah diambil!</Form.Text> : null)}
+                {emailIsValid === true? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : null)}
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
