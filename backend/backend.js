@@ -64,11 +64,9 @@ const initBloomFilter = async () => {
     // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
     await cluster.bf.reserve('emailBloom', 0.01, 1000);
     console.log('Reserved Bloom Filter.');
-        
+    console.log('hellloooooooooo')
     // Add multiple items to Bloom Filter at once with BF.MADD command
     await cluster.bf.mAdd('emailBloom', emailArr);
-
-    console.log(cluster.bf)
 
     await cluster.close();
 }
