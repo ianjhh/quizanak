@@ -142,6 +142,7 @@ function Register(props){
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
                 {emailIsValid === true? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : null)}
+                <Form.Text className="text-danger">{emailMsg}</Form.Text>
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
