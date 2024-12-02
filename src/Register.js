@@ -16,6 +16,7 @@ function Register(props){
     const [email, setEmail] = useState("");
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
+    const [correctEmailFormat, setCorrectEmailFormat] = useState(true);
     const navigate = useNavigate();
 
     const validateEmailFormat = (email) => {
@@ -63,11 +64,11 @@ function Register(props){
         let validEmail = validateEmailFormat(email)
 
         if(!validEmail){
-            setEmailMsg('Format Email salah!')
+            setCorrectEmailFormat(false)
             return;
         }
         else{
-            setEmailMsg(null)
+            setCorrectEmailFormat(true)
         }
         
         axios.post('/api/validateEmail', {
@@ -141,8 +142,7 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
-                {emailIsValid === true? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : null)}
-                <Form.Text className="text-danger">{emailMsg}</Form.Text>
+                {emailIsValid === true && correctEmailFormat? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false && correctEmailFormat? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : (!correctEmailFormat? <Form.Text className="text-danger">Format Email salah!</Form.Text> : null)}
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
