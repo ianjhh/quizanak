@@ -106,11 +106,9 @@ app.post('/api/validateEmail', async (req, res) => {
     }
   catch (e) {
         if (e.message.endsWith('item exists')) {
-            await cluster.close();
             console.log('Bloom Filter already reserved.');
         } 
         else {
-            await cluster.close();
             console.log('Error, maybe RedisBloom is not installed?:');
             console.log(e);
         }
