@@ -45,21 +45,25 @@ const spaceFact = database.collection('spaceFact');
 const historyFact = database.collection('historyFact');
 
 const initBloomFilter = async () => {
-    let emailArr = await credentials.distinct("email");
-    await cluster.connect();
-    
-    // Delete any pre-existing Bloom Filter
-    await cluster.del('emailBloom');
+    try{
+        let emailArr = await credentials.distinct("email");
+        await cluster.connect();
         
-    // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
-    await cluster.bf.reserve('emailBloom', 0.01, 1000);
-    console.log('Reserved Bloom Filter.');
-    console.log(emailArr)
+        // Delete any pre-existing Bloom Filter
+        await cluster.del('emailBloom');
+            
+        // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
+        await cluster.bf.reserve('emailBloom', 0.01, 1000);
+        console.log('Reserved Bloom Filter.');
+        
+        // Add multiple items to Bloom Filter at once with BF.MADD command
+        await cluster.bf.mAdd('emailBloom', emailArr);
     
-    // Add multiple items to Bloom Filter at once with BF.MADD command
-    await cluster.bf.mAdd('emailBloom', emailArr);
-
-    await cluster.close();
+        await cluster.close();
+    }
+    catch(e){
+        console.log(e)
+    }
 }
 initBloomFilter();
 
