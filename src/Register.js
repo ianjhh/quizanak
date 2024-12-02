@@ -71,7 +71,7 @@ function Register(props){
             setPassword2Msg(null)
         }
         else{
-            setPassword2Msg(Kata Sandi tidak cocok!)
+            setPassword2Msg('Kata Sandi tidak cocok!')
         }
     }
     
