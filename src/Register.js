@@ -12,10 +12,19 @@ function Register(props){
     const [usernameMsg, setUsernameMsg] = useState(null);
     const [passwordMsg, setPasswordMsg] = useState(null);
     const [password2Msg, setPassword2Msg] = useState(null);
+    const [emailMsg, setEmailMsg] = useState(null);
     const [email, setEmail] = useState("");
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
     const navigate = useNavigate();
+
+    const validateEmailFormat = (email) => {
+      return String(email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
 
     const handleRegister = () =>{
         const saltRounds = 11;
@@ -51,6 +60,16 @@ function Register(props){
     }
 
     const validateEmail = (email) =>{
+        let validEmail = validateEmailFormat(email)
+
+        if(!validEmail){
+            setEmailMsg('Format Email salah!')
+            return;
+        }
+        else{
+            setEmailMsg(null)
+        }
+        
         axios.post('/api/validateEmail', {
             email: email,
         })
