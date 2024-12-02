@@ -96,7 +96,7 @@ function Register(props){
         }
     }
 
-    const validateEmail = (emailIsValid) =>{
+    const validateEmailBrowser = (emailIsValid) =>{
         if(emailIsValid === true){
             setEmailMsg('Email bisa digunakan!')
         }
@@ -134,7 +134,7 @@ function Register(props){
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(emailIsValid)}} value={email} />
+                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmailBrowser(emailIsValid)}} value={email} />
                 {emailMsg}
             </Form.Group>
     
