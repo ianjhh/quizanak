@@ -9,6 +9,7 @@ function Register(props){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
+    const [password2Msg, setPassword2Msg] = useState("");
     const [email, setEmail] = useState("");
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
@@ -64,6 +65,15 @@ function Register(props){
             }
         });
     }
+
+    const validateSamePassword = (password, password2) =>{
+        if(password === password2 || password2 === ''){
+            setPassword2Msg(null)
+        }
+        else{
+            setPassword2Msg(Kata Sandi tidak cocok!)
+        }
+    }
     
     return(
         <Container className="w-25 mt-5">
@@ -83,10 +93,10 @@ function Register(props){
                 {password.length < 8 && password? <Form.Text className="text-muted">Panjang kata sandi tidak boleh kurang dari 8!</Form.Text> : null}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword2">
+            <Form.Group className="mb-3" controlId="formBasicPassword2" onBlur={()=>{validateSamePassword(password)}}>
                 <Form.Label>Ketik Ulang Kata Sandi</Form.Label>
                 <Form.Control type="password" onChange={(e)=>{setPassword2(e.target.value)}} value={password2} />
-                {(password === password2) || password2 === ''? null : <Form.Text className="text-muted">Kata Sandi tidak cocok!</Form.Text>}
+                {password2Msg}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
