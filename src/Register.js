@@ -10,6 +10,7 @@ function Register(props){
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [email, setEmail] = useState("");
+    const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
     const navigate = useNavigate();
 
@@ -53,10 +54,10 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
-                alert('email is valid!')
+                setEmailIsValid(true)
             }
             else if (response.status === 409){
-                alert('email exists already!')
+                setEmailIsValid(false)
             }
         })
         .catch(function (error) {
@@ -92,6 +93,7 @@ function Register(props){
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
+                {emailIsValid === true? <Form.Text className="text-muted">Email bisa digunakan!</Form.Text> : <Form.Text className="text-muted">Email sudah diambil!</Form.Text>
             </Form.Group>
     
             <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
