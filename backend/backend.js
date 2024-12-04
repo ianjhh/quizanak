@@ -10,6 +10,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 var redis = require("redis")
 const CryptoJS = require('crypto-js')
+const crypto = require('crypto')
 app.use(cookieParser());
 app.use(cors());
     
@@ -146,7 +147,7 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/register', async (req, res) => {
     try{
           let data = req.body;
-          let verificationCode = CryptoJS.randomInt(1000_000).toString().padStart(6, '0');
+          let verificationCode = crypto.randomInt(1000_000).toString().padStart(6, '0');
             
           const mailOptions = {
             from: "ianjhh.102@gmail.com",
