@@ -35,7 +35,7 @@ function Register(props){
             return;
         }
 
-      /* generate password hash *
+      /* generate password hash */
       bcrypt
       .genSalt(saltRounds)
       .then(salt => {
