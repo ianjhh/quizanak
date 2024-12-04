@@ -390,7 +390,7 @@ app.post('/api/setVerified', async (req, res) => {
       let verifySuccess = await credentials.findOne({verificationCode: req.body.verificationCode}, {projection: {_id: 0, verificationCode: 1}});
 
       if(verifySuccess){
-          let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true}, $unset: {createdAt: "", verificationCode: ""}});  
+          let result = await credentials.updateOne({verificationCode: req.body.verificationCode}, {$set: {verified: true}, $unset: {createdAt: "", verificationCode: ""}});  
           if(!result){
             res.status(404).send('Not found!');
           }
