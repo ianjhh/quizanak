@@ -174,6 +174,7 @@ app.post('/api/register', async (req, res) => {
           })
       
       await credentials.insertOne(data);
+      await cluster.bf.add('emailBloom', result.email);
       res.status(200).json(data);
     }
     catch(e){
@@ -388,13 +389,11 @@ app.post('/api/fetchGame', async (req, res) => {
 
 app.post('/api/setVerified', async (req, res) => {
   try{
-      let result = await credentials.findOneAndUpdate({username: req.body.username}, {$set: {verified: true}, $unset: {createdAt: ""}});
+      let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true}, $unset: {createdAt: ""}});
       if(!result){
         res.status(404).send('Not found!');
       }
       else{
-            await cluster.bf.add('emailBloom', result.email);
-
             jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
               if(err) { 
                   res.status.send('Error!')
