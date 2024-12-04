@@ -152,18 +152,11 @@ app.post('/api/register', async (req, res) => {
           res.status(404).send('User already registered!');
       }
       else{
-          var text = data.username;
-          var key = CryptoJS.enc.Utf8.parse('b75524255a7f54d2726a951bb39204df');
-          var iv  = CryptoJS.enc.Utf8.parse('1583288699248111');
-
-          let enc_username= CryptoJS.AES.encrypt(text, key, {iv: iv});
-          enc_username = enc_username.toString();
-
-          const mailOptions = {
+            const mailOptions = {
             from: "ianjhh.102@gmail.com",
             to: data.email,
-            subject: "Verify your account for WebsiteName by clicking the link below",
-            text: `https://kuisanak.com/verify?q=${enc_username}`
+            subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
+            text: req.body.verificationCode
           };
     
           transporter.sendMail(mailOptions, (error, info) => {
