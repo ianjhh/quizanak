@@ -121,14 +121,13 @@ app.post('/api/resendCode', async (req, res) => {
         let result = await credentials.findOne({name: req.body.username }, {projection: {_id: 0, email: 1}});
 
         if(result){
-        
-            let verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
-            let update = await credentials.updateOne({name: req.body.username}, {$set: {verificationCode: verificationCode}})
+            const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
+            const update = await credentials.updateOne({name: req.body.username}, {$set: {verificationCode: verificationCode}})
             const foundEmail = result.email
     
             const mailOptions = {
                 from: "ianjhh.102@gmail.com",
-                to: foundEmail.email,
+                to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
                 text: ` Kode verifikasi anda adalah:\n${verificationCode}`
             };
@@ -140,7 +139,7 @@ app.post('/api/resendCode', async (req, res) => {
                   console.log("Email sent: ", info.response);
                 }
               })
-              res.status(200).json(result);
+              res.status(200).send('Successfully resent email!')
         }
         else{
             res.status(404).send('Not found!')
