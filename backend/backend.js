@@ -59,7 +59,7 @@ const initBloomFilter = async () => {
         // Add multiple items to Bloom Filter at once with BF.MADD command
         await cluster.bf.mAdd('emailBloom', emailArr);
     
-        await cluster.close();
+        //await cluster.close();
     }
     catch(e){
         console.log(e)
