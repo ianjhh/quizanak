@@ -146,7 +146,6 @@ app.post('/api/resendCode', async (req, res) => {
         }
     }
     catch(e){
-        console.log('HELLOOOOOOOO')
         console.log(e)
         res.status(400).send('Error!')
     }
