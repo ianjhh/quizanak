@@ -118,8 +118,7 @@ app.post('/api/validateEmail', async (req, res) => {
 
 app.post('/api/resendCode', async (req, res) => {
     try{
-        let result = await credentials.findOne({name: req.body.username }, {projection: {_id: 0, email: 1}});
-        console.log(req.body.username)
+        let result = await credentials.findOne({username: req.body.username }, {projection: {_id: 0, email: 1}});
 
         if(result){
             const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
