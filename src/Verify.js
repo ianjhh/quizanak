@@ -57,14 +57,16 @@ function Verify(props){
     return(
         <>
             {!verified?
-            <h3>Masukin kode verifikasi dari email dibawah</h3>
-            <Form.Group className="mb-3" controlId="formVerificationCode">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control type="text" onChange={(e)=>{setCode(e.target.value)}} value={code} />
-            </Form.Group>
-    
-            <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>
-            <Button variant="danger" type="link" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
+            <>
+                <h3>Masukin kode verifikasi dari email dibawah</h3>
+                <Form.Group className="mb-3" controlId="formVerificationCode">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control type="text" onChange={(e)=>{setCode(e.target.value)}} value={code} />
+                </Form.Group>
+        
+                <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>
+                <Button variant="danger" type="link" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
+            </>
             : <h3>Akun telah diverifikasi!</h3>}
         </>
     )
