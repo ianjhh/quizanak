@@ -147,7 +147,7 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/register', async (req, res) => {
     try{
           let data = req.body;
-          let verificationCode = crypto.randomInt(1000_000).toString().padStart(6, '0');
+          let verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
             
           const mailOptions = {
             from: "ianjhh.102@gmail.com",
