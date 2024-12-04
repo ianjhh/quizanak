@@ -30,11 +30,12 @@ function Register(props){
     const handleRegister = () =>{
         const saltRounds = 11;
 
-        if (username.length < 3 || password.length < 8){
+        if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
             alert('Invalid input!')
             return;
         }
 
+      /* generate password hash *
       bcrypt
       .genSalt(saltRounds)
       .then(salt => {
