@@ -48,6 +48,7 @@ function Verify(props){
         }})
         .catch(function (error) {
             console.log('Error!')
+            alert('Oops ada error!')
         });
     }
 
