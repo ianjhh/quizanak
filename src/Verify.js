@@ -47,7 +47,7 @@ function Verify(props){
                 alert('Email telah dikirim!')
         }})
         .catch(function (error) {
-            console.log('Error!')
+            console.log(error)
             alert('Oops ada error!')
         });
     }
