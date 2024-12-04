@@ -143,7 +143,7 @@ app.post('/api/resendCode', async (req, res) => {
               res.status(200).json(result);
         }
         else{
-            res.status(400).send('Error!')
+            res.status(404).send('Not found!')
         }
     }
     catch(e){
