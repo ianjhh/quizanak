@@ -65,7 +65,7 @@ function Verify(props){
     
             <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>
             <Button variant="danger" type="link" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
-            : <h3>Akun telah diverifikasi!</h3>
+            : <h3>Akun telah diverifikasi!</h3>}
         </>
     )
 }
