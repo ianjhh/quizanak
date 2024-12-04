@@ -392,7 +392,11 @@ app.post('/api/setVerified', async (req, res) => {
       if(!result){
         res.status(404).send('Not found!');
       }
-      else{
+      else
+            /* if successfully updated document, then add the corresponding email to bloom filter */
+            let foundDoc = await credentials.findOne({username: data.username}, {projection: {_id: 0, email: 1}});
+            await cluster.bf.add('emailBloom', foundDoc.email);
+
             jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
               if(err) { 
                   res.status.send('Error!')
