@@ -166,6 +166,14 @@ app.post('/api/register', async (req, res) => {
       
           await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode});
           await cluster.bf.add('emailBloom', data.email);
+
+          jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+                  if(err) { 
+                      res.status.send('Error!')
+                  }
+                  res.status(200).cookie('jwt', token).send('Successful!');
+          });
+        
           res.status(200).json(data);
     
 }
