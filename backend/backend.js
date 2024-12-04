@@ -160,7 +160,7 @@ app.post('/api/register', async (req, res) => {
 
           const mailOptions = {
             from: "ianjhh.102@gmail.com",
-            to: req.body.email,
+            to: data.email,
             subject: "Verify your account for WebsiteName by clicking the link below",
             text: `https://kuisanak.com/verify?q=${enc_username}`
           };
@@ -174,7 +174,7 @@ app.post('/api/register', async (req, res) => {
           })
       
       await credentials.insertOne(data);
-      await cluster.bf.add('emailBloom', result.email);
+      await cluster.bf.add('emailBloom', data.email);
       res.status(200).json(data);
     }
     catch(e){
