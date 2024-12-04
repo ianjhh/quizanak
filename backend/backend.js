@@ -145,14 +145,10 @@ app.post('/api/login', async (req, res) => {
 
 app.post('/api/register', async (req, res) => {
     try{
-      let data = req.body;
-      let found = await credentials.findOne({username: data.username});
-
-      if (found){
-          res.status(404).send('User already registered!');
-      }
-      else{
-            const mailOptions = {
+          let data = req.body;
+          let verificationCode = randomInt(1000_000).toString().padStart(6, '0');
+            
+          const mailOptions = {
             from: "ianjhh.102@gmail.com",
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
@@ -167,10 +163,10 @@ app.post('/api/register', async (req, res) => {
             }
           })
       
-          await credentials.insertOne(data);
+          await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode});
           await cluster.bf.add('emailBloom', data.email);
           res.status(200).json(data);
-    }
+    
 }
     catch(e){
       res.status(400).send('Error!')
