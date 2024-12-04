@@ -151,11 +151,12 @@ app.post('/api/register', async (req, res) => {
       if (found){
           res.status(404).send('User already registered!');
       }
+      else{
           var text = data.username;
           var key = CryptoJS.enc.Utf8.parse('b75524255a7f54d2726a951bb39204df');
           var iv  = CryptoJS.enc.Utf8.parse('1583288699248111');
 
-          var enc_username= CryptoJS.AES.encrypt(text, key, {iv: iv});
+          let enc_username= CryptoJS.AES.encrypt(text, key, {iv: iv});
           enc_username = enc_username.toString();
 
           const mailOptions = {
@@ -173,10 +174,11 @@ app.post('/api/register', async (req, res) => {
             }
           })
       
-      await credentials.insertOne(data);
-      await cluster.bf.add('emailBloom', data.email);
-      res.status(200).json(data);
+          await credentials.insertOne(data);
+          await cluster.bf.add('emailBloom', data.email);
+          res.status(200).json(data);
     }
+}
     catch(e){
       res.status(400).send('Error!')
       console.log(e)
