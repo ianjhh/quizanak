@@ -52,7 +52,7 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             alert('Link verifikasi akun telah dikirim kepada email anda!')
-            navigate('/')
+            navigate('/verify')
         })
         .catch(function (error) {
             alert(error);
