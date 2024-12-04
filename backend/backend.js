@@ -90,7 +90,7 @@ app.post('/api/validateEmail', async (req, res) => {
         
         if(emailExists){
             /* cross check with database since it could be false positive */
-            let found = await credentials.findOne({username: req.body.username}, {projection: {_id: 0, username: 1}});
+            let found = await credentials.findOne({email: req.body.email}, {projection: {_id: 0, email: 1}});
 
             if(found){
                 res.status(409).send('Email exists already!');
