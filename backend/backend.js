@@ -124,8 +124,6 @@ app.post('/api/resendCode', async (req, res) => {
             const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
             const update = await credentials.updateOne({name: req.body.username}, {$set: {verificationCode: verificationCode}})
             const foundEmail = result.email
-            console.log(update)
-            console.log(foundEmail)
     
             const mailOptions = {
                 from: "ianjhh.102@gmail.com",
@@ -148,6 +146,7 @@ app.post('/api/resendCode', async (req, res) => {
         }
     }
     catch(e){
+        console.log('HELLOOOOOOOO')
         console.log(e)
         res.status(400).send('Error!')
     }
