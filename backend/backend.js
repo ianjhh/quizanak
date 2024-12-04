@@ -89,7 +89,16 @@ app.post('/api/validateEmail', async (req, res) => {
         const emailExists = await cluster.bf.exists('emailBloom', req.body.email);
         
         if(emailExists){
-            res.status(409).send('Email exists already!');
+            /* cross check with database since it could be false positive */
+            let found = await credentials.findOne({username: req.body.username}, {projection: {_id: 0, username: 1}});
+
+            if(found){
+                res.status(409).send('Email exists already!');
+            }
+            else{
+                /* update bloom filter to make it up-to-date with db */
+                res.status(200).send('Email does not exist! You can use that email!');
+            }
         }
         else{
             res.status(200).send('Email does not exist! You can use that email!');
