@@ -382,18 +382,24 @@ app.post('/api/fetchGame', async (req, res) => {
 
 app.post('/api/setVerified', async (req, res) => {
   try{
-      let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true}, $unset: {createdAt: ""}});
-      console.log(req.body.username)
-      if(!result){
-        res.status(404).send('Not found!');
+      let verifySuccess = await credentials.findOne({verificationCode: req.body.verificationCode}, {projection: {_id: 0, verificationCode: 1}});
+
+      if(verifySuccess){
+          let result = await credentials.updateOne({username: req.body.username}, {$set: {verified: true}, $unset: {createdAt: "", verificationCode: ""}});  
+          if(!result){
+            res.status(404).send('Not found!');
+          }
+          else{
+                jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+                  if(err) { 
+                      res.status.send('Error!')
+                  }
+                res.status(200).cookie('jwt', token).send('Successful!');
+            });
+          }
       }
       else{
-            jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
-              if(err) { 
-                  res.status.send('Error!')
-              }
-            res.status(200).cookie('jwt', token).send('Successful!');
-        });
+          res.status(404).send('Wrong verification code!');
       }
   }   
   catch(e){
