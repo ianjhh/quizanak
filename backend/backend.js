@@ -392,7 +392,7 @@ app.post('/api/setVerified', async (req, res) => {
       if(!result){
         res.status(404).send('Not found!');
       }
-      else
+      else{
             await cluster.bf.add('emailBloom', result.email);
 
             jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
