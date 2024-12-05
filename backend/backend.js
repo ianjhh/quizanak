@@ -167,7 +167,7 @@ app.post('/api/login', async (req, res) => {
             if(err) { 
                 res.status.send('Error!')
             }
-          res.status(200).cookie('jwt', token).send('Successful!');
+          res.status(200).cookie('jwt', token).send({verified: result.verified});
       });
       }
     });
@@ -259,6 +259,7 @@ app.get('/api/verifyToken', async (req, res) => {
               //If token is successfully verified, we can send the authorized data 
               res.status(200).json({
                   message: 'Successful log in',
+                  verified: true,
                   authorizedData
               });
           }
