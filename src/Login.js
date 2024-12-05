@@ -13,7 +13,12 @@ function Login(props){
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            navigate('/')
+            if (response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
             console.log(error);
@@ -27,7 +32,12 @@ function Login(props){
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            navigate('/')
+            if(response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
             console.log(error);
