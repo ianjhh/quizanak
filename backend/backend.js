@@ -154,7 +154,6 @@ app.post('/api/resendCode', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try{
     let result = await credentials.findOne({username: req.body.username});
-      console.log(result)
     if(!result){
       res.status(404).send('Not found!');
     }
@@ -169,7 +168,7 @@ app.post('/api/login', async (req, res) => {
                 res.status.send('Error!')
             }
           
-          res.status(200).cookie('jwt', token).send({verified: result.verified});
+          res.status(200).cookie('jwt', token).json({verified: result.verified});
       });
       }
     });
