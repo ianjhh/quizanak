@@ -12,7 +12,6 @@ function Login(props){
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
-            alert(response.data.verified)
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
                 navigate('/')
@@ -33,6 +32,7 @@ function Login(props){
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            alert(response.data.verified)
             if(response.data.verified === true){
                 navigate('/')
             }
