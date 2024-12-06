@@ -21,7 +21,7 @@ function Login(props){
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!')
         });
     }
 
@@ -32,7 +32,6 @@ function Login(props){
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            console.log(response.data)
             if(response.data.verified === true){
                 navigate('/')
             }
@@ -41,7 +40,7 @@ function Login(props){
             }
         })
         .catch(function (error) {
-            console.log('Error');
+            console.log('Error!');
         });
     }
 
