@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Navapp from './Navapp';
 import axios from 'axios';
 import { Container, Row, Button } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Confetti from 'react-confetti';
 import useWindowDimensions from './WindowDimensions';
 import Footer from './Footer';
@@ -25,6 +25,7 @@ function Quiz(props){
     const location = useLocation();
     const quizName = location.pathname.split('/')[2];
     const { height, width } = useWindowDimensions();
+    const navigate = useNavigate();
 
     function shuffle(array) {
         let currentIndex = array.length;
@@ -47,16 +48,17 @@ function Quiz(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
-                navigate('/')
+                setIsLoggedIn(true)
             }
             else{
                 navigate('/verify')
             }
         })
         .catch(function (error) {
-            console.log('Error!')
+            navigate('/login')
+            console.log('Not Logged In!')
         });
-    }
+}
 
     const fetchQuiz = () =>{
         axios.post('/api/fetchQuiz', {
