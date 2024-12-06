@@ -13,16 +13,21 @@ function Verify(props){
     const [username, setUsername] = useState("");
     const navigate = useNavigate();
 
-    const verifyToken = async () =>{
+    const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            setIsLoggedIn(true)
-            setUsername(response.data.authorizedData.username)
+            if (response.data.verified === true){
+                setIsLoggedIn(true)
+                setUsername(response.data.authorizedData.username)
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
             navigate('/login')
-            console.log(error);
+            console.log('Error!')
         });
     }
 
