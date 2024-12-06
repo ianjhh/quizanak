@@ -31,7 +31,7 @@ function Register(props){
             }
         })
         .catch(function (error) {
-            console.log('Not Logged In!')
+            console.log(error.response.status)
         });
     }
 
@@ -72,10 +72,10 @@ function Register(props){
             navigate('/verify')
         })
         .catch(function (error) {
-            console.log('error');
+            console.log(error.response.status);
         });
       })
-      .catch(err => console.log('error'))
+      .catch(error => console.log(error.response.status))
     }
 
     const validateEmail = (email) =>{
