@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoggedInNav from './LoggedInNav';
 import Navapp from './Navapp';
+import { useNavigate } from "react-router-dom";
 
 function AboutUs(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
