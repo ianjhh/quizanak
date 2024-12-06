@@ -50,7 +50,7 @@ function Home(props){
             }
         })
         .catch(function (error) {
-            alert('Username atau kata sandi salah!')
+            alert(error.response.data)
         });
     }
 
