@@ -17,30 +17,38 @@ function Home(props){
     const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
     const navigate = useNavigate();
 
-    const verifyToken = async () =>{
+    const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            setIsLoggedIn(true)
-            setUsername(response.data.authorizedData.username)
-            fetchHistory(response.data.authorizedData.username)
+            if (response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!')
         });
     }
 
-    const handleLogin = async () =>{
+   const handleLogin = () =>{
         axios.post('/api/login', {
             username: username,
             password: password
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            window.location.reload()
+            if(response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!');
         });
     }
 
