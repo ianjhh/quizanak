@@ -41,7 +41,7 @@ const Stacker = () =>{
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
