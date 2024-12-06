@@ -47,7 +47,7 @@ function HistoryFacts(props){
                 navigate('/verify')
             }
         })
-        .catch(function ('error') {
+        .catch(function (error) {
             console.log('Error!');
         });
     }
