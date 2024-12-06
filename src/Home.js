@@ -49,7 +49,7 @@ function Home(props){
                 navigate('/verify')
             }
         })
-        .catch(function ('error') {
+        .catch(function (error) {
             alert('Username atau kata sandi salah!')
         });
     }
@@ -64,8 +64,8 @@ function Home(props){
                 setHistoryList(response.data.reverse())
             }
         })
-        .catch(function ('error') {
-            console.log(error);
+        .catch(function (error) {
+            console.log('error');
         });
     }
 
