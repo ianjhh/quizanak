@@ -23,7 +23,7 @@ function Verify(props){
         })
         .catch(function (error) {
             navigate('/login')
-            console.log('Not Logged In!')
+            console.log(error.response.status)
         });
 }
 
@@ -35,8 +35,8 @@ function Verify(props){
                 setVerified(true)
         }})
         .catch(function (error) {
-            alert('Error!')
-            console.log('error');
+            alert(error.response.data)
+            console.log(error.response.status);
         });
     }
 
@@ -48,8 +48,8 @@ function Verify(props){
                 alert('Email telah dikirim!')
         }})
         .catch(function (error) {
-            console.log('Error!')
-            alert('Oops ada error!')
+            console.log(error.response.status)
+            alert(error.response.data)
         });
     }
 
