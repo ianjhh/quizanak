@@ -29,7 +29,7 @@ function AnimalFacts(props){
             }
         })
         .catch(function (error) {
-            console.log('Not Logged In!')
+            console.log(error.response.status)
         });
 }
 
@@ -48,7 +48,7 @@ function AnimalFacts(props){
             }
         })
         .catch(function (error) {
-            console.log('Error!');
+            console.log(error.response.status);
         });
     }
 
@@ -61,7 +61,7 @@ function AnimalFacts(props){
             }
         })
         .catch(function (error) {
-            console.log('error');
+            console.log(error.response.status);
         });
     }
 
