@@ -13,14 +13,14 @@ function AboutUs(){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
-                navigate('/')
+                setIsLoggedIn(true)
             }
             else{
                 navigate('/verify')
             }
         })
         .catch(function (error) {
-            console.log('Error!')
+            console.log('Not Logged In!')
         });
     }
 
