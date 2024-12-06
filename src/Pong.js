@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import LoggedInNav from './LoggedInNav';
 import Navapp from './Navapp';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import './Pong.css';
 
@@ -11,6 +11,7 @@ function Pong(){
 const [gameStarted, setGameStarted] = useState(false);
 const location = useLocation();
 const gameName = location.pathname.split('/')[2];
+const navigate = useNavigate();
 
 const [isLoggedIn, setIsLoggedIn] = useState(false);
     const verifyToken = () =>{
