@@ -42,7 +42,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
