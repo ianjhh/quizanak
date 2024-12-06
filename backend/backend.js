@@ -122,7 +122,7 @@ app.post('/api/resendCode', async (req, res) => {
 
         if(result){
             const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
-            const update = await credentials.updateOne({username: req.body.username}, {$set: {verificationCode: verificationCode, codeCreatedAt: new Date()}})
+            const update = await credentials.updateOne({username: req.body.username}, {$set: {verificationCode: verificationCode, codeCreatedAt: new Date().getTime()}})
             const foundEmail = result.email
     
             const mailOptions = {
@@ -198,7 +198,7 @@ app.post('/api/register', async (req, res) => {
             }
           })
       
-          await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode, codeCreatedAt: new Date()});
+          await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode, codeCreatedAt: new Date().getTime()});
           await cluster.bf.add('emailBloom', data.email);
 
           jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
