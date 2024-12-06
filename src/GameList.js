@@ -15,6 +15,7 @@ function GameList(props){
     const [password, setPassword] = useState("");
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [errMsg, setErrMsg] = useState("");
     const navigate = useNavigate();
 
    const verifyToken = () =>{
@@ -48,7 +49,7 @@ function GameList(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            setErrMsg(error.response.data);
         });
     }
 
@@ -84,9 +85,7 @@ function GameList(props){
                                 <Form.Label>Kata Sandi</Form.Label>
                                 <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Ingat Saya" />
-                            </Form.Group>
+                            <Form.Text className="text-danger">{errMsg}</Form.Text>
                             <Button variant="primary" type="button" onClick={handleLogin}>
                                 Masuk
                             </Button>
