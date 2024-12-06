@@ -427,7 +427,7 @@ app.post('/api/setVerified', async (req, res) => {
       if(verifySuccess){
           /* if verification code expired */
           if ((verifySuccess.codeCreatedAt + 86400000) >= new Date().getTime()){
-              res.status(400).send('Code Expired!')
+              res.status(498).send('Code Expired!')
           }
           
           let result = await credentials.updateOne({verificationCode: req.body.verificationCode}, {$set: {verified: true}, $unset: {createdAt: "", verificationCode: "", codeCreatedAt: ""}});  
