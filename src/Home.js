@@ -30,7 +30,7 @@ function Home(props){
                 navigate('/verify')
             }
         })
-        .catch(function ('error') {
+        .catch(function (error) {
             console.log('Not Logged In!')
         });
 }
