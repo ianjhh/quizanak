@@ -17,28 +17,38 @@ function AnimalFacts(props){
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
 
-    const verifyToken = () =>{
+   const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            setIsLoggedIn(true)
+            if (response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!')
         });
     }
 
-    const handleLogin = () =>{
+   const handleLogin = () =>{
         axios.post('/api/login', {
             username: username,
             password: password
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            navigate('/')
+            if(response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!');
         });
     }
 
