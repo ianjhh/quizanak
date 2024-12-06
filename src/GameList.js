@@ -17,21 +17,21 @@ function GameList(props){
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
 
-    const verifyToken = () =>{
+   const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
-                navigate('/')
+                setIsLoggedIn(true)
             }
             else{
                 navigate('/verify')
             }
         })
         .catch(function (error) {
-            console.log('Error!')
+            console.log('Not Logged In!')
         });
-    }
+}
 
      const handleLogin = () =>{
         axios.post('/api/login', {
@@ -61,7 +61,7 @@ function GameList(props){
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
