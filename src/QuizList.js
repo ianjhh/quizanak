@@ -51,7 +51,7 @@ function QuizList(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            alert(error.response.data);
         });
     }
 
