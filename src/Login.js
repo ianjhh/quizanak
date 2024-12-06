@@ -40,6 +40,7 @@ function Login(props){
             }
         })
         .catch(function (error) {
+            alert('Oops ada error!')
             console.log(error.response.status);
         });
     }
