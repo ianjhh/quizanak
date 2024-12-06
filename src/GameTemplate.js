@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import LoggedInNav from './LoggedInNav';
 import Navapp from './Navapp';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 
 const GameName = () =>{
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const location = useLocation();
     const gameName = location.pathname.split('/')[2];
+    const navigate = useNavigate();
 
    const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
