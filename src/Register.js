@@ -72,10 +72,10 @@ function Register(props){
             navigate('/verify')
         })
         .catch(function (error) {
-            alert(error);
+            console.log('error');
         });
       })
-      .catch(err => console.error(err.message))
+      .catch(err => console.log('error'))
     }
 
     const validateEmail = (email) =>{
