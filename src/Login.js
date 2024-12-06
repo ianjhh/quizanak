@@ -21,7 +21,7 @@ function Login(props){
             }
         })
         .catch(function (error) {
-            console.log('Error!')
+            console.log(error.response.status)
         });
     }
 
@@ -40,7 +40,7 @@ function Login(props){
             }
         })
         .catch(function (error) {
-            console.log('Error!');
+            console.log(error.response.status);
         });
     }
 
