@@ -26,7 +26,7 @@ const SnakeGame = () =>{
         })
         .catch(function (error) {
             navigate('/login')
-            console.log('Not Logged In!')
+            console.log(error.response.status)
         });
 }
 
@@ -41,7 +41,7 @@ const SnakeGame = () =>{
             }
         })
         .catch(function (error) {
-            console.log('error');
+            console.log(error.response.status);
         });
     }
 
