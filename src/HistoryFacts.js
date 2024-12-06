@@ -13,6 +13,7 @@ function HistoryFacts(props){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [historyFacts, setHistoryFacts] = useState([]);
+    const [errMsg, setErrMsg] = useState("");
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
@@ -48,7 +49,7 @@ function HistoryFacts(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            setErrMsg(error.response.data);
         });
     }
 
@@ -84,9 +85,7 @@ function HistoryFacts(props){
                                 <Form.Label>Kata Sandi</Form.Label>
                                 <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Ingat Saya" />
-                            </Form.Group>
+                            <Form.Text className="text-danger">{errMsg}</Form.Text>
                             <Button variant="primary" type="button" onClick={handleLogin}>
                                 Masuk
                             </Button>
