@@ -27,6 +27,7 @@ function SpaceFact(){
             }
         })
         .catch(function (error) {
+            navigate('/login')
             console.log('Not Logged In!')
         });
     }
