@@ -422,9 +422,14 @@ app.post('/api/fetchGame', async (req, res) => {
 
 app.post('/api/setVerified', async (req, res) => {
   try{
-      let verifySuccess = await credentials.findOne({verificationCode: req.body.verificationCode}, {projection: {_id: 0, verificationCode: 1}});
+      let verifySuccess = await credentials.findOne({verificationCode: req.body.verificationCode}, {projection: {_id: 0, verificationCode: 1, codeCreatedAt: 1}});
 
       if(verifySuccess){
+          /* if verification code expired */
+          if ((verifySuccess.codeCreatedAt + 86400000) >= new Date().getTime()){
+              res.status(400).send('Code Expired!')
+          }
+          
           let result = await credentials.updateOne({verificationCode: req.body.verificationCode}, {$set: {verified: true}, $unset: {createdAt: "", verificationCode: "", codeCreatedAt: ""}});  
           if(!result){
             res.status(404).send('Not found!');
