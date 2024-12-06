@@ -22,7 +22,7 @@ function AboutUs(){
             }
         })
         .catch(function (error) {
-            console.log('Not Logged In!')
+            console.log(error.response.status)
         });
     }
 
