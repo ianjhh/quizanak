@@ -14,13 +14,18 @@ const gameName = location.pathname.split('/')[2];
 
 const [isLoggedIn, setIsLoggedIn] = useState(false);
     const verifyToken = () =>{
-        axios.get('/http://localhost:5000/verifyToken', { withCredentials: true })
+        axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            setIsLoggedIn(true)
+            if (response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!')
         });
     }
 
