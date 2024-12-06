@@ -169,7 +169,7 @@ app.post('/api/login', async (req, res) => {
                 console.log(err)
             }
           
-          res.status(200).cookie('jwt', token).send('hello');
+          res.status(200).cookie('jwt', token).json({verified: result.verified});
             
       });
       }
