@@ -18,18 +18,14 @@ function Verify(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
-                setIsLoggedIn(true)
-                setUsername(response.data.authorizedData.username)
-            }
-            else{
-                navigate('/verify')
+                navigate('/')
             }
         })
         .catch(function (error) {
             navigate('/login')
-            console.log('Error!')
+            console.log('Not Logged In!')
         });
-    }
+}
 
     const handleVerify = () =>{
         axios.post('/api/setVerified', {verificationCode: code})
