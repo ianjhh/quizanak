@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import LoggedInNav from './LoggedInNav';
 import Navapp from './Navapp';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import Snake from './Snake.tsx';
 
@@ -11,22 +11,24 @@ const SnakeGame = () =>{
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const location = useLocation();
     const gameName = location.pathname.split('/')[2];
+    const navigate = useNavigate();
 
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
-                navigate('/')
+                setIsLoggedIn(true)
             }
             else{
                 navigate('/verify')
             }
         })
         .catch(function (error) {
-            console.log('Error!')
+            navigate('/login')
+            console.log('Not Logged In!')
         });
-    }
+}
 
     const fetchGame = () =>{
         axios.post('/http://localhost:5000/fetchGame', {
