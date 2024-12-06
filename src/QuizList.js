@@ -24,10 +24,15 @@ function QuizList(props){
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            setIsLoggedIn(true)
+            if (response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!')
         });
     }
 
@@ -38,10 +43,15 @@ function QuizList(props){
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            navigate('/')
+            if(response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('Error!');
         });
     }
 
