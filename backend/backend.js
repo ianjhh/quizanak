@@ -154,11 +154,11 @@ app.post('/api/resendCode', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try{
     let result = await credentials.findOne({username: req.body.username });
-    console.log(result)
     if(!result){
       res.status(404).send('Not found!');
     }
     else{
+        console.log(result)
     bcrypt.compare(req.body.password, result.password, function(err, result) {
       if(result!==true){
           res.status(404).send('Not found!')
