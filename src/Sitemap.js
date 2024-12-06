@@ -64,7 +64,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
@@ -77,7 +77,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
@@ -90,7 +90,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
@@ -103,7 +103,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
@@ -116,7 +116,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log('error');
         });
     }
 
