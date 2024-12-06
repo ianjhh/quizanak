@@ -23,6 +23,8 @@ function Home(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
                 setIsLoggedIn(true)
+                setUsername(response.data.username)
+                fetchHistory(response.data.authorizedData.username)
             }
             else{
                 navigate('/verify')
@@ -41,14 +43,14 @@ function Home(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if(response.data.verified === true){
-                navigate('/')
+                window.location.reload()
             }
             else{
                 navigate('/verify')
             }
         })
         .catch(function (error) {
-            console.log('Error!');
+            alert('Username atau kata sandi salah!')
         });
     }
 
