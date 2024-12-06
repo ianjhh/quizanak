@@ -168,7 +168,7 @@ app.post('/api/login', async (req, res) => {
                 res.status.send('Error!')
                 console.log(err)
             }
-          console.log(result.verified)
+          console.log(result)
           res.status(200).cookie('jwt', token).json({verified: `${result.verified}`});
             
       });
