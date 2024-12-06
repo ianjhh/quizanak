@@ -158,22 +158,18 @@ app.post('/api/login', async (req, res) => {
       res.status(404).send('Not found!');
     }
     else{
-        console.log(result)
     bcrypt.compare(req.body.password, result.password, function(err, result) {
       if(result!==true){
           res.status(404).send('Not found!')
-      }
-      else{
-          jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+      }   
+      });
+      jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
             if(err) { 
                 res.status.send('Error!')
                 console.log(err)
             }
           console.log(result)
           res.status(200).cookie('jwt', token).json({verified: result.verified});
-            
-      });
-      }
     });
   }
 }
