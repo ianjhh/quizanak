@@ -19,6 +19,22 @@ function Register(props){
     const [correctEmailFormat, setCorrectEmailFormat] = useState(true);
     const navigate = useNavigate();
 
+    const verifyToken = () =>{
+        axios.get('/api/verifyToken', { withCredentials: true })
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            if (response.data.verified === true){
+                navigate('/')
+            }
+            else{
+                navigate('/verify')
+            }
+        })
+        .catch(function (error) {
+            console.log('Not Logged In!')
+        });
+    }
+
     const validateEmailFormat = (email) => {
       return String(email)
         .toLowerCase()
