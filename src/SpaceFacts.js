@@ -29,7 +29,7 @@ function SpaceFacts(props){
             }
         })
         .catch(function (error) {
-            console.log('Not Logged In!')
+            console.log(error.response.status)
         });
     }
 
@@ -49,7 +49,7 @@ function SpaceFacts(props){
             }
         })
         .catch(function (error) {
-            console.log('Error!');
+            console.log(error.response.status);
         });
     }
 
@@ -62,7 +62,7 @@ function SpaceFacts(props){
             }
         })
         .catch(function (error) {
-            console.log('error');
+            console.log(error.response.status);
         });
     }
 
