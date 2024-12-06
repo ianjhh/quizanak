@@ -2,7 +2,7 @@ import Navapp from './Navapp';
 import LoggedInNav from './LoggedInNav';
 import { useEffect, useState } from 'react';
 import { Container, Button } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import Footer from './Footer';
 import axios from 'axios';
@@ -13,6 +13,7 @@ function SpaceFact(){
     const [title, setTitle] = useState('');
     const location = useLocation();
     const linkName = location.pathname.split('/')[2];
+    const navigate = useNavigate();
     
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
