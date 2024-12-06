@@ -36,7 +36,7 @@ function Verify(props){
         }})
         .catch(function (error) {
             alert('Error!')
-            console.log(error);
+            console.log('error');
         });
     }
 
