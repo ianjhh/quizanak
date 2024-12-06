@@ -14,7 +14,8 @@ function LoggedInNav(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
         })
         .catch(function (error) {
-            console.log('error');
+            alert(error.response.data)
+            console.log(error.response.status);
         });
     }
 
