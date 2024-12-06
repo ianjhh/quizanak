@@ -155,7 +155,7 @@ app.post('/api/login', async (req, res) => {
   try{
     let result = await credentials.findOne({username: req.body.username });
     if(!result){
-      res.status(404).send('Not found!');
+      res.status(404).send('Username atau kata sandi salah!');
     }
     else{
     bcrypt.compare(req.body.password, result.password, function(err, result) {
