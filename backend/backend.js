@@ -122,7 +122,7 @@ app.post('/api/resendCode', async (req, res) => {
 
         if(result){
             const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
-            const update = await credentials.updateOne({username: req.body.username}, {$set: {verificationCode: verificationCode}})
+            const update = await credentials.updateOne({username: req.body.username}, {$set: {verificationCode: verificationCode, codeCreatedAt: new Date()}})
             const foundEmail = result.email
     
             const mailOptions = {
