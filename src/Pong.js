@@ -27,7 +27,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
         })
         .catch(function (error) {
             navigate('/login')
-            console.log('Not Logged In!')
+            console.log(error.response.status)
         });
 }
 
@@ -42,7 +42,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
             }
         })
         .catch(function (error) {
-            console.log('error');
+            console.log(error.response.status);
         });
     }
 
