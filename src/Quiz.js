@@ -26,22 +26,6 @@ function Quiz(props){
     const quizName = location.pathname.split('/')[2];
     const navigate = useNavigate();
 
-    function shuffle(array) {
-        let currentIndex = array.length;
-      
-        // While there remain elements to shuffle...
-        while (currentIndex !== 0) {
-      
-          // Pick a remaining element...
-          let randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-      
-          // And swap it with the current element.
-          [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]];
-        }
-    }
-
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
@@ -68,7 +52,7 @@ function Quiz(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
                 let arr = response.data.array;
-                shuffle(arr)
+                arr = arr.sort(() => 0.5 - Math.random());
                 setQuizList(arr);
                 setQuizProperty(response.data.title)
                 setQuizImage(response.data.quizImage)
@@ -82,9 +66,7 @@ function Quiz(props){
             .then(function (response) {
                 /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
                 if (response.status === 200){
-                    let responseArr = response.data;
-                    shuffle(responseArr)
-                    responseArr = responseArr.slice(0, 3)
+                    let responseArr = response.data.sort(() => 0.5 - Math.random()).slice(0, 3)
                     setSimilarQuiz(responseArr)
                 }
             })
