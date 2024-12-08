@@ -2,7 +2,7 @@ import LoggedInNav from './LoggedInNav';
 import { useEffect, useState } from 'react';
 import Navapp from './Navapp';
 import axios from 'axios';
-import { Container, Row, Button } from 'react-bootstrap';
+import { Container, Row, Button, Col, Card } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import './Quiz.css';
@@ -21,6 +21,7 @@ function Quiz(props){
     const [isCorrect, setIsCorrect] = useState();
     const [quizImage, setQuizImage] = useState();
     const [username, setUsername] = useState('');
+    const [similarQuiz, setSimilarQuiz] = useState([])
     const location = useLocation();
     const quizName = location.pathname.split('/')[2];
     const navigate = useNavigate();
@@ -71,6 +72,23 @@ function Quiz(props){
                 setQuizProperty(response.data.title)
                 setQuizImage(response.data.quizImage)
             }
+        })
+        .then(function(data){
+            axios.post('/api/fetchSimilarQuiz', {
+                quizName: data.title, category: data.category
+            })
+            .then(function (response) {
+                /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+                if (response.status === 200){
+                    let responseArr = response.data;
+                    shuffle(responseArr)
+                    responseArr = responseArr.slice(0, 3)
+                    setSimilarQuiz(responseArr)
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         })
         .catch(function (error) {
             console.log(error.response.status);
@@ -172,7 +190,23 @@ function Quiz(props){
                         {clickedNext? <>{isCorrect==='Benar'? <p className='fs-5 correctanswer'><i class="bi bi-check"></i>{isCorrect}!</p> : <p className='fs-5 wronganswer'><i className="bi bi-x"></i>{isCorrect}! jawaban yang benar adalah "{quizList[currentQuestion-1].answer}"</p>}<br/><br/><br/><br/><br/><br/><br/><Button variant='primary' className='mb-3 mt-4 fs-5' onClick={handleMoveNextQ}>Next Question</Button></> : null}
                     </>
                     : 
-                    <h1 className='text-center'>Skor Total: <br/>{score}/10</h1>)}
+                    <>
+                        <h1 className='text-center mt-3'>Skor Total: <br/><b>{score}/10</b></h1><br/><br/>
+                        <h3 className='text-center'>Coba juga:</h3>
+                        <Row xs={1} md={3} className="g-4 mb-3">
+                            {similarQuiz.map((item, idx) => (
+                                    <Col key={idx}>
+                                    <Card>
+                                        <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
+                                        <Card.Body>
+                                        <Card.Title>{item.title}</Card.Title>
+                                        <Button variant="primary" onClick={()=>{navigate(`/quiz/${item.name}`)}}>Mulai!</Button>
+                                        </Card.Body>
+                                    </Card>
+                                    </Col>
+                            ))}
+                        </Row><br/>
+                    </>)}
                 </div>
                 </Row>
             </Container><br/><br/>
