@@ -87,7 +87,7 @@ function Quiz(props){
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.status);
             });
         })
         .catch(function (error) {
