@@ -86,7 +86,7 @@ app.get('/api/', async (req, res) => {
 
 app.post('/api/fetchSimilarQuiz', async (req, res) => {
   try{
-      let result = await quiz.find({category: req.body.category, name: {$nin: [req.body.quizName] }}, {projection: {_id: 0, title: 1, quizImage: 1}}).toArray();
+      let result = await quiz.find({category: req.body.category, name: {$nin: [req.body.quizName] }}, {projection: {_id: 0, title: 1, quizImage: 1, name: 1}}).toArray();
       res.status(200).json(result);
   }
   catch(e){
