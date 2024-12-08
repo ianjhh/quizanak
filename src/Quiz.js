@@ -48,6 +48,7 @@ function Quiz(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
                 setIsLoggedIn(true)
+                setUsername(response.data.authorizedData.username)
             }
             else{
                 navigate('/verify')
