@@ -73,6 +73,7 @@ function Quiz(props){
                 setQuizProperty(response.data.title)
                 setQuizImage(response.data.quizImage)
             }
+            return response.data
         })
         .then(function(data){
             axios.post('/api/fetchSimilarQuiz', {
