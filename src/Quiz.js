@@ -4,8 +4,6 @@ import Navapp from './Navapp';
 import axios from 'axios';
 import { Container, Row, Button } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Confetti from 'react-confetti';
-import useWindowDimensions from './WindowDimensions';
 import Footer from './Footer';
 import './Quiz.css';
 
@@ -24,7 +22,6 @@ function Quiz(props){
     const [username, setUsername] = useState('');
     const location = useLocation();
     const quizName = location.pathname.split('/')[2];
-    const { height, width } = useWindowDimensions();
     const navigate = useNavigate();
 
     function shuffle(array) {
@@ -135,11 +132,6 @@ function Quiz(props){
 
     return(
         <div className='bg-warning'>  
-            {quizEnded? <Confetti
-            width={width}
-            height={height}
-            /> : null}
-
             {isLoggedIn? <LoggedInNav /> : <Navapp />}
             <Container className='mt-4'>
                 <Row>
