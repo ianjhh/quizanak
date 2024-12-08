@@ -84,6 +84,17 @@ app.get('/api/', async (req, res) => {
     console.log('hello world')
 })
 
+app.post('/api/fetchSimilarQuiz', async (req, res) => {
+  try{
+      let result = await quiz.find({category: req.body.category, name: {$nin: [req.body.quizName] }}, {projection: {_id: 0, title: 1, quizImage: 1}}).toArray();
+      res.status(200).json(result);
+  }
+  catch(e){
+      console.log(e)
+      res.status(400).send('Error!')
+  }
+})
+
 app.post('/api/validateEmail', async (req, res) => {
   try{
         /* check whether email exists in bloom filter */
