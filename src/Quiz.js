@@ -6,6 +6,7 @@ import { Container, Row, Button } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import './Quiz.css';
+import Spinner from 'react-bootstrap/Spinner';
 
 function Quiz(props){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -139,14 +140,19 @@ function Quiz(props){
                     <Link to='/quiz' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </div>
                 
-                <div className='col-8 rounded quiz-container'>
-                    {!quizStarted? 
-                    <div className='text-center mt-3'>
-                        {quizProperty && quizImage? <><h1 className='mb-3'>Kuis {quizProperty}</h1><img width={300} height={300} src={require(`./${quizImage}.jpg`)} /></> : null}<br/><br/>
-                        <Button variant='primary' className='mb-4 fs-3'
-                        onClick={startQuiz}>
-                        Mulai
-                        </Button>
+                    <div className='col-8 rounded quiz-container'>
+                        {!quizStarted? 
+                        <div className='text-center mt-3'>
+                            {quizProperty && quizImage? 
+                            <>
+                                <h1 className='mb-3'>Quiz {quizProperty}</h1>
+                                <img width={300} height={300} src={require(`./${quizImage}.jpg`)} /><br/><br/>
+                                <Button variant='primary' className='mb-4 fs-3' onClick={startQuiz}>Mulai</Button>
+                            </> 
+                            : 
+                            <><Spinner animation="border" role="status" variant="dark" className='mt-5 mb-5'>
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner></>}
                     </div>
                     :
                     (!quizEnded? <>
