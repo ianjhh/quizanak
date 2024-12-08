@@ -202,7 +202,7 @@ function Quiz(props){
                                         <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                         <Card.Body>
                                         <Card.Title>{item.title}</Card.Title>
-                                        <Button variant="primary" onClick={()=>{navigate(`/quiz/${item.name}`)}}>Mulai!</Button>
+                                        <Button variant="primary" onClick={()=>{navigate(`/quiz/${item.name}`); window.location.reload()}}>Mulai!</Button>
                                         </Card.Body>
                                     </Card>
                                     </Col>
