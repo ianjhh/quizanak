@@ -35,8 +35,8 @@ function LoggedInNav(props){
                         <Link to='/fakta-angkasa'>Angkasa</Link>
                         <Link to='/fakta-sejarah'>Sejarah</Link>
                     </div>
-                    </div>
-                    <NavLink to = '/login'><Button variant="danger" className='login-button' onClick={handleLogout}>Logout</Button></NavLink>
+                    </div>&nbsp;&nbsp;
+                    <NavLink to = '/login'><Button variant="danger" onClick={handleLogout}>Logout</Button></NavLink>
                 </Nav>
                 </Navbar.Collapse>
             </Container>
