@@ -3,9 +3,18 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Link, NavLink } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { useState } from 'react';
 import './Navapp.css';
 
 function Navapp(props){
+    const [show, setShow] = useState(false);
+    const showDropdown = (e)=>{
+        setShow(!show);
+    }
+    const hideDropdown = e => {
+        setShow(false);
+    }
+    
     return (
         <Navbar className="bg-black">
             <Container>
@@ -15,14 +24,11 @@ function Navapp(props){
                 <Nav className="me-auto">
                     <Navbar.Text><NavLink to='/quiz' className='text-white text-decoration-none nav-text'>Kuis</NavLink></Navbar.Text>&nbsp;&nbsp;
                     <Navbar.Text><NavLink to='/games' className='text-white text-decoration-none nav-text'>Games</NavLink></Navbar.Text>&nbsp;&nbsp;
-                    <div className="dropdown mt-2">
-                    <Navbar.Text className="dropbtn text-white text-decoration-none nav-text">Fakta</Navbar.Text>&nbsp;&nbsp;
-                    <div className="dropdown-content">
-                        <Link to='/fakta-binatang'>Binatang</Link>
-                        <Link to='/fakta-angkasa'>Angkasa</Link>
-                        <Link to='/fakta-sejarah'>Sejarah</Link>
-                    </div>
-                    </div>
+                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown}>
+                        <NavDropdown.Item><Link to='/fakta-binatang' className='text-decoration-none text-black'>Binatang</Link></NavDropdown.Item>
+                        <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
+                        <NavDropdown.Item><Link to='/fakta-sejarah' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
+                    </NavDropdown>
                     <Link to ='/register'><Button variant="success">Register</Button></Link>&nbsp;
                     <Link to ='/login'><Button variant="primary">Login</Button></Link>
                 </Nav>
