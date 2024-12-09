@@ -2,6 +2,10 @@
     background-color: red;
 }
 
+.dropdown-menu{
+  margin-top: 0 !important;
+}
+
  /* if not touch screen */
   @media not (hover: none){
     #collapsible-nav-dropdown {
