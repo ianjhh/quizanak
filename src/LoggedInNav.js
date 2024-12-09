@@ -15,6 +15,9 @@ function LoggedInNav(props){
     const hideDropdown = e => {
         setShow(false);
     }
+    const manageShow = () =>{
+        setShow(!show)
+    }
 
     const handleLogout = () =>{
         axios.get('/api/logout', { withCredentials: true })
@@ -36,7 +39,7 @@ function LoggedInNav(props){
                 <Nav className="me-auto">
                     <Navbar.Text><NavLink to='/quiz' className='text-white text-decoration-none nav-text'>Kuis</NavLink></Navbar.Text>&nbsp;&nbsp;
                     <Navbar.Text><NavLink to='/games' className='text-white text-decoration-none nav-text'>Games</NavLink></Navbar.Text>&nbsp;&nbsp;
-                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown}>
+                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown} onClick={manageShow}>
                         <NavDropdown.Item><Link to='/fakta-binatang' className='text-decoration-none text-black'>Binatang</Link></NavDropdown.Item>
                         <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
                         <NavDropdown.Item><Link to='/fakta-sejarah' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
