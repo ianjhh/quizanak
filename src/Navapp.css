@@ -2,11 +2,6 @@
     background-color: red;
 }
 
-.login-button{
-    margin-left: 45vw;
-    margin-right: 6px;
-}
-
  /* if not touch screen */
   @media not (hover: none){
     #collapsible-nav-dropdown {
