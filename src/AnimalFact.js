@@ -59,7 +59,7 @@ function AnimalFact(){
                     <h2 className='mt-3 mb-4'>{title}</h2>
                     <ol>
                     {animalFact.map((item, idx) => (
-                        <li className='mb-4 fs-5'>{item[0]}<br/><img src={require(`./${item[1]}.jpg`)} height={200} /></li>
+                        <li className='mb-4 fs-5'>{item[0]}<br/>{item[1]? <img src={require(`./${item[1]}.jpg`)} height={200} /> : null}</li>
                     ))}
                     </ol>
                     </div>
