@@ -6,3 +6,13 @@
     text-decoration: none;
     color: #008000;
 }
+
+@media only screen and (max-width: 564px){
+    .historylist{
+        display: none;
+    }
+
+    .main-container{
+        width: 300px;
+    }
+}
