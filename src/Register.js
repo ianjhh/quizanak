@@ -134,7 +134,7 @@ function Register(props){
     }
     
     return(
-        <Container className="w-25 mt-5">
+        <Container className="mt-5 col-10 col-sm-7 col-lg-4 col-xl-3">
         <div className="shadow-sm p-3 rounded bg-white">
             <h3 className="text-center">Registrasi akun</h3>
             <br />
