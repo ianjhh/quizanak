@@ -50,7 +50,7 @@ function Login(props){
     }, [])
 
     return(
-        <Container className="w-25 mt-5">
+        <Container className="mt-5 col-9 col-sm-6 col-lg-4 col-xl-3">
         <div className="shadow-sm p-3 rounded bg-white">
             <h3 className="text-center">Login</h3>
             <br />
