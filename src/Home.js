@@ -78,11 +78,11 @@ function Home(props){
                 <br />
                 <Container>
                 <Row>
-                    <div className='col-8 main-container'>
+                    <div className='col-xs-12 col-sm-6 col-md-8'>
                         <h1>Games dan Kuis untuk anak-anak! 🌴</h1>
                         {/* --------------CARDS-------------- */}
 
-                        <Row xs={1} md={2} lg={3} className="g-4">
+                        <Row xs={1} md={2} lg={3} className="g-4 main-container">
                         <Col>
                             <Card>
                                 <Card.Img variant="top" src={img1} height={200} />
@@ -150,7 +150,7 @@ function Home(props){
                 </Row>
 
                     </div>
-                    {!isLoggedIn? <div className='col-4'>
+                    {!isLoggedIn? <div className='col-sm-6 col-md-4'>
                         <div className="shadow-sm p-3 rounded bg-white">
                             <h3 className="text-center">Login</h3>
                             <br />
@@ -171,7 +171,7 @@ function Home(props){
                             <p className='mt-3'>Belum daftar? <Link to='/register' className='text-decoration-none'>Buat akun baru</Link></p>
                         </div>
                     </div> : 
-                        <div className='col-4'>
+                        <div className='col-sm-6 col-md-4'>
                         <div className="shadow-sm p-3 rounded bg-white">
                             <h3 className='fw-bold'>{username}</h3>
                             <Table>
