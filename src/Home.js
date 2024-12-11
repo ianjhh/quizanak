@@ -151,7 +151,7 @@ function Home(props){
 
                     </div>
                     {!isLoggedIn? <div className='col-sm-6 col-md-4'>
-                        <div className="shadow-sm p-3 rounded bg-white">
+                        <div className="shadow-sm p-3 rounded bg-white loginarea">
                             <h3 className="text-center">Login</h3>
                             <br />
                             <Form>
@@ -172,7 +172,7 @@ function Home(props){
                         </div>
                     </div> : 
                         <div className='col-sm-6 col-md-4'>
-                        <div className="shadow-sm p-3 rounded bg-white">
+                        <div className="shadow-sm p-3 rounded bg-white historylist">
                             <h3 className='fw-bold'>{username}</h3>
                             <Table>
                             <thead>
