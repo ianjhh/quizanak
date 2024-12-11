@@ -8,7 +8,7 @@
 }
 
 @media only screen and (max-width: 564px){
-    .historylist{
+    .historylist, .loginarea{
         display: none;
     }
 
