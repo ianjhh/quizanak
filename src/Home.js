@@ -78,11 +78,11 @@ function Home(props){
                 <br />
                 <Container>
                 <Row>
-                    <div className='col-8'>
+                    <div className='col-8 main-container'>
                         <h1>Games dan Kuis untuk anak-anak! 🌴</h1>
                         {/* --------------CARDS-------------- */}
 
-                        <Row xs={1} md={3} className="g-4">
+                        <Row xs={1} md={2} lg={3} className="g-4">
                         <Col>
                             <Card>
                                 <Card.Img variant="top" src={img1} height={200} />
