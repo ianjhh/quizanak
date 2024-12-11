@@ -38,7 +38,7 @@ function LoggedInNav(props){
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Navbar.Text><NavLink to='/quiz' className='text-white text-decoration-none nav-text'>Kuis</NavLink></Navbar.Text>&nbsp;&nbsp;
-                    <Navbar.Text><NavLink to='/games' className='text-white text-decoration-none nav-text'>Games</NavLink></Navbar.Text>&nbsp;&nbsp;
+                    <Navbar.Text><NavLink to='/games' className='text-white text-decoration-none nav-text'>Games</NavLink></Navbar.Text>
                     <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown} onClick={manageShow}>
                         <NavDropdown.Item><Link to='/fakta-binatang' className='text-decoration-none text-black'>Binatang</Link></NavDropdown.Item>
                         <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
