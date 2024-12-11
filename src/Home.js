@@ -78,7 +78,7 @@ function Home(props){
                 <br />
                 <Container>
                 <Row>
-                    <div className='col-xs-12 col-sm-6 col-md-8'>
+                    <div className='col-12 col-sm-6 col-md-8'>
                         <h1>Games dan Kuis untuk anak-anak! 🌴</h1>
                         {/* --------------CARDS-------------- */}
 
