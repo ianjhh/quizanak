@@ -1,4 +1,4 @@
-import './Home.css';
+import './QuizList.css';
 import Navapp from './Navapp';
 import LoggedInNav from './LoggedInNav';
 import Footer from './Footer';
@@ -142,9 +142,9 @@ function QuizList(props){
                 <Container>
                 <Link to='/' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Kembali</Button></Link>
                 <h3 className='mt-3'>Kuis Binatang</h3>
-                <Row xs={1} md={5} className="g-4">
+                <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {animalQuiz.map((item, idx) => (
-                            <Col key={idx}>
+                            <Col key={idx} className='quiz-card'>
                             <Card>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
@@ -161,9 +161,9 @@ function QuizList(props){
                 </Row><br/><br/>
 
                 <h3>Kuis Matematika</h3>
-                <Row xs={1} md={5} className="g-4">
+                <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {mathQuiz.map((item, idx) => (
-                            <Col key={idx}>
+                            <Col key={idx} className='quiz-card'>
                             <Card>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
@@ -180,9 +180,9 @@ function QuizList(props){
                 </Row><br/><br/>
 
                 <h3>Kuis Bahasa</h3>
-                <Row xs={1} md={5} className="g-4">
+                <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {languageQuiz.map((item, idx) => (
-                            <Col key={idx}>
+                            <Col key={idx} className='quiz-card'>
                             <Card>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
@@ -199,9 +199,9 @@ function QuizList(props){
                 </Row><br/><br/>
 
                 <h3>Kuis Lain</h3>
-                <Row xs={1} md={5} className="g-4">
+                <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {miscellaneousQuiz.map((item, idx) => (
-                            <Col key={idx}>
+                            <Col key={idx} className='quiz-card'> 
                             <Card>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
