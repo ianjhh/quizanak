@@ -154,13 +154,13 @@ function Quiz(props){
     return(
         <div className='bg-warning'>  
             {isLoggedIn? <LoggedInNav /> : <Navapp />}
-            <Container className='mt-4'>
+            <Container className='mt-3'>
                 <Row>
-                <div className='col-2'>
-                    <Link to='/quiz' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
+                <div className='col-12 col-sm-12 col-lg-2'>
+                    <Link to='/quiz' className='text-decoration-none'><Button variant='primary' className='mb-3'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </div>
                 
-                    <div className='col-8 rounded quiz-container'>
+                    <div className='col-12 col-sm-12 col-lg-10 col-xl-8 rounded quiz-container'>
                         {!quizStarted? 
                         <div className='text-center mt-3'>
                             {quizProperty && quizImage? 
@@ -210,8 +210,9 @@ function Quiz(props){
                         </Row><br/>
                     </>)}
                 </div>
+                <Link to='/quiz' className='text-decoration-none back-button-bottom mt-3'><Button variant='primary' className='fs-5'><i className="bi bi-arrow-left-short"></i>Quiz List</Button></Link>
                 </Row>
-            </Container><br/><br/>
+            </Container><br/>
             <Footer />
         </div>
     );
