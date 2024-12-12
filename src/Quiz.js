@@ -157,7 +157,7 @@ function Quiz(props){
             <Container className='mt-3'>
                 <Row>
                 <div className='col-12 col-sm-12 col-lg-2'>
-                    <Link to='/quiz' className='text-decoration-none'><Button variant='primary' className='mb-3'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
+                    <Link to='/quiz' className='text-decoration-none back-button'><Button variant='primary' className='mb-3'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </div>
                 
                     <div className='col-12 col-sm-12 col-lg-10 col-xl-8 rounded quiz-container'>
