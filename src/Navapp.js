@@ -32,8 +32,8 @@ function Navapp(props){
                         <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
                         <NavDropdown.Item><Link to='/fakta-sejarah' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
                     </NavDropdown>
-                    <Link to ='/register'><Button variant="success">Register</Button></Link>&nbsp;
-                    <Link to ='/login'><Button variant="primary">Login</Button></Link>
+                    <Link to ='/login'><Button variant="primary">Login</Button></Link>&nbsp;
+                    <Link to ='/register'><Button variant="success">Register</Button></Link>
                 </Nav>
                 </Navbar.Collapse>
             </Container>
