@@ -43,7 +43,7 @@ function LoggedInNav(props){
                         <NavDropdown.Item><Link to='/fakta-binatang' className='text-decoration-none text-black'>Binatang</Link></NavDropdown.Item>
                         <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
                         <NavDropdown.Item><Link to='/fakta-sejarah' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
-                    </NavDropdown>&nbsp;&nbsp;
+                    </NavDropdown>
                     <NavLink to = '/login'><Button variant="danger" onClick={handleLogout}>Logout</Button></NavLink>
                 </Nav>
                 </Navbar.Collapse>
