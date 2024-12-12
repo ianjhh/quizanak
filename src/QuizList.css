@@ -1,0 +1,14 @@
+.link-style:hover{
+    background-color: #90EE90;
+}
+
+.link-style{
+    text-decoration: none;
+    color: #008000;
+}
+
+@media only screen and (max-width: 576px){
+    .quiz-card{
+        width: 300px;
+    }
+}
