@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import Footer from './Footer';
 import axios from 'axios';
+import './Fact.css';
 
 function AnimalFact(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,7 +60,7 @@ function AnimalFact(){
                     <h2 className='mt-3 mb-4'>{title}</h2>
                     <ol>
                     {animalFact.map((item, idx) => (
-                        <li className='mb-4 fs-5'>{item[0]}<br/>{item[1]? <img src={require(`./${item[1]}.jpg`)} height={200} /> : null}</li>
+                        <li className='mb-4 fs-5'>{item[0]}<br/>{item[1]? <img src={require(`./${item[1]}.jpg`)} /> : null}</li>
                     ))}
                     </ol>
                     </div>
