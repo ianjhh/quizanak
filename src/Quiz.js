@@ -210,7 +210,7 @@ function Quiz(props){
                         </Row><br/>
                     </>)}
                 </div>
-                <Link to='/quiz' className='text-decoration-none back-button-bottom mt-3'><Button variant='primary' className='fs-5'><i className="bi bi-arrow-left-short"></i>Quiz List</Button></Link>
+                <Link to='/quiz' className='text-decoration-none back-button-bottom mt-3'><Button variant='primary' className='fs-5'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </Row>
             </Container><br/>
             <Footer />
