@@ -100,7 +100,7 @@ function AnimalFacts(props){
                 <Container>
                 <Link to='/' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Kembali</Button></Link>
                 <h3 className='mt-3'>Fakta-Fakta Binatang</h3>
-                <Row xs={1} sm={2} md={3} lg={4} xl={5 className="g-4">
+                <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {animalFacts.map((item, idx) => (
                             <Col key={idx} className='fact-card'>
                             <Card>
