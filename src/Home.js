@@ -84,8 +84,8 @@ function Home(props){
 
                         <Row xs={1} md={2} lg={3} className="g-4 main-container">
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none link-card'>
-                            <Card>
+                            <Link to='/quiz' className='text-decoration-none'>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={img1} height={200} />
                                 <Card.Body>
                                 <Card.Title>Quiz</Card.Title>
@@ -100,8 +100,8 @@ function Home(props){
                         
                         
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none link-card'>
-                            <Card>
+                            <Link to='/quiz' className='text-decoration-none'>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={games_img} height={200} />
                                 <Card.Body>
                                 <Card.Title>Games</Card.Title>
@@ -115,8 +115,8 @@ function Home(props){
                         </Col>
 
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none link-card'>
-                            <Card>
+                            <Link to='/quiz' className='text-decoration-none'>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} height={200} />
                                 <Card.Body>
                                 <Card.Title>Fakta Binatang</Card.Title>
@@ -131,8 +131,8 @@ function Home(props){
                         
                         
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none link-card'>
-                            <Card>
+                            <Link to='/quiz' className='text-decoration-none'>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} height={200} />
                                 <Card.Body>
                                 <Card.Title>Fakta Angkasa</Card.Title>
@@ -146,8 +146,8 @@ function Home(props){
                         </Col>
      
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none link-card'>
-                            <Card>
+                            <Link to='/quiz' className='text-decoration-none'>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} height={200} />
                                 <Card.Body>
                                 <Card.Title>Fakta Aneh Tapi Nyata</Card.Title>
