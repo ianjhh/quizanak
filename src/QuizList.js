@@ -146,7 +146,7 @@ function QuizList(props){
                     {animalQuiz.map((item, idx) => (
                             <Col key={idx} className='quiz-card'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
-                            <Card>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
                                 <Card.Title>{item.title}</Card.Title>
@@ -165,7 +165,7 @@ function QuizList(props){
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {mathQuiz.map((item, idx) => (
                             <Col key={idx} className='quiz-card'>
-                            <Card>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
                                 <Card.Title>{item.title}</Card.Title>
@@ -184,7 +184,7 @@ function QuizList(props){
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {languageQuiz.map((item, idx) => (
                             <Col key={idx} className='quiz-card'>
-                            <Card>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
                                 <Card.Title>{item.title}</Card.Title>
@@ -203,7 +203,7 @@ function QuizList(props){
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {miscellaneousQuiz.map((item, idx) => (
                             <Col key={idx} className='quiz-card'> 
-                            <Card>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
                                 <Card.Title>{item.title}</Card.Title>
