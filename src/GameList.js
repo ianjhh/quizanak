@@ -52,13 +52,13 @@ function GameList(props){
                 <Link to='/' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Kembali</Button></Link>
                 <Row xs={1} md={5} className="g-4 mt-1">
                     {gameList? gameList.map((item, idx) => (
-                            <Col key={idx}>
+                            <Col key={idx} className='games-col-list'>
                             <Link to={`/games/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.gameImage}.jpg`)} width={200} height={200} />
-                                <Card.Body>
+                                <Card.Img variant="top" src={require(`./${item.gameImage}.jpg`)} className='games-img-card-list' />
+                                <Card.Body className='games-card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='games-card-description-list'>
                                   {item.description}<br/><br/>
                                 </Card.Text>
                                 </Card.Body>
