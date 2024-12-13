@@ -54,7 +54,7 @@ function GameList(props){
                     {gameList? gameList.map((item, idx) => (
                             <Col key={idx}>
                             <Link to={`/games/${item.name}`} className='text-decoration-none'>
-                            <Card>
+                            <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./${item.gameImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
                                 <Card.Title>{item.title}</Card.Title>
