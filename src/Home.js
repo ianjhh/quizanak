@@ -91,7 +91,6 @@ function Home(props){
                                 <Card.Text className='card-description-home'>
                                     Kuis tentang binatang, matematika dan lebih!
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{navigate('/quiz')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
                             </Link>
@@ -107,7 +106,6 @@ function Home(props){
                                 <Card.Text className='card-description-home'>
                                   Permainan anak-anak klasik seperti Ular
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{navigate('/games')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
                             </Link>
@@ -122,7 +120,6 @@ function Home(props){
                                 <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta binatang!
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{navigate('/fakta-binatang')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
                             </Link>
@@ -138,7 +135,6 @@ function Home(props){
                                 <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta angkasa!
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{navigate('/fakta-angkasa')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
                             </Link>
@@ -153,7 +149,6 @@ function Home(props){
                                 <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta aneh tapi nyata!
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{navigate('/fakta-sejarah')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
                             </Link>
