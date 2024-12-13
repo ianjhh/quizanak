@@ -1,4 +1,4 @@
-import './Home.css';
+import './GameList.css';
 import Navapp from './Navapp';
 import LoggedInNav from './LoggedInNav';
 import Footer from './Footer';
