@@ -199,7 +199,7 @@ function Quiz(props){
                             {similarQuiz.map((item, idx) => (
                                     <Col key={idx} className='quiz-col-end'>
                                     <Card>
-                                        <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
+                                        <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card' />
                                         <Card.Body>
                                         <Card.Title>{item.title}</Card.Title>
                                         <Button variant="primary" onClick={()=>{navigate(`/quiz/${item.name}`); window.location.reload()}}>Mulai!</Button>
