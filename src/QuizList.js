@@ -13,8 +13,6 @@ function QuizList(props){
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
     const [languageQuiz, setLanguageQuiz] = useState([]);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     const verifyToken = () =>{
