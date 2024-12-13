@@ -13,12 +13,8 @@ function QuizList(props){
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
     const [languageQuiz, setLanguageQuiz] = useState([]);
-    const [show, setShow] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [errMsg, setErrMsg] = useState("");
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const navigate = useNavigate();
 
     const verifyToken = () =>{
@@ -34,25 +30,6 @@ function QuizList(props){
         })
         .catch(function (error) {
             console.log(error.response.status)
-        });
-    }
-
-    const handleLogin = () =>{
-        axios.post('/api/login', {
-            username: username,
-            password: password
-        })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if(response.data.verified === true){
-                navigate('/')
-            }
-            else{
-                navigate('/verify')
-            }
-        })
-        .catch(function (error) {
-            setErrMsg(error.response.data);
         });
     }
 
@@ -112,30 +89,6 @@ function QuizList(props){
 
     return(
         <>
-            <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-            <Modal.Title>Login</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Label>Kata Sandi</Form.Label>
-                                <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
-                            </Form.Group>
-                            <Form.Text className="text-danger">{errMsg}</Form.Text>
-                            <Button variant="primary" type="button" onClick={handleLogin}>
-                                Masuk
-                            </Button>
-                </Form>
-                <p className='mt-3'>Belum daftar? <Link to='/register' className='text-decoration-none'>Buat akun baru</Link></p>
-            </Modal.Body>
-            </Modal>
-
             {isLoggedIn? <LoggedInNav /> : <Navapp />}
             <div className='bg-warning'>
                 <br />
