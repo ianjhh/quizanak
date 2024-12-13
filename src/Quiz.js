@@ -195,7 +195,7 @@ function Quiz(props){
                     <>
                         <h1 className='text-center mt-3'>Skor Total: <br/><b>{score}/10</b></h1><br/><br/>
                         <h3 className='text-center'>Coba juga:</h3>
-                        <Row xs={1} md={3} className="g-4 mb-3">
+                        <Row xs={1} sm={2} md={3} className="g-4 mb-3">
                             {similarQuiz.map((item, idx) => (
                                     <Col key={idx}>
                                     <Card>
