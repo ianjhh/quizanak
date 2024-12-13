@@ -107,7 +107,7 @@ function HistoryFacts(props){
                                 <Card.Img variant="top" src={require(`./${item.image}.jpg`)} width={200} height={200} />
                                 <Card.Body className='bg-black text-white'>
                                 <Card.Title>{item.title}</Card.Title>
-                                <Button variant="primary" onClick={()=>{if (isLoggedIn){navigate(`/fakta-sejarah/${item.link_name}`)} else{handleShow()}}}>Mulai!</Button>
+                                <Button variant="primary" onClick={()=>{if (isLoggedIn){navigate(`/fakta-aneh/${item.link_name}`)} else{handleShow()}}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
                             </Col>
