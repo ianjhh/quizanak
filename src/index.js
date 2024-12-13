@@ -41,8 +41,8 @@ root.render(
               <Route path='/fakta-binatang/:fact-title' element={<AnimalFact />} />
               <Route path='/fakta-angkasa' element={<SpaceFacts />} />
               <Route path='/fakta-angkasa/:fact-title' element={<SpaceFact />} />
-              <Route path='/fakta-sejarah' element={<HistoryFacts />} />
-              <Route path='/fakta-sejarah/:fact-title' element={<HistoryFact />} />
+              <Route path='/fakta-aneh' element={<HistoryFacts />} />
+              <Route path='/fakta-aneh/:fact-title' element={<HistoryFact />} />
               <Route path='/quiz/:quiz-name' element={<Quiz />} />
               <Route path='/games/pong' element={<Pong />} />
               <Route path='/games/snake' element={<SnakeGame />} />
