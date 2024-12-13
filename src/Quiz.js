@@ -160,7 +160,7 @@ function Quiz(props){
                     <Link to='/quiz' className='text-decoration-none back-button'><Button variant='primary' className='mb-3'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </div>
                 
-                    <div className='col-12 col-sm-12 col-lg-10 col-xl-8 rounded quiz-container'>
+                    <div className='col-12 col-sm-12 col-lg-10 col-xl-8 quiz-container'>
                         {!quizStarted? 
                         <div className='text-center mt-3'>
                             {quizProperty && quizImage? 
