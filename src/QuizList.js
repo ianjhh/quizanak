@@ -136,6 +136,7 @@ function QuizList(props){
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {languageQuiz.map((item, idx) => (
                             <Col key={idx} className='quiz-col-list'>
+                            <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
@@ -155,6 +156,7 @@ function QuizList(props){
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {miscellaneousQuiz.map((item, idx) => (
                             <Col key={idx} className='quiz-col-list'> 
+                            <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
