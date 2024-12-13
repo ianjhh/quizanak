@@ -83,8 +83,8 @@ function Home(props){
                         {/* --------------CARDS-------------- */}
 
                         <Row xs={1} md={2} lg={3} className="g-4 main-container">
-                        <Link to='/quiz' className='text-decoration-none link-card'>
                         <Col>
+                            <Link to='/quiz' className='text-decoration-none link-card'>
                             <Card>
                                 <Card.Img variant="top" src={img1} height={200} />
                                 <Card.Body>
@@ -95,11 +95,12 @@ function Home(props){
                                 <Button variant="primary" onClick={()=>{navigate('/quiz')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                         </Col>
-                        </Link>
-
-                        <Link to='/quiz' className='text-decoration-none link-card'>
+                        
+                        
                         <Col>
+                            <Link to='/quiz' className='text-decoration-none link-card'>
                             <Card>
                                 <Card.Img variant="top" src={games_img} height={200} />
                                 <Card.Body>
@@ -110,11 +111,11 @@ function Home(props){
                                 <Button variant="primary" onClick={()=>{navigate('/games')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                         </Col>
-                        </Link>
 
-                        <Link to='/quiz' className='text-decoration-none link-card'>
                         <Col>
+                            <Link to='/quiz' className='text-decoration-none link-card'>
                             <Card>
                                 <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} height={200} />
                                 <Card.Body>
@@ -125,11 +126,12 @@ function Home(props){
                                 <Button variant="primary" onClick={()=>{navigate('/fakta-binatang')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                         </Col>
-                        </Link>
-
-                        <Link to='/quiz' className='text-decoration-none link-card'>
+                        
+                        
                         <Col>
+                            <Link to='/quiz' className='text-decoration-none link-card'>
                             <Card>
                                 <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} height={200} />
                                 <Card.Body>
@@ -140,11 +142,11 @@ function Home(props){
                                 <Button variant="primary" onClick={()=>{navigate('/fakta-angkasa')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                         </Col>
-                        </Link>
-
-                        <Link to='/quiz' className='text-decoration-none link-card'>
+     
                         <Col>
+                            <Link to='/quiz' className='text-decoration-none link-card'>
                             <Card>
                                 <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} height={200} />
                                 <Card.Body>
@@ -155,8 +157,8 @@ function Home(props){
                                 <Button variant="primary" onClick={()=>{navigate('/fakta-sejarah')}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                         </Col>
-                        </Link>
                 </Row>
 
                     </div>
