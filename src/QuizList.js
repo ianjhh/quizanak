@@ -145,6 +145,7 @@ function QuizList(props){
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {animalQuiz.map((item, idx) => (
                             <Col key={idx} className='quiz-card'>
+                            <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card>
                                 <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                 <Card.Body>
@@ -153,9 +154,9 @@ function QuizList(props){
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{if (isLoggedIn){navigate(`/quiz/${item.name}`)} else{handleShow()}}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                             </Col>
                     ))}
                 </Row><br/><br/>
@@ -172,9 +173,9 @@ function QuizList(props){
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{if (isLoggedIn){navigate(`/quiz/${item.name}`)} else{handleShow()}}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                             </Col>
                     ))}
                 </Row><br/><br/>
@@ -191,9 +192,9 @@ function QuizList(props){
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
                                 </Card.Text>
-                                <Button variant="primary" onClick={()=>{if (isLoggedIn){navigate(`/quiz/${item.name}`)} else{handleShow()}}}>Mulai!</Button>
                                 </Card.Body>
                             </Card>
+                            </Link>
                             </Col>
                     ))}
                 </Row><br/><br/>
@@ -209,10 +210,10 @@ function QuizList(props){
                                 <Card.Text>
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
-                                </Card.Text>
-                                <Button variant="primary" onClick={()=>{if (isLoggedIn){navigate(`/quiz/${item.name}`)} else{handleShow()}}}>Mulai!</Button>
+                                </Card.Text>   
                                 </Card.Body>
                             </Card>
+                            </Link>
                             </Col>
                     ))}
                 </Row><br/><br/>
