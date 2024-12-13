@@ -95,13 +95,13 @@ function QuizList(props){
                 <h3 className='mt-3'>Kuis Binatang</h3>
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {animalQuiz.map((item, idx) => (
-                            <Col key={idx} className='quiz-card'>
+                            <Col key={idx} className='quiz-col-list'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
-                                <Card.Body>
+                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
                                 </Card.Text>
@@ -115,12 +115,12 @@ function QuizList(props){
                 <h3>Kuis Matematika</h3>
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {mathQuiz.map((item, idx) => (
-                            <Col key={idx} className='quiz-card'>
+                            <Col key={idx} className='quiz-col-list'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
-                                <Card.Body>
+                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
                                 </Card.Text>
@@ -134,12 +134,12 @@ function QuizList(props){
                 <h3>Kuis Bahasa</h3>
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {languageQuiz.map((item, idx) => (
-                            <Col key={idx} className='quiz-card'>
+                            <Col key={idx} className='quiz-col-list'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
-                                <Card.Body>
+                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
                                 </Card.Text>
@@ -153,12 +153,12 @@ function QuizList(props){
                 <h3>Kuis Lain</h3>
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {miscellaneousQuiz.map((item, idx) => (
-                            <Col key={idx} className='quiz-card'> 
+                            <Col key={idx} className='quiz-col-list'> 
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
-                                <Card.Body>
+                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
                                   Kesulitan: {item.difficulty}
                                 </Card.Text>   
