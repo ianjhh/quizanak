@@ -83,6 +83,7 @@ function Home(props){
                         {/* --------------CARDS-------------- */}
 
                         <Row xs={1} md={2} lg={3} className="g-4 main-container">
+                        <Link to='/quiz' className='text-decoration-none'>
                         <Col>
                             <Card>
                                 <Card.Img variant="top" src={img1} height={200} />
@@ -95,7 +96,9 @@ function Home(props){
                                 </Card.Body>
                             </Card>
                         </Col>
+                        </Link>
 
+                        <Link to='/quiz' className='text-decoration-none'>
                         <Col>
                             <Card>
                                 <Card.Img variant="top" src={games_img} height={200} />
@@ -108,7 +111,9 @@ function Home(props){
                                 </Card.Body>
                             </Card>
                         </Col>
+                        </Link>
 
+                        <Link to='/quiz' className='text-decoration-none'>
                         <Col>
                             <Card>
                                 <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} height={200} />
@@ -121,7 +126,9 @@ function Home(props){
                                 </Card.Body>
                             </Card>
                         </Col>
+                        </Link>
 
+                        <Link to='/quiz' className='text-decoration-none'>
                         <Col>
                             <Card>
                                 <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} height={200} />
@@ -134,7 +141,9 @@ function Home(props){
                                 </Card.Body>
                             </Card>
                         </Col>
+                        </Link>
 
+                        <Link to='/quiz' className='text-decoration-none'>
                         <Col>
                             <Card>
                                 <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} height={200} />
@@ -147,6 +156,7 @@ function Home(props){
                                 </Card.Body>
                             </Card>
                         </Col>
+                        </Link>
                 </Row>
 
                     </div>
