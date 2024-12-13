@@ -81,15 +81,14 @@ function Home(props){
                     <div className='col-12 col-sm-6 col-md-8'>
                         <h1>Games dan Kuis untuk anak-anak! 🌴</h1>
                         {/* --------------CARDS-------------- */}
-
                         <Row xs={1} md={2} lg={3} className="g-4 main-container">
-                        <Col>
+                        <Col className='quiz-col-home'>
                             <Link to='/quiz' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={img1} height={200} />
+                                <Card.Img variant="top" src={img1} className='img-card-home' />
                                 <Card.Body>
                                 <Card.Title>Quiz</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-home'>
                                     Kuis tentang binatang, matematika dan lebih!
                                 </Card.Text>
                                 <Button variant="primary" onClick={()=>{navigate('/quiz')}}>Mulai!</Button>
@@ -99,14 +98,14 @@ function Home(props){
                         </Col>
                         
                         
-                        <Col>
+                        <Col className='quiz-col-home'>
                             <Link to='/games' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={games_img} height={200} />
+                                <Card.Img variant="top" src={games_img} className='img-card-home' />
                                 <Card.Body>
                                 <Card.Title>Games</Card.Title>
-                                <Card.Text>
-                                  Permainan anak-anak klasik seperti Ular dan Pong
+                                <Card.Text className='card-description-home'>
+                                  Permainan anak-anak klasik seperti Ular
                                 </Card.Text>
                                 <Button variant="primary" onClick={()=>{navigate('/games')}}>Mulai!</Button>
                                 </Card.Body>
@@ -114,13 +113,13 @@ function Home(props){
                             </Link>
                         </Col>
 
-                        <Col>
+                        <Col className='quiz-col-home'>
                             <Link to='/fakta-binatang' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} height={200} />
+                                <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} className='img-card-home' />
                                 <Card.Body>
                                 <Card.Title>Fakta Binatang</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta binatang!
                                 </Card.Text>
                                 <Button variant="primary" onClick={()=>{navigate('/fakta-binatang')}}>Mulai!</Button>
@@ -130,13 +129,13 @@ function Home(props){
                         </Col>
                         
                         
-                        <Col>
+                        <Col className='quiz-col-home'>
                             <Link to='/fakta-angkasa' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} height={200} />
+                                <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} className='img-card-home' />
                                 <Card.Body>
                                 <Card.Title>Fakta Angkasa</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta angkasa!
                                 </Card.Text>
                                 <Button variant="primary" onClick={()=>{navigate('/fakta-angkasa')}}>Mulai!</Button>
@@ -145,13 +144,13 @@ function Home(props){
                             </Link>
                         </Col>
      
-                        <Col>
+                        <Col className='quiz-col-home'>
                             <Link to='/fakta-aneh' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} height={200} />
+                                <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} className='img-card-home' />
                                 <Card.Body>
                                 <Card.Title>Fakta Aneh</Card.Title>
-                                <Card.Text>
+                                <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta aneh tapi nyata!
                                 </Card.Text>
                                 <Button variant="primary" onClick={()=>{navigate('/fakta-sejarah')}}>Mulai!</Button>
