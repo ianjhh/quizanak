@@ -100,7 +100,7 @@ function Home(props){
                         
                         
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none'>
+                            <Link to='/games' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={games_img} height={200} />
                                 <Card.Body>
@@ -115,7 +115,7 @@ function Home(props){
                         </Col>
 
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none'>
+                            <Link to='/fakta-binatang' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} height={200} />
                                 <Card.Body>
@@ -131,7 +131,7 @@ function Home(props){
                         
                         
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none'>
+                            <Link to='/fakta-angkasa' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} height={200} />
                                 <Card.Body>
@@ -146,11 +146,11 @@ function Home(props){
                         </Col>
      
                         <Col>
-                            <Link to='/quiz' className='text-decoration-none'>
+                            <Link to='/fakta-aneh' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} height={200} />
                                 <Card.Body>
-                                <Card.Title>Fakta Aneh Tapi Nyata</Card.Title>
+                                <Card.Title>Fakta Aneh</Card.Title>
                                 <Card.Text>
                                   Belajar tentang fakta-fakta aneh tapi nyata!
                                 </Card.Text>
