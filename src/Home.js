@@ -86,7 +86,7 @@ function Home(props){
                             <Link to='/quiz' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={img1} className='img-card-home' />
-                                <Card.Body>
+                                <Card.Body className='card-body-home'>
                                 <Card.Title>Quiz</Card.Title>
                                 <Card.Text className='card-description-home'>
                                     Kuis tentang binatang, matematika dan lebih!
@@ -102,7 +102,7 @@ function Home(props){
                             <Link to='/games' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={games_img} className='img-card-home' />
-                                <Card.Body>
+                                <Card.Body className='card-body-home'>
                                 <Card.Title>Games</Card.Title>
                                 <Card.Text className='card-description-home'>
                                   Permainan anak-anak klasik seperti Ular
@@ -117,7 +117,7 @@ function Home(props){
                             <Link to='/fakta-binatang' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} className='img-card-home' />
-                                <Card.Body>
+                                <Card.Body className='card-body-home'>
                                 <Card.Title>Fakta Binatang</Card.Title>
                                 <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta binatang!
@@ -133,7 +133,7 @@ function Home(props){
                             <Link to='/fakta-angkasa' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} className='img-card-home' />
-                                <Card.Body>
+                                <Card.Body className='card-body-home'>
                                 <Card.Title>Fakta Angkasa</Card.Title>
                                 <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta angkasa!
@@ -148,7 +148,7 @@ function Home(props){
                             <Link to='/fakta-aneh' className='text-decoration-none'>
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} className='img-card-home' />
-                                <Card.Body>
+                                <Card.Body className='card-body-home'>
                                 <Card.Title>Fakta Aneh</Card.Title>
                                 <Card.Text className='card-description-home'>
                                   Belajar tentang fakta-fakta aneh tapi nyata!
