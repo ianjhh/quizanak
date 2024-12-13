@@ -69,11 +69,11 @@
 
 @media only screen and (min-width: 577px){
     .quiz-col-end{
-        width: 267px;
+        width: 255px;
         text-align: center;
     }
     .img-card{
-        height: 200px;
+        height: 191px;
     }
 }
 
