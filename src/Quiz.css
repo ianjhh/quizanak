@@ -51,3 +51,38 @@
         display: none;
     }
 }
+
+@media only screen and (max-width: 576px){
+    .quiz-col-end{
+        width: 170px;
+        text-align: center;
+    }
+
+    .img-card{
+        height: 120px;
+    }
+
+    .quiz-title{
+        font-size: 17px;
+    }
+}
+
+@media only screen and (min-width: 577px){
+    .quiz-col-end{
+        width: 267px;
+        text-align: center;
+    }
+    .img-card{
+        height: 200px;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px){
+    .quiz-col-end{
+        width: 257px;
+        text-align: center;
+    }
+    .img-card{
+        height: 192px;
+    }
+}
