@@ -197,7 +197,7 @@ function Quiz(props){
                         <h3 className='text-center'>Coba juga:</h3>
                         <Row xs={1} sm={2} md={3} className="g-4 mb-3">
                             {similarQuiz.map((item, idx) => (
-                                    <Col key={idx}>
+                                    <Col key={idx} className='quiz-col-end'>
                                     <Card>
                                         <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} width={200} height={200} />
                                         <Card.Body>
