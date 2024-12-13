@@ -53,11 +53,11 @@ function HistoryFacts(props){
                 <h3 className='mt-3'>Fakta-Fakta Aneh Tapi Nyata</h3>
                 <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                     {historyFacts.map((item, idx) => (
-                            <Col key={idx} className='fact-card'>
+                            <Col key={idx} className='facts-col-list'>
                             <Link to={`/fakta-aneh/${item.link_name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.image}.jpg`)} width={200} height={200} />
-                                <Card.Body className='bg-black text-white'>
+                                <Card.Img variant="top" src={require(`./${item.image}.jpg`)} className='facts-img-card-list' />
+                                <Card.Body className='bg-black text-white facts-card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 </Card.Body>
                             </Card>
