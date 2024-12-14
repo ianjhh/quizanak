@@ -79,7 +79,7 @@ function Home(props){
                 <Container>
                 <Row>
                     <div className='col-12 col-sm-6 col-md-8'>
-                        <h1>Games dan Kuis untuk anak-anak! 🌴</h1>
+                        <h1>Kuis untuk anak-anak! 🌴</h1>
                         {/* --------------CARDS-------------- */}
                         <Row xs={1} md={2} lg={3} className="g-4 main-container">
                         <Col className='quiz-col-home'>
@@ -90,21 +90,6 @@ function Home(props){
                                 <Card.Title>Quiz</Card.Title>
                                 <Card.Text className='card-description-home'>
                                     Kuis tentang binatang, matematika dan lebih!
-                                </Card.Text>
-                                </Card.Body>
-                            </Card>
-                            </Link>
-                        </Col>
-                        
-                        
-                        <Col className='quiz-col-home'>
-                            <Link to='/games' className='text-decoration-none'>
-                            <Card className='link-card'>
-                                <Card.Img variant="top" src={games_img} className='img-card-home' />
-                                <Card.Body className='card-body-home'>
-                                <Card.Title>Games</Card.Title>
-                                <Card.Text className='card-description-home'>
-                                  Permainan anak-anak klasik seperti Ular
                                 </Card.Text>
                                 </Card.Body>
                             </Card>
