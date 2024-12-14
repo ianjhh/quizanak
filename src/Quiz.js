@@ -157,7 +157,7 @@ function Quiz(props){
             <Container className='mt-3'>
                 <Row>
                 <div className='col-12 col-sm-12 col-lg-2'>
-                    <Link to='/quiz' className='text-decoration-none back-button'><Button variant='primary' className='mb-3'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
+                    <Link to='/quiz' className='text-decoration-none back-button'><Button variant='danger' className='mb-3'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </div>
                 
                     <div className='col-12 col-sm-12 col-lg-10 col-xl-8 quiz-container'>
@@ -177,10 +177,10 @@ function Quiz(props){
                     :
                     (!quizEnded? <>
                         {quizList? <><h3>Q{currentQuestion}: {quizList[currentQuestion-1].question}</h3>
-                        {quizList[currentQuestion-1].imagesrc? <><img className='mb-3' src={require(`./${quizList[currentQuestion-1].imagesrc}.jpg`)} alt="Logo" height={300} /></> : null}
+                        {quizList[currentQuestion-1].imagesrc? <><img className='mb-3 questionImage' src={require(`./${quizList[currentQuestion-1].imagesrc}.jpg`)} alt="Logo" /></> : null}
                         {!clickedNext? quizList[currentQuestion-1].options.map((option, index) =>
                         <div className="form-check radio-toolbar" key={index}>
-                            <Row xs={2} md={2} className="g-4">
+                            <Row className="g-4 quiz-options-width col-8 col-sm-7 col-md-6 col-lg-5">
                         <input className="form-check-input fs-5" type="radio" name="flexRadioDefault" id={`flexRadioDefault${index}`} value={option} checked={answer === option} onChange={onOptionChange} />
                         <label className="form-check-label fs-5" htmlFor={`flexRadioDefault${index}`}>
                             {option}
@@ -210,7 +210,7 @@ function Quiz(props){
                         </Row><br/>
                     </>)}
                 </div>
-                <Link to='/quiz' className='text-decoration-none back-button-bottom mt-3'><Button variant='primary' className='fs-5'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
+                <Link to='/quiz' className='text-decoration-none back-button-bottom mt-3'><Button variant='danger' className='fs-5'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
                 </Row>
             </Container><br/>
             <Footer />
