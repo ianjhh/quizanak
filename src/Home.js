@@ -13,6 +13,7 @@ function Home(props){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [historyList, setHistoryList] = useState([]);
+    const navigate = useNavigate();
 
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
