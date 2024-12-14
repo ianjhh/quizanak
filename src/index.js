@@ -9,11 +9,7 @@ import Login from './Login';
 import Verify from './Verify';
 import Quiz from './Quiz';
 import QuizList from './QuizList';
-import Pong from './Pong';
 import AboutUs from './AboutUs';
-import Stacker from './Stacker';
-import GameList from './GameList';
-import SnakeGame from './SnakeGame';
 import AnimalFacts from './AnimalFacts';
 import AnimalFact from './AnimalFact';
 import SpaceFacts from './SpaceFacts';
@@ -36,7 +32,6 @@ root.render(
               <Route path='/quiz' element={<QuizList />} />
               <Route path='/about-us' element={<AboutUs />} />
               <Route path='/sitemap' element={<Sitemap />} />
-              <Route path='/games' element={<GameList />} />
               <Route path='/fakta-binatang' element={<AnimalFacts />} />
               <Route path='/fakta-binatang/:fact-title' element={<AnimalFact />} />
               <Route path='/fakta-angkasa' element={<SpaceFacts />} />
@@ -44,9 +39,6 @@ root.render(
               <Route path='/fakta-aneh' element={<HistoryFacts />} />
               <Route path='/fakta-aneh/:fact-title' element={<HistoryFact />} />
               <Route path='/quiz/:quiz-name' element={<Quiz />} />
-              <Route path='/games/pong' element={<Pong />} />
-              <Route path='/games/snake' element={<SnakeGame />} />
-              <Route path='/games/stacker' element={<Stacker />} />
           </Routes>
       </BrowserRouter>
   </React.StrictMode>
