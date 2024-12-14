@@ -1,9 +1,0 @@
-.quiz-container{
-    background-color: #9ACD32;
-    border: 3px solid #007f00;
-}
-
-.pong-container {
-    display: flex;
-    flex-direction: column;
-}
