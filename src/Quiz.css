@@ -57,13 +57,14 @@
         width: 170px;
         text-align: center;
     }
-
     .img-card{
         height: 120px;
     }
-
     .quiz-title{
         font-size: 17px;
+    }
+    .questionImage{
+        height: 170px;
     }
 }
 
