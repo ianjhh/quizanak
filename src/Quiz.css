@@ -40,10 +40,6 @@
     border: 3px solid #007f00;
 }
 
-.next-question{
-    margin-top: -25px !important;
-}
-
 @media only screen and (max-width: 991px){
     .back-button{
         display: none;
