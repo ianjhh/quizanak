@@ -188,8 +188,8 @@ function Quiz(props){
                         </Row>
                         </div>
                         ) : null}</> : null}
-                        {currentQuestion>=10 ? <Button variant='primary' className='fs-5 mt-3 mb-3' onClick={handleFinishQuiz}>Finish</Button> : (!clickedNext?<Button variant='success' onClick={handleNext} className='mb-3 mt-3 fs-5'>Next</Button> : null)}
-                        {clickedNext? <>{isCorrect==='Benar'? <p className='fs-5 correctanswer'><i class="bi bi-check"></i>{isCorrect}!</p> : <p className='fs-5 wronganswer'><i className="bi bi-x"></i>{isCorrect}! jawaban yang benar adalah "{quizList[currentQuestion-1].answer}"</p>}<br/><br/><br/><br/><br/><br/><br/><Button variant='primary' className='mb-3 mt-4 fs-5' onClick={handleMoveNextQ}>Next Question</Button></> : null}
+                        {currentQuestion>=10 ? <Button variant='primary' className='fs-5 mt-3 mb-3 w-50' onClick={handleFinishQuiz}>Finish</Button> : (!clickedNext?<Button variant='success' onClick={handleNext} className='mb-3 mt-3 fs-5 w-50'>Next</Button> : null)}
+                        {clickedNext? <>{isCorrect==='Benar'? <p className='fs-5 correctanswer'><i class="bi bi-check"></i>{isCorrect}!</p> : <p className='fs-5 wronganswer'><i className="bi bi-x"></i>{isCorrect}! jawaban yang benar adalah "{quizList[currentQuestion-1].answer}"</p>}<br/><br/><br/><br/><br/><br/><br/><Button variant='primary' className='mb-3 mt-4 fs-5 w-50' onClick={handleMoveNextQ}>Next Question</Button></> : null}
                     </>
                     : 
                     <>
