@@ -7,15 +7,12 @@ import axios from 'axios';
 import { Row, Container, Form, Button, Card, Table, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
 import img1 from './binatang-laut1.jpg'
-import games_img from './games_img.jpg'
 
 function Home(props){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [historyList, setHistoryList] = useState([]);
-    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
-    const navigate = useNavigate();
 
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
