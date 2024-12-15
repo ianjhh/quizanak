@@ -18,3 +18,16 @@
         display: none;
      }
 }
+
+@font-face {
+  font-family: 'titlefont';
+  src: local('titlefont'), url(./fonts/titlefont.ttf) format('truetype'); /* or truetype */
+}
+
+.navbar-title {
+  font-family: 'titlefont';
+}
+
+.navbar-title:hover{
+  background-color: #157347 !important;
+}
