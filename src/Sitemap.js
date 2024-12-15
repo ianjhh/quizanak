@@ -12,7 +12,6 @@ function Sitemap(){
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
     const [languageQuiz, setLanguageQuiz] = useState([]);
-    const [gameList, setGameList] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [show, setShow] = useState(false);
@@ -48,19 +47,6 @@ function Sitemap(){
             }
             else{
                 navigate('/verify')
-            }
-        })
-        .catch(function (error) {
-            console.log(error.response.status);
-        });
-    }
-
-    const fetchAllGames = () =>{
-        axios.get('/api/fetchAllGames')
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.status === 200){
-                setGameList(response.data);
             }
         })
         .catch(function (error) {
@@ -120,7 +106,7 @@ function Sitemap(){
         });
     }
 
-    useEffect(()=>{verifyToken(); fetchAnimalQuiz(); fetchMathQuiz(); fetchLanguageQuiz(); fetchMiscellaneousQuiz(); fetchAllGames()}, [])
+    useEffect(()=>{verifyToken(); fetchAnimalQuiz(); fetchMathQuiz(); fetchLanguageQuiz(); fetchMiscellaneousQuiz();}, [])
 
     return(
         <>
@@ -188,17 +174,6 @@ function Sitemap(){
                 {miscellaneousQuiz.map((item, idx) => (
                             <Col key={idx}>
                                 <Button className='text-decoration-none' variant="link" onClick={()=>{navigate(`/quiz/${item.name}`)}}>{item.title}</Button>
-                            </Col>
-                    ))}
-                    </ul>
-                </Row>
-                <h3 className='mb-3'>Games</h3>
-                <h5>Quiz Lain</h5>
-                <Row xs={1} md={2} className="g-4">
-                    <ul>
-                {gameList.map((item, idx) => (
-                            <Col key={idx}>
-                                <Button className='text-decoration-none' variant="link" onClick={()=>{navigate(`/games/${item.name}`)}}>{item.title}</Button>
                             </Col>
                     ))}
                     </ul>
