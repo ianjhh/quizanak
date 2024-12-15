@@ -4,7 +4,7 @@ import Footer from './Footer';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap';
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Sitemap(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -12,12 +12,6 @@ function Sitemap(){
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
     const [languageQuiz, setLanguageQuiz] = useState([]);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const navigate = useNavigate();
 
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
@@ -110,32 +104,6 @@ function Sitemap(){
 
     return(
         <>
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-            <Modal.Title>Login</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Label>Kata Sandi</Form.Label>
-                                <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Ingat Saya" />
-                            </Form.Group>
-                            <Button variant="primary" type="button" onClick={handleLogin}>
-                                Masuk
-                            </Button>
-                </Form>
-                <p className='mt-3'>Belum daftar? <Link to='/register' className='text-decoration-none'>Buat akun baru</Link></p>
-            </Modal.Body>
-            </Modal>
-
         {isLoggedIn? <LoggedInNav /> : <Navapp />}
         <div className='bg-warning'>
             <br/>
@@ -146,7 +114,7 @@ function Sitemap(){
                     <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
                     {animalQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Button className='text-decoration-none' variant="link" onClick={()=>{if (isLoggedIn){navigate(`/quiz/${item.name}`)} else{handleShow()}}}>{item.title}</Button>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
                             </Col>
                     ))}</ul>
                 </Row>
@@ -155,7 +123,7 @@ function Sitemap(){
                 <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
                     {mathQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Button className='text-decoration-none' variant="link" onClick={()=>{if (isLoggedIn){navigate(`/quiz/${item.name}`)} else{handleShow()}}}>{item.title}</Button>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
                             </Col>
                     ))}</ul>
                 </Row>
@@ -164,7 +132,7 @@ function Sitemap(){
                 <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
                     {languageQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Button className='text-decoration-none' variant="link" onClick={()=>{if (isLoggedIn){navigate(`/quiz/${item.name}`)} else{handleShow()}}}>{item.title}</Button>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
                             </Col>
                     ))}</ul>
                 </Row>
@@ -173,7 +141,7 @@ function Sitemap(){
                 <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
                 {miscellaneousQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Button className='text-decoration-none' variant="link" onClick={()=>{navigate(`/quiz/${item.name}`)}}>{item.title}</Button>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
                             </Col>
                     ))}
                     </ul>
