@@ -21,7 +21,7 @@ function Navapp(props){
     return (
         <Navbar className="bg-black">
             <Container>
-                <Navbar.Brand><Link to='/' className='text-decoration-none navbar-title text-white'>KuisAnak</Link></Navbar.Brand>
+                <Navbar.Brand><Link to='/' className='text-decoration-none navbar-title text-white fs-4'>KuisAnak</Link></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
