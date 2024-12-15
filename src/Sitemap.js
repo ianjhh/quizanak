@@ -4,7 +4,7 @@ import Footer from './Footer';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Sitemap(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -12,6 +12,7 @@ function Sitemap(){
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
     const [languageQuiz, setLanguageQuiz] = useState([]);
+    const navigate = useNavigate();
 
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
@@ -28,25 +29,6 @@ function Sitemap(){
             console.log(error.response.status)
         });
 }
-
-   const handleLogin = () =>{
-        axios.post('/api/login', {
-            username: username,
-            password: password
-        })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if(response.data.verified === true){
-                navigate('/')
-            }
-            else{
-                navigate('/verify')
-            }
-        })
-        .catch(function (error) {
-            console.log(error.response.status);
-        });
-    }
 
     const fetchAnimalQuiz = () =>{
         axios.get('/api/fetchAnimalQuiz')
