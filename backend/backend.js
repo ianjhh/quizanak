@@ -12,21 +12,8 @@ var redis = require("redis")
 const CryptoJS = require('crypto-js')
 const crypto = require('crypto')
 app.use(cookieParser());
-
-const whitelist = ['https://kuisanak.com']; // List of trusted origins
-const corsOptions = {
- origin: function(origin, callback) {
- if (whitelist.indexOf(origin) !== -1) {
- callback(null, true);
- } else {
- callback(new Error('Not allowed by CORS'));
- }
- },
- credentials: true, // Allow cookies to be sent with requests
- 
-};
-app.use(cors(corsOptions));
-
+app.use(cors());
+    
 const cluster = redis.createCluster({
     rootNodes: [
         {
@@ -269,7 +256,6 @@ app.get('/api/homepage', async (req, res) => {
 })
 
 app.get('/api/verifyToken', async (req, res) => {
-    try{
     if(!req.cookies.jwt){
       res.status(400).send('error')
     }
@@ -288,11 +274,6 @@ app.get('/api/verifyToken', async (req, res) => {
               });
           }
         })
-    }
-    }
-    catch(e){
-        console.log(e)
-        res.status(500).send('Error!')
     }
 })
 
