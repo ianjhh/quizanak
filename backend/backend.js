@@ -12,7 +12,20 @@ var redis = require("redis")
 const CryptoJS = require('crypto-js')
 const crypto = require('crypto')
 app.use(cookieParser());
-app.use(cors());
+
+const whitelist = ['https://kuisanak.com'];
+/* only allows cross origin request from kuisanak.com domain whitelist */
+const corsOptions = {
+ origin: function(origin, callback) {
+ if (whitelist.indexOf(origin) !== -1) {
+ callback(null, true);
+ } else {
+ callback(new Error('Not allowed by CORS'));
+ }
+ },
+ credentials: true // Allow cookies to be sent with requests
+};
+app.use(cors(corsOptions));
     
 const cluster = redis.createCluster({
     rootNodes: [
