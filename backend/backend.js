@@ -12,7 +12,11 @@ var redis = require("redis")
 const CryptoJS = require('crypto-js')
 const crypto = require('crypto')
 app.use(cookieParser());
-app.use(cors());
+const corsOptions = {
+  origin: 'https://kuisanak.com',
+};
+
+app.use(cors(corsOptions));
     
 const cluster = redis.createCluster({
     rootNodes: [
