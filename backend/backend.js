@@ -140,7 +140,10 @@ app.post('/api/resendCode', async (req, res) => {
             const foundEmail = result.email
     
             const mailOptions = {
-                from: "registrasi@kuisanak.com",
+                from: {
+                    name: 'KuisAnak',
+                    address: 'registrasi@kuisanak.com'
+                },
                 to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
                 text: ` Kode verifikasi anda adalah:\n${verificationCode}`
@@ -198,7 +201,10 @@ app.post('/api/register', async (req, res) => {
           let verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
             
           const mailOptions = {
-            from: "registrasi@kuisanak.com",
+            from: {
+                    name: 'KuisAnak',
+                    address: 'registrasi@kuisanak.com'
+                },
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
             text: ` Kode verifikasi anda adalah:\n${verificationCode}`
