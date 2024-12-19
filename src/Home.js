@@ -77,7 +77,7 @@ function Home(props){
                 <Container>
                 <Row>
                     <div className='col-12 col-sm-6 col-md-8'>
-                        <h1 className='home-h1'>Kuis untuk anak-anak! 🌴</h1>
+                        <h1>Kuis untuk anak-anak! 🌴</h1>
                         {/* --------------CARDS-------------- */}
                         <Row xs={1} md={2} lg={3} className="g-4 main-container">
                         <Col className='quiz-col-home'>
