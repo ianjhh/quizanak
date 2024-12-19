@@ -146,7 +146,7 @@ app.post('/api/resendCode', async (req, res) => {
                 },
                 to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
-                text: ` Kode verifikasi anda adalah:\n${verificationCode}`
+                text: `Kode verifikasi anda adalah:\n${verificationCode}`
             };
     
               transporter.sendMail(mailOptions, (error, info) => {
@@ -207,7 +207,7 @@ app.post('/api/register', async (req, res) => {
                 },
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
-            text: ` Kode verifikasi anda adalah:\n${verificationCode}`
+            text: `Kode verifikasi anda adalah:\n${verificationCode}`
           };
     
           transporter.sendMail(mailOptions, (error, info) => {
