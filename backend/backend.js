@@ -74,13 +74,12 @@ initBloomFilter();
 
 /* NODEMAILER */
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  host: "smtp.gmail.com",
+  host: "mail.privateemail.com",
   port: 465,
   secure: true,
   auth: {
-    user: "ianjh.102@gmail.com",
-    pass: "wstl waad oxia gttw",
+    user: "registrasi@kuisanak.com",
+    pass: "ijh21999",
   },
 });
 
@@ -141,7 +140,7 @@ app.post('/api/resendCode', async (req, res) => {
             const foundEmail = result.email
     
             const mailOptions = {
-                from: "ianjhh.102@gmail.com",
+                from: "registrasi@kuisanak.com",
                 to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
                 text: ` Kode verifikasi anda adalah:\n${verificationCode}`
@@ -199,7 +198,7 @@ app.post('/api/register', async (req, res) => {
           let verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
             
           const mailOptions = {
-            from: "ianjhh.102@gmail.com",
+            from: "registrasi@kuisanak.com",
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
             text: ` Kode verifikasi anda adalah:\n${verificationCode}`
