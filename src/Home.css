@@ -11,15 +11,6 @@
     transform: scale(1.02);
 }
 
-@font-face {
-  font-family: 'titlefont';
-  src: local('titlefont'), url(./fonts/titlefont.ttf) format('truetype'); /* or truetype */
-}
-
-.home-h1 {
-  font-family: 'titlefont';
-}
-
 @media only screen and (max-width: 576px){
     .historylist, .loginarea{
         display: none;
