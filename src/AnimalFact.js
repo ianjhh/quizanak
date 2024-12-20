@@ -51,9 +51,7 @@ function AnimalFact(){
 
     return(
         <>
-            {isLoggedIn? 
-            <>
-            <LoggedInNav /> 
+            {isLoggedIn? <LoggedInNav /> : <Navapp />}
             <div className='bg-warning'>
                 <br />
                 <Container>
@@ -70,9 +68,6 @@ function AnimalFact(){
                 <br /><br />
             </div>
             <Footer />
-            </>
-            :
-            null}
         </>
     );
 }
