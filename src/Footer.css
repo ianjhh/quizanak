@@ -2,3 +2,7 @@
     color: white;
     text-decoration: none;
 }
+
+.footer-text:hover{
+    background-color: #157347;
+}
