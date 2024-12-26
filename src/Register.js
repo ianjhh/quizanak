@@ -43,7 +43,9 @@ function Register(props){
         );
     };
 
-    const handleRegister = () =>{
+    const handleRegister = (email) =>{
+        let emailIsValidLocal = validateEmail(email);
+        console.log(emailIsValidLocal)
         const saltRounds = 11;
 
         if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
@@ -80,10 +82,11 @@ function Register(props){
 
     const validateEmail = (email) =>{
         let validEmail = validateEmailFormat(email)
+        let returnVal;
 
         if(!validEmail){
             setCorrectEmailFormat(false)
-            return;
+            return false;
         }
         else{
             setCorrectEmailFormat(true)
@@ -95,15 +98,19 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setEmailIsValid(true)
+            returnVal = true;
         })
         .catch(function (e) {
             if(e.response && e.response.status === 409){
                 setEmailIsValid(false)
+                returnVal = false;
             }
             else{
                 alert('Oops ada error!')
+                returnVal = false;
             }
         });
+        return returnVal;
     }
 
     const validateUsername = (username) =>{
@@ -163,7 +170,7 @@ function Register(props){
                 {emailIsValid === true && correctEmailFormat? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false && correctEmailFormat? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : (!correctEmailFormat? <Form.Text className="text-danger">Format Email salah!</Form.Text> : null))}
             </Form.Group>
     
-            <Button variant="primary" type="button" onClick={handleRegister}}>Daftar</Button>
+            <Button variant="primary" type="button" onClick={()=>{handleRegister(email)}}>Daftar</Button>
             </Form>
         </div>
         </Container>
