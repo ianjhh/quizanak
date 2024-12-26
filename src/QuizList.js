@@ -102,7 +102,7 @@ function QuizList(props){
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
-                                  {item.description}<br/><br/>
+                                  {item.description}<br/>
                                 </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -121,7 +121,7 @@ function QuizList(props){
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
-                                  {item.description}<br/><br/>
+                                  {item.description}<br/>
                                 </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -140,7 +140,7 @@ function QuizList(props){
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
-                                  {item.description}<br/><br/>
+                                  {item.description}<br/>
                                 </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -159,7 +159,7 @@ function QuizList(props){
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
-                                  {item.description}<br/><br/>
+                                  {item.description}<br/>
                                 </Card.Text>   
                                 </Card.Body>
                             </Card>
