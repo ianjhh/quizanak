@@ -103,7 +103,6 @@ function QuizList(props){
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
-                                  Kesulitan: {item.difficulty}
                                 </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -123,7 +122,6 @@ function QuizList(props){
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
-                                  Kesulitan: {item.difficulty}
                                 </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -143,7 +141,6 @@ function QuizList(props){
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
-                                  Kesulitan: {item.difficulty}
                                 </Card.Text>
                                 </Card.Body>
                             </Card>
@@ -163,7 +160,6 @@ function QuizList(props){
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
                                   {item.description}<br/><br/>
-                                  Kesulitan: {item.difficulty}
                                 </Card.Text>   
                                 </Card.Body>
                             </Card>
