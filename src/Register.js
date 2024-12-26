@@ -166,7 +166,7 @@ function Register(props){
                 {emailIsValid === true && correctEmailFormat? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false && correctEmailFormat? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : (!correctEmailFormat? <Form.Text className="text-danger">Format Email salah!</Form.Text> : null))}
             </Form.Group>
     
-            <Button variant="primary" type="button" onClick={setToggle(!toggle)}>Daftar</Button>
+            <Button variant="primary" type="button" onClick={()=>{setToggle(!toggle)}}>Daftar</Button>
             </Form>
         </div>
         </Container>
