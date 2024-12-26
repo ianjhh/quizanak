@@ -48,6 +48,7 @@ function Register(props){
 
         if(emailIsValid === null){
             let isValid = validateEmail(email)
+            console.log(isValid)
             if (isValid !== true){
                 alert('Input tidak valid')
                 return;
