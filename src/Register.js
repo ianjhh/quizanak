@@ -47,16 +47,17 @@ function Register(props){
         const saltRounds = 11;
 
         if(emailIsValid === null){
-            if (!validateEmail(email)){
+            let isValid = validateEmail(email)
+            if (isValid !== true){
                 alert('Input tidak valid')
-                console.log(email)
                 return;
             }
         }
-
-        if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || (emailIsValid!==null && !emailIsValid)){
-            alert('Input tidak valid')
-            return;
+        else{
+            if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
+                alert('Input tidak valid')
+                return;
+            }
         }
 
       /* generate password hash */
@@ -108,12 +109,11 @@ function Register(props){
         .catch(function (e) {
             if(e.response && e.response.status === 409){
                 setEmailIsValid(false)
-                return false;
             }
             else{
                 alert('Oops ada error!')
-                return false;
             }
+            return false;
         });
     }
 
