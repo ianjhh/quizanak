@@ -90,10 +90,11 @@ function Register(props){
 
     const validateEmail = (email) =>{
         let validEmail = validateEmailFormat(email)
+        let returnVal;
 
         if(!validEmail){
             setCorrectEmailFormat(false)
-            return false;
+            returnVal = false;
         }
         else{
             setCorrectEmailFormat(true)
@@ -105,7 +106,7 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setEmailIsValid(true)
-            return true;
+            returnVal = true;
         })
         .catch(function (e) {
             if(e.response && e.response.status === 409){
@@ -114,8 +115,10 @@ function Register(props){
             else{
                 alert('Oops ada error!')
             }
-            return false;
+            returnVal = false;
         });
+
+        return returnVal;
     }
 
     const validateUsername = (username) =>{
