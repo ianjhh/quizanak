@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import { Form,Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import bcrypt from 'bcryptjs';
@@ -17,7 +17,6 @@ function Register(props){
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
     const [correctEmailFormat, setCorrectEmailFormat] = useState(true);
-    const [toggle, setToggle] = useState(true);
     const navigate = useNavigate();
 
     const verifyToken = () =>{
@@ -48,7 +47,7 @@ function Register(props){
         const saltRounds = 11;
 
         if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
-            alert('Input tidak valid!')
+            alert('Invalid input!')
             return;
         }
 
@@ -133,8 +132,6 @@ function Register(props){
             setPassword2Msg('Kata Sandi tidak cocok!')
         }
     }
-
-    useEffect(()=>{handleRegister();}, [toggle])
     
     return(
         <Container className="mt-5 col-10 col-sm-7 col-lg-4 col-xl-3">
@@ -166,7 +163,7 @@ function Register(props){
                 {emailIsValid === true && correctEmailFormat? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false && correctEmailFormat? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : (!correctEmailFormat? <Form.Text className="text-danger">Format Email salah!</Form.Text> : null))}
             </Form.Group>
     
-            <Button variant="primary" type="button" onClick={()=>{setToggle(!toggle)}}>Daftar</Button>
+            <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
             </Form>
         </div>
         </Container>
