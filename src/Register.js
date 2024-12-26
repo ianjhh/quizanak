@@ -47,7 +47,7 @@ function Register(props){
         const saltRounds = 11;
 
         if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
-            alert('Invalid input!')
+            alert('Input tidak valid!')
             return;
         }
 
