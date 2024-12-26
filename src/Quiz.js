@@ -180,7 +180,7 @@ function Quiz(props){
                         {quizList[currentQuestion-1].imagesrc? <><img className='mb-3 questionImage' src={require(`./${quizList[currentQuestion-1].imagesrc}.jpg`)} alt="Logo" /></> : null}
                         {!clickedNext? quizList[currentQuestion-1].options.map((option, index) =>
                         <div className="form-check radio-toolbar" key={index}>
-                            <Row className="g-4 quiz-options-width col-8 col-sm-7 col-md-6 col-lg-5">
+                            <Row className="g-4 quiz-options-width col-10 col-sm-7 col-md-6 col-lg-5">
                         <input className="form-check-input fs-5" type="radio" name="flexRadioDefault" id={`flexRadioDefault${index}`} value={option} checked={answer === option} onChange={onOptionChange} />
                         <label className="form-check-label fs-5 py-1 px-3" htmlFor={`flexRadioDefault${index}`}>
                             {option}
