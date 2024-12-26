@@ -110,6 +110,7 @@ function Register(props){
                 returnVal = false;
             }
         });
+        console.log(returnVal)
         return returnVal;
     }
 
