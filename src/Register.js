@@ -17,7 +17,7 @@ function Register(props){
     const [emailIsValid, setEmailIsValid] = useState(null);
     const [bloomFilter, setBloomFilter] = useState(null);
     const [correctEmailFormat, setCorrectEmailFormat] = useState(true);
-    const [toggle, setToggle] = useState(false);
+    const [toggle, setToggle] = useState(true);
     const navigate = useNavigate();
 
     const verifyToken = () =>{
@@ -134,7 +134,7 @@ function Register(props){
         }
     }
 
-    useEffect(()=>{handleRegister()}, [toggle])
+    useEffect(()=>{handleRegister();}, [toggle])
     
     return(
         <Container className="mt-5 col-10 col-sm-7 col-lg-4 col-xl-3">
