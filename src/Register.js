@@ -45,7 +45,7 @@ function Register(props){
 
     const handleRegister = (email) =>{
         let emailIsValidLocal = validateEmail(email);
-        console.log(emailIsValidLocal)
+        //console.log(emailIsValidLocal)
         const saltRounds = 11;
 
         if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
@@ -97,18 +97,16 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setEmailIsValid(true)
-            return true;
         })
         .catch(function (e) {
             if(e.response && e.response.status === 409){
                 setEmailIsValid(false)
-                return false;
             }
             else{
                 alert('Oops ada error!')
-                return false;
             }
         });
+        console.log(emailIsValid)
     }
 
     const validateUsername = (username) =>{
