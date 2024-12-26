@@ -47,10 +47,13 @@ function Register(props){
         const saltRounds = 11;
 
         if(emailIsValid === null){
-            validateEmail(email)
+            if (!validateEmail(email)){
+                alert('Input tidak valid')
+                return;
+            }
         }
 
-        if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
+        if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || (emailIsValid!==null && !emailIsValid)){
             alert('Input tidak valid')
             return;
         }
@@ -87,7 +90,7 @@ function Register(props){
 
         if(!validEmail){
             setCorrectEmailFormat(false)
-            return;
+            return false;
         }
         else{
             setCorrectEmailFormat(true)
@@ -99,13 +102,16 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setEmailIsValid(true)
+            return true;
         })
         .catch(function (e) {
             if(e.response && e.response.status === 409){
                 setEmailIsValid(false)
+                return false;
             }
             else{
                 alert('Oops ada error!')
+                return false;
             }
         });
     }
