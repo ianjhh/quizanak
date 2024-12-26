@@ -85,7 +85,7 @@ function Home(props){
                             <Card className='link-card'>
                                 <Card.Img variant="top" src={img1} className='img-card-home' />
                                 <Card.Body className='card-body-home'>
-                                <Card.Title>Quiz</Card.Title>
+                                <Card.Title>Kuis</Card.Title>
                                 <Card.Text className='card-description-home'>
                                     Kuis tentang binatang, matematika dan lebih!
                                 </Card.Text>
