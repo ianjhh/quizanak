@@ -46,11 +46,6 @@ function Register(props){
     const handleRegister = () =>{
         const saltRounds = 11;
 
-        /* if user does not unblur email and instantly click register after typing in input */
-        if(!emailIsValid){
-            validateEmail(email)
-        }
-
         if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
             alert('Input tidak valid')
             return;
