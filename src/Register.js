@@ -43,9 +43,7 @@ function Register(props){
         );
     };
 
-    const handleRegister = (email) =>{
-        let emailIsValidLocal = validateEmail(email);
-        //console.log(emailIsValidLocal)
+    const handleRegister = () =>{
         const saltRounds = 11;
 
         if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
@@ -166,7 +164,7 @@ function Register(props){
                 {emailIsValid === true && correctEmailFormat? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false && correctEmailFormat? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : (!correctEmailFormat? <Form.Text className="text-danger">Format Email salah!</Form.Text> : null))}
             </Form.Group>
     
-            <Button variant="primary" type="button" onClick={()=>{handleRegister(email)}}>Daftar</Button>
+            <Button variant="primary" type="button" onClick={()=>{handleRegister}>Daftar</Button>
             </Form>
         </div>
         </Container>
