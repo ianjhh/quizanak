@@ -238,7 +238,7 @@ app.post('/api/register', async (req, res) => {
 
 app.get('/api/homepage', async (req, res) => {
     if(!req.cookies.jwt){
-      res.status(400).send('No valid authentication token, try logging in again')
+      res.status(400).send('Token otentikasi tidak valid, tolong coba lagi.')
     }
     else{
         jwt.verify(req.cookies.jwt, 'privatekey', async (err, authorizedData) => {
@@ -250,7 +250,7 @@ app.get('/api/homepage', async (req, res) => {
               let found = await credentials.findOne({username: authorizedData.username}, {verified:1, _id:0});
               if(found){
                   if(found.verified!== true){
-                      res.status(400).send('Not verified!');
+                      res.status(400).send('Akun belum diverifikasi!');
                   }
                   else{
                       console.log('verified!')
@@ -267,6 +267,7 @@ app.get('/api/homepage', async (req, res) => {
 })
 
 app.get('/api/verifyToken', async (req, res) => {
+  try{
     if(!req.cookies.jwt){
       res.status(400).send('error')
     }
@@ -276,16 +277,28 @@ app.get('/api/verifyToken', async (req, res) => {
               //If error send Forbidden (403)
               console.log(err)
               res.status(403).send('error');
-          } else {
+          } 
+          else {
+              /* retrieve verified status of user */
+              let found = await credentials.findOne({username: authorizedData.username}, {verified:1, _id:0});
+
+              if(!found){
+                  res.status(400).send('Oops! ada error.')
+              }
+            
               //If token is successfully verified, we can send the authorized data 
               res.status(200).json({
                   message: 'Successful log in',
-                  verified: true,
+                  verified: found.verified,
                   authorizedData
               });
           }
         })
     }
+  }
+  catch(e){
+      res.status(400).send('Oops! ada error.')
+  }
 })
 
 app.post('/api/fetchQuiz', async (req, res) => {
