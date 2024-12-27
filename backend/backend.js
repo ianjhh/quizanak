@@ -177,7 +177,7 @@ app.post('/api/login', async (req, res) => {
     else{
     bcrypt.compare(req.body.password, result.password, function(err, result) {
       if(result!==true){
-          res.status(404).send('Not found!')
+          res.status(404).send('Username atau kata sandi salah!')
       }
       else{
           jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
