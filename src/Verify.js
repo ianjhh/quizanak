@@ -31,6 +31,7 @@ function Verify(props){
         axios.get('/api/logout', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            navigate('/login')
         })
         .catch(function (error) {
             alert(error.response.data)
@@ -77,9 +78,9 @@ function Verify(props){
                 </Form.Group>
         
                 <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>
-                <Button variant="danger" type="link" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
-                <br/>
-                <Button variant="danger" onClick={handleLogout}>Logout</Button>
+                <Button variant="danger" type="button" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
+                <br/><br/>
+                <Button variant="danger" type="button" onClick={handleLogout}>Logout</Button>
             </>
             : <h3>Akun telah diverifikasi!</h3>}
         </>
