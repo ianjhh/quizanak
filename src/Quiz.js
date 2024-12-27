@@ -45,7 +45,7 @@ function Quiz(props){
     const verifyToken = () =>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
-            console.log(response.data.verified)
+            console.log(response.data)
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
                 setIsLoggedIn(true)
