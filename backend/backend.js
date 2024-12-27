@@ -272,7 +272,7 @@ app.get('/api/verifyToken', async (req, res) => {
       res.status(400).send('error')
     }
     else{
-        jwt.verify(req.cookies.jwt, 'privatekey', (err, authorizedData) => {
+        jwt.verify(req.cookies.jwt, 'privatekey', async (err, authorizedData) => {
           if(err){
               //If error send Forbidden (403)
               console.log(err)
