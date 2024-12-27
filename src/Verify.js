@@ -17,13 +17,17 @@ function Verify(props){
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            setIsLoggedIn(true)
             if (response.data.verified === true){
                 navigate('/')
             }
+            else{
+                setUsername(response.data.authorizedData.username)
+            }
         })
         .catch(function (error) {
-            navigate('/login')
             console.log(error.response.status)
+            navigate('/login')
         });
     }
 
