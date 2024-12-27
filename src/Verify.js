@@ -25,7 +25,18 @@ function Verify(props){
             navigate('/login')
             console.log(error.response.status)
         });
-}
+    }
+
+    const handleLogout = () =>{
+        axios.get('/api/logout', { withCredentials: true })
+        .then(function (response) {
+            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+        })
+        .catch(function (error) {
+            alert(error.response.data)
+            console.log(error.response.status);
+        });
+    }
 
     const handleVerify = () =>{
         axios.post('/api/setVerified', {verificationCode: code})
@@ -67,6 +78,8 @@ function Verify(props){
         
                 <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>
                 <Button variant="danger" type="link" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
+                <br/>
+                <Button variant="danger" onClick={handleLogout}>Logout</Button>
             </>
             : <h3>Akun telah diverifikasi!</h3>}
         </>
