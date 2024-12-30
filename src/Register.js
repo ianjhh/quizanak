@@ -45,7 +45,6 @@ function Register(props){
 
     const handleRegister = (email) =>{
         let validEmail = validateEmailFormat(email)
-        console.log(validEmail)
 
         if(!validEmail){
             setCorrectEmailFormat(false)
