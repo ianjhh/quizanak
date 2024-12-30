@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import Footer from './Footer';
 import axios from 'axios';
+import Spinner from 'react-bootstrap/Spinner';
 import './Fact.css';
 
 function AnimalFact(){
@@ -49,9 +50,11 @@ function AnimalFact(){
 
     useEffect(()=>{verifyToken(); fetchAnimalFact();}, [])
 
-    return(
-        <>
-            {isLoggedIn? <LoggedInNav /> : <Navapp />}
+    function loggedInRender(isLoggedIn){
+        if (isLoggedIn){
+            return
+            <>
+            <LoggedInNav /> 
             <div className='bg-warning'>
                 <br />
                 <Container>
@@ -68,6 +71,18 @@ function AnimalFact(){
                 <br /><br />
             </div>
             <Footer />
+            </>
+        }
+        return
+        <Spinner animation="border" role="status" variant="success">
+            <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        
+    }
+
+    return(
+        <>
+            <loggedInRender isLoggedIn={isLoggedIn} />
         </>
     );
 }
