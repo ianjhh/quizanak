@@ -149,7 +149,7 @@ function Quiz(props){
         setAnswer(e.target.value)
     }
 
-    function loggedInRender(isLoggedIn){
+    function LoggedInRender(isLoggedIn){
         if (isLoggedIn){
             return (<div className='bg-warning'>  
             <LoggedInNav />
@@ -224,7 +224,7 @@ function Quiz(props){
 
     return(
         <>
-            <loggedInRender isLoggedIn={isLoggedIn} />
+            <LoggedInRender isLoggedIn={isLoggedIn} />
         </>
     );
 }
