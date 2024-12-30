@@ -43,42 +43,7 @@ function Register(props){
         );
     };
 
-    const handleRegister = () =>{
-        const saltRounds = 11;
-
-        if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
-            alert('Input tidak valid!')
-            return;
-        }
-
-      /* generate password hash */
-      bcrypt
-      .genSalt(saltRounds)
-      .then(salt => {
-        return bcrypt.hash(password, salt)
-      })
-      .then(hash => {
-        axios.post('/api/register', {
-            username: username,
-            password: hash,
-            email: email,
-            verified: false,
-            createdAt: new Date(),
-            history: []
-        })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            alert('Link verifikasi akun telah dikirim kepada email anda!')
-            navigate('/verify')
-        })
-        .catch(function (error) {
-            console.log(error.response.status);
-        });
-      })
-      .catch(error => console.log(error.response.status))
-    }
-
-    const validateEmail = (email) =>{
+    const handleRegister = (email) =>{
         let validEmail = validateEmailFormat(email)
 
         if(!validEmail){
@@ -88,22 +53,54 @@ function Register(props){
         else{
             setCorrectEmailFormat(true)
         }
-        
+
         axios.post('/api/validateEmail', {
             email: email,
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setEmailIsValid(true)
-        })
-        .catch(function (e) {
-            if(e.response && e.response.status === 409){
-                setEmailIsValid(false)
+            const saltRounds = 11;
+
+            if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
+                alert('Input tidak valid!')
+                return;
             }
-            else{
-                alert('Oops ada error!')
-            }
-        });
+    
+          /* generate password hash */
+          bcrypt
+          .genSalt(saltRounds)
+          .then(salt => {
+            return bcrypt.hash(password, salt)
+          })
+          .then(hash => {
+            axios.post('/api/register', {
+                username: username,
+                password: hash,
+                email: email,
+                verified: false,
+                createdAt: new Date(),
+                history: []
+            })
+            .then(function (response) {
+                /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+                alert('Link verifikasi akun telah dikirim kepada email anda!')
+                navigate('/verify')
+            })
+            .catch(function (error) {
+                console.log(error.response.status);
+            });
+          })
+          .catch(error => console.log(error.response.status))
+            })
+            .catch(function (e) {
+                if(e.response && e.response.status === 409){
+                    setEmailIsValid(false)
+                }
+                else{
+                    alert('Oops ada error!')
+                }
+            });
     }
 
     const validateUsername = (username) =>{
@@ -159,11 +156,11 @@ function Register(props){
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} onBlur={()=>{validateEmail(email)}} value={email} />
+                <Form.Control type="email" onChange={(e)=>{setEmail(e.target.value)}} value={email} />
                 {emailIsValid === true && correctEmailFormat? <Form.Text className="text-success">Email bisa digunakan!</Form.Text> : (emailIsValid === false && correctEmailFormat? <Form.Text className="text-danger">Email sudah diambil!</Form.Text> : (!correctEmailFormat? <Form.Text className="text-danger">Format Email salah!</Form.Text> : null))}
             </Form.Group>
     
-            <Button variant="primary" type="button" onClick={handleRegister}>Daftar</Button>
+            <Button variant="primary" type="button" onClick={(email)=>{handleRegister(email);}}>Daftar</Button>
             </Form>
         </div>
         </Container>
