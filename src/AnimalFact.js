@@ -50,7 +50,7 @@ function AnimalFact(){
 
     useEffect(()=>{verifyToken(); fetchAnimalFact();}, [])
 
-    function loggedInRender(isLoggedIn){
+    function LoggedInRender(isLoggedIn){
         if (isLoggedIn){
             return <>
             <LoggedInNav /> 
@@ -79,7 +79,7 @@ function AnimalFact(){
 
     return(
         <>
-            <loggedInRender isLoggedIn={isLoggedIn} />
+            <LoggedInRender isLoggedIn={isLoggedIn} />
         </>
     );
 }
