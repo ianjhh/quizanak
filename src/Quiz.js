@@ -152,6 +152,7 @@ function Quiz(props){
     useEffect(()=>{verifyToken(); fetchQuiz();}, [])
 
     return(
+        <>
         {isLoggedIn ?
             (<div className='bg-warning'>  
             <LoggedInNav />
@@ -221,6 +222,7 @@ function Quiz(props){
         <Spinner animation="border" role="status" variant="success">
             <span className="visually-hidden">Loading...</span>
         </Spinner>}
+        </>
     );
 }
 
