@@ -152,7 +152,7 @@ function Quiz(props){
     useEffect(()=>{verifyToken(); fetchQuiz();}, [])
 
     return(
-        {isLoggedIn?
+        {isLoggedIn ?
             (<div className='bg-warning'>  
             <LoggedInNav />
             <Container className='mt-3'>
