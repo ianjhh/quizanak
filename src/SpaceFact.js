@@ -50,7 +50,7 @@ function SpaceFact(){
 
     useEffect(()=>{verifyToken(); fetchSpaceFact();}, [])
 
-    function loggedInRender(isLoggedIn){
+    function LoggedInRender(isLoggedIn){
         if (isLoggedIn){
             return <>
                <LoggedInNav />
@@ -79,7 +79,7 @@ function SpaceFact(){
 
     return(
         <>
-            <loggedInRender isLoggedIn={isLoggedIn} />
+            <LoggedInRender isLoggedIn={isLoggedIn} />
         </>
     );
 }
