@@ -149,16 +149,10 @@ function Quiz(props){
         setAnswer(e.target.value)
     }
 
-    useEffect(()=>{verifyToken(); fetchQuiz();}, [])
-
-    return(
-        <>
-        {!isLoggedIn ? 
-        <Spinner animation="border" role="status" variant="success">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        :
-        <div className='bg-warning'>  
+    function loggedInRender(isLoggedIn){
+        if (isLoggedIn){
+            return
+            <div className='bg-warning'>  
             <LoggedInNav />
             <Container className='mt-3'>
                 <Row>
@@ -220,7 +214,19 @@ function Quiz(props){
                 </Row>
             </Container><br/>
             <Footer />
-        </div>}
+            </div>
+        }
+        return
+        <Spinner animation="border" role="status" variant="success">
+            <span className="visually-hidden">Loading...</span>
+        </Spinner>
+    }
+
+    useEffect(()=>{verifyToken(); fetchQuiz();}, [])
+
+    return(
+        <>
+            <loggedInRender isLoggedIn={isLoggedIn} />
         </>
     );
 }
