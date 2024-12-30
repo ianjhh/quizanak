@@ -153,8 +153,12 @@ function Quiz(props){
 
     return(
         <>
-        {isLoggedIn ?
-            (<div className='bg-warning'>  
+        {!isLoggedIn ? 
+        <Spinner animation="border" role="status" variant="success">
+            <span className="visually-hidden">Loading...</span>
+        </Spinner>}
+        :
+        <div className='bg-warning'>  
             <LoggedInNav />
             <Container className='mt-3'>
                 <Row>
@@ -216,12 +220,7 @@ function Quiz(props){
                 </Row>
             </Container><br/>
             <Footer />
-        </div>)
-
-        :
-        <Spinner animation="border" role="status" variant="success">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>}
+        </div>
         </>
     );
 }
