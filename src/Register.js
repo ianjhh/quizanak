@@ -45,7 +45,7 @@ function Register(props){
 
     const handleRegister = (email) =>{
         let validEmail = validateEmailFormat(email)
-        let formatIsCorrect;
+        console.log(validEmail)
 
         if(!validEmail){
             setCorrectEmailFormat(false)
@@ -53,7 +53,6 @@ function Register(props){
         }
         else{
             setCorrectEmailFormat(true)
-            formatIsCorrect = true;
         }
 
         axios.post('/api/validateEmail', {
