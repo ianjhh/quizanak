@@ -45,6 +45,7 @@ function Register(props){
 
     const handleRegister = (email) =>{
         let validEmail = validateEmailFormat(email)
+        let formatIsCorrect;
 
         if(!validEmail){
             setCorrectEmailFormat(false)
@@ -52,6 +53,7 @@ function Register(props){
         }
         else{
             setCorrectEmailFormat(true)
+            formatIsCorrect = true;
         }
 
         axios.post('/api/validateEmail', {
@@ -62,7 +64,7 @@ function Register(props){
             setEmailIsValid(true)
             const saltRounds = 11;
 
-            if (username.length < 3 || password.length < 8 || password !== password2 || !correctEmailFormat || !emailIsValid){
+            if (username.length < 3 || password.length < 8 || password !== password2){
                 alert('Input tidak valid!')
                 return;
             }
