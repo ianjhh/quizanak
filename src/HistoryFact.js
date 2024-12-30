@@ -53,8 +53,7 @@ function HistoryFact(){
 
     function loggedInRender(isLoggedIn){
         if (isLoggedIn){
-            return
-            <>
+            return <>
                 <LoggedInNav />
                 <div className='bg-warning'>
                 <br />
@@ -74,8 +73,7 @@ function HistoryFact(){
                 <Footer />
             </>
         }
-        return
-        <Spinner animation="border" role="status" variant="success">
+        return <Spinner animation="border" role="status" variant="success">
             <span className="visually-hidden">Loading...</span>
         </Spinner>
         
