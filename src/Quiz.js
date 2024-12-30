@@ -156,7 +156,7 @@ function Quiz(props){
         {!isLoggedIn ? 
         <Spinner animation="border" role="status" variant="success">
             <span className="visually-hidden">Loading...</span>
-        </Spinner>}
+        </Spinner>
         :
         <div className='bg-warning'>  
             <LoggedInNav />
@@ -220,7 +220,7 @@ function Quiz(props){
                 </Row>
             </Container><br/>
             <Footer />
-        </div>
+        </div>}
         </>
     );
 }
