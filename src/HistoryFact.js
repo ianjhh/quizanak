@@ -51,7 +51,7 @@ function HistoryFact(){
 
     useEffect(()=>{verifyToken(); fetchRandomFact();}, [])
 
-    function loggedInRender(isLoggedIn){
+    function LoggedInRender(isLoggedIn){
         if (isLoggedIn){
             return <>
                 <LoggedInNav />
@@ -81,7 +81,7 @@ function HistoryFact(){
 
     return(
         <>
-            <loggedInRender isLoggedIn={isLoggedIn} />
+            <LoggedInRender isLoggedIn={isLoggedIn} />
         </>
     );
 }
