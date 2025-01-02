@@ -71,7 +71,7 @@ function Home(props){
 
     return(
         <>
-            {isLoggedIn? <LoggedInNav /> : (isLoggedIn!==undefined ? <Navapp /> : null)}
+            {isLoggedIn? <LoggedInNav /> : <Navapp />}
             <div className='bg-warning'>
                 <br />
                 <Container>
