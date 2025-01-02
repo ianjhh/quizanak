@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
+import LoadingNav from './LoadingNav';
 
 function QuizList(props){
     const [isLoggedIn, setIsLoggedIn] = useState(null);
