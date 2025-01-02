@@ -7,7 +7,7 @@ import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap'
 import { useNavigate, Link } from "react-router-dom";
 
 function Sitemap(){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [animalQuiz, setAnimalQuiz] = useState([]);
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
@@ -82,11 +82,18 @@ function Sitemap(){
         });
     }
 
+    function LoggedInRender({isLoggedIn}){
+        if(isLoggedIn){
+            return <LoggedInNav />
+        }
+        return <Navapp />
+    }
+
     useEffect(()=>{verifyToken(); fetchAnimalQuiz(); fetchMathQuiz(); fetchLanguageQuiz(); fetchMiscellaneousQuiz();}, [])
 
     return(
         <>
-        {isLoggedIn? <LoggedInNav /> : <Navapp />}
+        {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
         <div className='bg-warning'>
             <br/>
             <Container>
