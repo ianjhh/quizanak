@@ -5,6 +5,7 @@ import axios from 'axios';
 import LoggedInNav from './LoggedInNav';
 import Navapp from './Navapp';
 import { useNavigate } from "react-router-dom";
+import LoadingNav from './LoadingNav';
 
 function AboutUs(){
     const [isLoggedIn, setIsLoggedIn] = useState(null);
