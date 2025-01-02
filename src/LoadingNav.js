@@ -14,10 +14,13 @@ function LoadingNav(){
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Placeholder animation="glow">
-                      <Placeholder xs={5} /><Placeholder xs={5} />
-                    </Placeholder>
-                    <Placeholder.Button variant="primary" xs={10} />
+                    <Navbar.Text className='text-white nav-text'>Kuis</Navbar.Text>
+                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown">
+                        <NavDropdown.Item className='text-black'>Binatang</NavDropdown.Item>
+                        <NavDropdown.Item className='text-black'>Angkasa</NavDropdown.Item>
+                        <NavDropdown.Item className='text-black'>Sejarah</NavDropdown.Item>
+                    </NavDropdown>
+                    <Placeholder.Button variant="secondary" xs={5}/>
                 </Nav>
                 </Navbar.Collapse>
             </Container>
