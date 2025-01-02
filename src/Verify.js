@@ -3,7 +3,7 @@ import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
 import { useSearchParams } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function Verify(props){
