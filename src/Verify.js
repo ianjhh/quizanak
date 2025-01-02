@@ -7,7 +7,7 @@ import { Form,Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function Verify(props){
-    const [verified, setVerified] = useState(null);
+    const [verified, setVerified] = useState(false);
     const [code, setCode] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
@@ -19,12 +19,10 @@ function Verify(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
             if (response.data.verified === true){
-                setVerified(true)
                 navigate('/')
             }
             else{
                 setUsername(response.data.authorizedData.username)
-                setVerified(false)
             }
         })
         .catch(function (error) {
@@ -71,11 +69,12 @@ function Verify(props){
         });
     }
 
-    function RenderVerify(verified){
-        if(verified=== true){
-            return <h3>Akun telah diverifikasi!</h3>
-        }
-        else if (verified=== false){return <>
+    useEffect(()=>{verifyToken();}, [])
+    
+    return(
+        <>
+            {!verified?
+            <>
                 <h3>Masukin kode verifikasi dari email dibawah</h3>
                 <Form.Group className="mb-3" controlId="formVerificationCode">
                         <Form.Label>Username</Form.Label>
@@ -87,19 +86,7 @@ function Verify(props){
                 <br/><br/>
                 <Button variant="danger" type="button" onClick={handleLogout}>Logout</Button>
             </>
-        }
-        else{
-            return <Spinner animation="border" role="status" variant="dark" className='mt-5 mb-5'>
-                                <span className="visually-hidden">Loading...</span>
-                            </Spinner>
-        }
-    }
-
-    useEffect(()=>{verifyToken();}, [])
-    
-    return(
-        <>
-            <RenderVerify verified={verified} />
+            : <h3>Akun telah diverifikasi!</h3>}
         </>
     )
 }
