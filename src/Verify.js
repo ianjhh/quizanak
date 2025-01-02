@@ -81,7 +81,7 @@ function Verify(props){
                         <Form.Control type="text" onChange={(e)=>{setCode(e.target.value)}} value={code} />
                 </Form.Group>
         
-                <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>
+                <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>&nbsp;
                 <Button variant="danger" type="button" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
                 <br/><br/>
                 <Button variant="danger" type="button" onClick={handleLogout}>Logout</Button>
