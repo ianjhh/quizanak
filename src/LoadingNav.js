@@ -14,10 +14,10 @@ function LoadingNav(){
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Placeholder as={Navbar.Text} animation="glow">
-                      <Placeholder xs={3} /><Placeholder xs={3} />
+                    <Placeholder animation="glow">
+                      <Placeholder xs={5} /><Placeholder xs={5} />
                     </Placeholder>
-                    <Placeholder.Button variant="primary" xs={5} />
+                    <Placeholder.Button variant="primary" xs={10} />
                 </Nav>
                 </Navbar.Collapse>
             </Container>
