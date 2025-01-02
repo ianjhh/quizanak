@@ -74,11 +74,13 @@ function Verify(props){
     return(
         <>
             {!verified?
-            <Container className='mt-3'>
+            <Container className='mt-4'>
                 <h3>Masukin kode verifikasi dari email dibawah</h3>
                 <Form.Group className="mb-3" controlId="formVerificationCode">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" onChange={(e)=>{setCode(e.target.value)}} value={code} />
+                        <Form.Label>Kode Verifikasi (6-digit)</Form.Label>
+                        <Col xs={5} sm={4} md={3} lg={2}>
+                            <Form.Control type="text" onChange={(e)=>{setCode(e.target.value)}} value={code}  />
+                        </Col>
                 </Form.Group>
         
                 <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>&nbsp;
