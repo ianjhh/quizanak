@@ -93,6 +93,7 @@ function Verify(props){
                                 <span className="visually-hidden">Loading...</span>
                             </Spinner>
         }
+    }
 
     useEffect(()=>{verifyToken();}, [])
     
