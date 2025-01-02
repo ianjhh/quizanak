@@ -11,7 +11,7 @@ function LoadingNav(){
     <>
         <Navbar className="bg-black">
             <Container>
-                <Navbar.Brand className='text-white navbar-title fs-5'><Link>KuisAnak</Link></Navbar.Brand>
+                <Navbar.Brand><Link className='text-decoration-none text-white navbar-title fs-5'>KuisAnak</Link></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
