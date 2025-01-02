@@ -7,7 +7,7 @@ import Navapp from './Navapp';
 import { useNavigate } from "react-router-dom";
 
 function AboutUs(){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const navigate = useNavigate();
 
     const verifyToken = () =>{
@@ -26,11 +26,18 @@ function AboutUs(){
         });
     }
 
+    function LoggedInRender({isLoggedIn}){
+        if(isLoggedIn){
+            return <LoggedInNav />
+        }
+        return <Navapp />
+    }
+
     useEffect(()=>{verifyToken();}, [])
 
     return(
         <>
-        {isLoggedIn? <LoggedInNav /> : <Navapp />}
+        {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
         <div>
             <br/>
             <Container>
