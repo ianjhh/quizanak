@@ -11,6 +11,12 @@
     transform: scale(1.02);
 }
 
+.spinnerHome{
+    position: relative;
+    top: 20px;
+    left: 20px;
+}
+
 @media only screen and (max-width: 576px){
     .historylist, .loginarea{
         display: none;
