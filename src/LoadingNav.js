@@ -10,9 +10,7 @@ function LoadingNav(){
     <>
         <Navbar className="bg-black">
             <Container>
-                <Placeholder as={Navbar.Brand} animation="glow">
-                    <Placeholder xs={6} />
-                </Placeholder>
+                <Navbar.Brand><Link to='/' className='text-decoration-none text-white navbar-title fs-5'>KuisAnak</Link></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
