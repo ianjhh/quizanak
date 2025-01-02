@@ -3,6 +3,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Button, NavDropdown } from 'react-bootstrap';
 import './Navapp.css';
+import Placeholder from 'react-bootstrap/Placeholder';
 
 function LoadingNav(){
   return(
@@ -14,7 +15,7 @@ function LoadingNav(){
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Navbar.Text className='text-white nav-text'>Kuis</Navbar.Text>
-                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown} onClick={manageShow}>
+                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown">
                         <NavDropdown.Item className='text-black'>Binatang</NavDropdown.Item>
                         <NavDropdown.Item className='text-black'>Angkasa</NavDropdown.Item>
                         <NavDropdown.Item className='text-black'>Sejarah</NavDropdown.Item>
