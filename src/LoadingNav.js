@@ -1,17 +1,23 @@
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { Button, NavDropdown } from 'react-bootstrap';
+import './Navapp.css';
+
 function LoadingNav(){
   return(
     <>
         <Navbar className="bg-black">
             <Container>
-                <Navbar.Brand><Link to='/' className='text-decoration-none text-white navbar-title fs-5'>KuisAnak</Link></Navbar.Brand>
+                <Navbar.Brand className='text-white navbar-title fs-5'>KuisAnak</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Navbar.Text><NavLink to='/quiz' className='text-white text-decoration-none nav-text'>Kuis</NavLink></Navbar.Text>
+                    <Navbar.Text className='text-white nav-text'>Kuis</Navbar.Text>
                     <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown} onClick={manageShow}>
-                        <NavDropdown.Item><Link to='/fakta-binatang' className='text-decoration-none text-black'>Binatang</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link to='/fakta-sejarah' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
+                        <NavDropdown.Item className='text-black'>Binatang</NavDropdown.Item>
+                        <NavDropdown.Item className='text-black'>Angkasa</NavDropdown.Item>
+                        <NavDropdown.Item className='text-black'>Sejarah</NavDropdown.Item>
                     </NavDropdown>
                     <Placeholder.Button variant="primary" xs={5} />
                 </Nav>
