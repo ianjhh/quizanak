@@ -79,7 +79,7 @@ function Home(props){
 
     return(
         <>
-            {typeof isLoggedIn === null ? <p>heloooooo</p> : <LoggedInRender isLoggedIn={isLoggedIn} />}
+            {isLoggedIn === null ? <p>heloooooo</p> : <LoggedInRender isLoggedIn={isLoggedIn} />}
             <div className='bg-warning'>
                 <br />
                 <Container>
