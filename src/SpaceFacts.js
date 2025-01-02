@@ -8,7 +8,7 @@ import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap'
 import { useNavigate, Link } from "react-router-dom";
 
 function SpaceFacts(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [spaceFacts, setSpaceFacts] = useState([]);
     const navigate = useNavigate();
 
@@ -41,11 +41,18 @@ function SpaceFacts(props){
         });
     }
 
+    function LoggedInRender({isLoggedIn}){
+        if(isLoggedIn){
+            return <LoggedInNav />
+        }
+        return <Navapp />
+    }
+
     useEffect(()=>{verifyToken(); fetchSpaceFacts();}, [])
 
     return(
         <>
-            {isLoggedIn? <LoggedInNav /> : <Navapp />}
+            {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
             <div className='bg-warning'>
                 <br />
                 <Container>
