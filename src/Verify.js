@@ -3,7 +3,7 @@ import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
 import { useSearchParams } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
-import { Form,Button } from "react-bootstrap";
+import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function Verify(props){
@@ -74,7 +74,7 @@ function Verify(props){
     return(
         <>
             {!verified?
-            <>
+            <Container>
                 <h3>Masukin kode verifikasi dari email dibawah</h3>
                 <Form.Group className="mb-3" controlId="formVerificationCode">
                         <Form.Label>Username</Form.Label>
@@ -85,8 +85,8 @@ function Verify(props){
                 <Button variant="danger" type="button" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
                 <br/><br/>
                 <Button variant="danger" type="button" onClick={handleLogout}>Logout</Button>
-            </>
-            : <h3>Akun telah diverifikasi!</h3>}
+            </Container>
+            : <Container><h3>Akun telah diverifikasi!</h3></Container>}
         </>
     )
 }
