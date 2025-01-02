@@ -8,7 +8,7 @@ import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap'
 import { useNavigate, Link } from "react-router-dom";
 
 function HistoryFacts(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [historyFacts, setHistoryFacts] = useState([]);
     const navigate = useNavigate();
 
@@ -41,11 +41,18 @@ function HistoryFacts(props){
         });
     }
 
+    function LoggedInRender({isLoggedIn}){
+        if(isLoggedIn){
+            return <LoggedInNav />
+        }
+        return <Navapp />
+    }
+
     useEffect(()=>{verifyToken(); fetchRandomFacts();}, [])
 
     return(
          <>
-            {isLoggedIn? <LoggedInNav /> : <Navapp />}
+            {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
             <div className='bg-warning'>
                 <br />
                 <Container>
