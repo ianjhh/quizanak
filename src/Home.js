@@ -9,7 +9,7 @@ import { useNavigate, Link } from "react-router-dom";
 import img1 from './binatang-laut1.jpg'
 
 function Home(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [historyList, setHistoryList] = useState([]);
@@ -29,6 +29,7 @@ function Home(props){
             }
         })
         .catch(function (error) {
+            setIsLoggedIn(false)
             console.log(error.response.status)
         });
 }
@@ -69,9 +70,16 @@ function Home(props){
 
     useEffect(()=>{verifyToken();}, [])
 
+    function LoggedInRender({isLoggedIn}){
+        if(isLoggedIn){
+            return <LoggedInNav />
+        }
+        return <Navapp />
+    }
+
     return(
         <>
-            {isLoggedIn ? <LoggedInNav /> : <Navapp />}
+            {typeof isLoggedIn === null ? null : <LoggedInRender isLoggedIn={isLoggedIn} />}
             <div className='bg-warning'>
                 <br />
                 <Container>
