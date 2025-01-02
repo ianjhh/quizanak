@@ -196,7 +196,7 @@ function Home(props){
                 </Row>
 
                     </div>
-                    {isLoggedIn === null ? <Spinner animation="border" role="status" variant="success" className='spinnerHome'>
+                    {isLoggedIn === null ? <Spinner animation="border" role="status" variant="secondary" className='spinnerHome'>
             <span className="visually-hidden">Loading...</span>
         </Spinner> : <RenderWhiteBox isLoggedIn={isLoggedIn} />}
                 </Row>
