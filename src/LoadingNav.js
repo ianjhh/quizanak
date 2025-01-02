@@ -10,17 +10,16 @@ function LoadingNav(){
     <>
         <Navbar className="bg-black">
             <Container>
-                <Navbar.Brand className='text-white navbar-title fs-5'>KuisAnak</Navbar.Brand>
+                <Placeholder as={Navbar.Brand} animation="glow">
+                    <Placeholder xs={6} />
+                </Placeholder>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Navbar.Text className='text-white nav-text'>Kuis</Navbar.Text>
-                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown">
-                        <NavDropdown.Item className='text-black'>Binatang</NavDropdown.Item>
-                        <NavDropdown.Item className='text-black'>Angkasa</NavDropdown.Item>
-                        <NavDropdown.Item className='text-black'>Sejarah</NavDropdown.Item>
-                    </NavDropdown>
-                    <Placeholder.Button variant="primary" xs={5} />
+                    <Placeholder as={Navbar.Text} animation="glow">
+                      <Placeholder xs={3} /><Placeholder xs={3} />
+                    </Placeholder>
+                    <Placeholder.Button variant="primary" xs={5} animation="glow" />
                 </Nav>
                 </Navbar.Collapse>
             </Container>
