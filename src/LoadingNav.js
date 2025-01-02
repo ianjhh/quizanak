@@ -17,7 +17,7 @@ function LoadingNav(){
                     <Placeholder as={Navbar.Text} animation="glow">
                       <Placeholder xs={3} /><Placeholder xs={3} />
                     </Placeholder>
-                    <Placeholder.Button variant="primary" xs={5} animation="glow" />
+                    <Placeholder.Button variant="primary" xs={5} />
                 </Nav>
                 </Navbar.Collapse>
             </Container>
