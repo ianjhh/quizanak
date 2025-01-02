@@ -23,6 +23,7 @@ function AboutUs(){
             }
         })
         .catch(function (error) {
+            setIsLoggedIn(false)
             console.log(error.response.status)
         });
     }
