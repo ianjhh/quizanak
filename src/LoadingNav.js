@@ -22,7 +22,7 @@ function LoadingNav(){
                         <NavDropdown.Item className='text-black'>Angkasa</NavDropdown.Item>
                         <NavDropdown.Item className='text-black'>Sejarah</NavDropdown.Item>
                     </NavDropdown>
-                    <NavLink><PlaceholderButton variant="secondary" xs={12} animation="glow" /></NavLink>
+                    <PlaceholderButton variant="secondary" xs={7} animation="glow" />
                 </Nav>
                 </Navbar.Collapse>
             </Container>
