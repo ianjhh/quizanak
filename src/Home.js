@@ -8,6 +8,7 @@ import { Row, Container, Form, Button, Card, Table, Col } from 'react-bootstrap'
 import { useNavigate, Link } from "react-router-dom";
 import img1 from './binatang-laut1.jpg'
 import LoadingNav from './LoadingNav';
+import Spinner from 'react-bootstrap/Spinner';
 
 function Home(props){
     const [isLoggedIn, setIsLoggedIn] = useState(null);
@@ -76,6 +77,53 @@ function Home(props){
             return <LoggedInNav />
         }
         return <Navapp />
+    }
+
+    function RenderWhiteBox({isLoggedIn}){
+        if(isLoggedIn){
+            (<div className='col-sm-6 col-md-4'>
+                        <div className="shadow-sm p-3 rounded bg-white historylist">
+                            <h3 className='fw-bold'>{username}</h3>
+                            <Table>
+                            <thead>
+                                <tr>
+                                    <th>Aktivitas Terbaru</th>
+                                    <th>Skor Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {historyList? historyList.map((item, idx)=>{
+                                return(
+                                <tr key={idx}>
+                                    <td>{item[0]}</td>
+                                    <td>{item[1]}</td>
+                                </tr>)
+                            }) : null}
+                            </tbody>
+                            </Table>
+                        </div></div>)
+        }
+        return <div className='col-sm-6 col-md-4'>
+                        <div className="shadow-sm p-3 rounded bg-white loginarea">
+                            <h3 className="text-center">Login</h3>
+                            <br />
+                            <Form>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Label>Kata Sandi</Form.Label>
+                                <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
+                            </Form.Group>
+                            <Button variant="primary" type="button" onClick={handleLogin}>
+                                Masuk
+                            </Button>
+                            </Form>
+                            <p className='mt-3'>Belum daftar? <Link to='/register' className='text-decoration-none'>Buat akun baru</Link></p>
+                        </div>
+                    </div>
     }
 
     return(
@@ -148,48 +196,9 @@ function Home(props){
                 </Row>
 
                     </div>
-                    {!isLoggedIn? <div className='col-sm-6 col-md-4'>
-                        <div className="shadow-sm p-3 rounded bg-white loginarea">
-                            <h3 className="text-center">Login</h3>
-                            <br />
-                            <Form>
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" onChange={(e)=>{setUsername(e.target.value)}} value={username} />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Label>Kata Sandi</Form.Label>
-                                <Form.Control type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password} />
-                            </Form.Group>
-                            <Button variant="primary" type="button" onClick={handleLogin}>
-                                Masuk
-                            </Button>
-                            </Form>
-                            <p className='mt-3'>Belum daftar? <Link to='/register' className='text-decoration-none'>Buat akun baru</Link></p>
-                        </div>
-                    </div> : 
-                        <div className='col-sm-6 col-md-4'>
-                        <div className="shadow-sm p-3 rounded bg-white historylist">
-                            <h3 className='fw-bold'>{username}</h3>
-                            <Table>
-                            <thead>
-                                <tr>
-                                    <th>Aktivitas Terbaru</th>
-                                    <th>Skor Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {historyList? historyList.map((item, idx)=>{
-                                return(
-                                <tr key={idx}>
-                                    <td>{item[0]}</td>
-                                    <td>{item[1]}</td>
-                                </tr>)
-                            }) : null}
-                            </tbody>
-                            </Table>
-                        </div></div>}
+                    {isLoggedIn === null ? <Spinner animation="border" role="status" variant="success">
+            <span className="visually-hidden">Loading...</span>
+        </Spinner> : <RenderWhiteBox isLoggedIn={isLoggedIn} />}
                 </Row>
                 </Container>
                     
