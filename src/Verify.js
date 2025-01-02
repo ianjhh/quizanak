@@ -74,7 +74,7 @@ function Verify(props){
     return(
         <>
             {!verified?
-            <Container>
+            <Container className='mt-3'>
                 <h3>Masukin kode verifikasi dari email dibawah</h3>
                 <Form.Group className="mb-3" controlId="formVerificationCode">
                         <Form.Label>Username</Form.Label>
