@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Row, Container, Form, Button, Card, Table, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
 import img1 from './binatang-laut1.jpg'
+import LoadingNav from './LoadingNav';
 
 function Home(props){
     const [isLoggedIn, setIsLoggedIn] = useState(null);
@@ -79,7 +80,7 @@ function Home(props){
 
     return(
         <>
-            {isLoggedIn === null ? <p>heloooooo</p> : <LoggedInRender isLoggedIn={isLoggedIn} />}
+            {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
             <div className='bg-warning'>
                 <br />
                 <Container>
