@@ -81,7 +81,7 @@ function Home(props){
 
     function RenderWhiteBox({isLoggedIn}){
         if(isLoggedIn){
-            (<div className='col-sm-6 col-md-4'>
+            return (<div className='col-sm-6 col-md-4'>
                         <div className="shadow-sm p-3 rounded bg-white historylist">
                             <h3 className='fw-bold'>{username}</h3>
                             <Table>
