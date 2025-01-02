@@ -69,9 +69,16 @@ function Home(props){
 
     useEffect(()=>{verifyToken();}, [])
 
+    function LoggedInRender({isLoggedIn}){
+        if(isLoggedIn){
+            return <LoggedInNav />
+        }
+        return <Navapp />
+    }
+
     return(
         <>
-            {isLoggedIn? <LoggedInNav /> : <Navapp />}
+            {typeof isLoggedIn==='undefined'? null : <LoggedInRender isLoggedIn={isLoggedIn} />}
             <div className='bg-warning'>
                 <br />
                 <Container>
