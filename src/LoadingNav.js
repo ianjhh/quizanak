@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import { Button, NavDropdown } from 'react-bootstrap';
 import './Navapp.css';
 import Placeholder from 'react-bootstrap/Placeholder';
+import { NavLink } from 'react-router-dom';
 
 function LoadingNav(){
   return(
@@ -20,7 +21,7 @@ function LoadingNav(){
                         <NavDropdown.Item className='text-black'>Angkasa</NavDropdown.Item>
                         <NavDropdown.Item className='text-black'>Sejarah</NavDropdown.Item>
                     </NavDropdown>
-                    <Placeholder.Button variant="secondary" xs={5}/>
+                    <NavLink><Placeholder.Button variant="secondary" xs={5}/></NavLink>
                 </Nav>
                 </Navbar.Collapse>
             </Container>
