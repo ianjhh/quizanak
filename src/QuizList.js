@@ -107,7 +107,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
@@ -126,7 +126,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
@@ -145,7 +145,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
@@ -164,7 +164,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'> 
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>

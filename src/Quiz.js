@@ -165,7 +165,7 @@ function Quiz(props){
                             {quizProperty && quizImage? 
                             <>
                                 <h1 className='mb-3'>Quiz {quizProperty}</h1>
-                                <img width={300} height={300} src={require(`./${quizImage}.jpg`)} /><br/><br/>
+                                <img width={300} height={300} src={require(`./assets/images/${quizImage}.jpg`)} /><br/><br/>
                                 <Button variant='primary' className='mb-4 fs-3' onClick={startQuiz}>Mulai</Button>
                             </> 
                             : 
@@ -176,7 +176,7 @@ function Quiz(props){
                     :
                     (!quizEnded? <>
                         {quizList? <><h3>Q{currentQuestion}: {quizList[currentQuestion-1].question}</h3>
-                        {quizList[currentQuestion-1].imagesrc? <><img className='mb-3 questionImage' src={require(`./${quizList[currentQuestion-1].imagesrc}.jpg`)} alt="Logo" /></> : null}
+                        {quizList[currentQuestion-1].imagesrc? <><img className='mb-3 questionImage' src={require(`./assets/images/${quizList[currentQuestion-1].imagesrc}.jpg`)} alt="Logo" /></> : null}
                         {!clickedNext? quizList[currentQuestion-1].options.map((option, index) =>
                         <div className="form-check radio-toolbar" key={index}>
                             <Row className="g-4 quiz-options-width col-10 col-sm-7 col-md-6 col-lg-5">
@@ -198,7 +198,7 @@ function Quiz(props){
                             {similarQuiz.map((item, idx) => (
                                     <Col key={idx} className='quiz-col-end'>
                                     <Card>
-                                        <Card.Img variant="top" src={require(`./${item.quizImage}.jpg`)} className='img-card' />
+                                        <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card' />
                                         <Card.Body>
                                         <Card.Title>{item.title}</Card.Title>
                                         <Button variant="primary" onClick={()=>{navigate(`/quiz/${item.name}`); window.location.reload()}}>Mulai!</Button>

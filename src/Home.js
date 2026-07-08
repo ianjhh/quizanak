@@ -6,7 +6,7 @@ import LoggedInNav from './LoggedInNav';
 import axios from 'axios';
 import { Row, Container, Form, Button, Card, Table, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
-import img1 from './binatang-laut1.jpg'
+import img1 from './assets/images/binatang-laut1.jpg'
 import LoadingNav from './LoadingNav';
 import Spinner from 'react-bootstrap/Spinner';
 
@@ -154,7 +154,7 @@ function Home(props){
                         <Col className='quiz-col-home'>
                             <Link to='/fakta-binatang' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./faktabinatang.jpg`)} className='img-card-home' />
+                                <Card.Img variant="top" src={require(`./assets/images/faktabinatang.jpg`)} className='img-card-home' />
                                 <Card.Body className='card-body-home'>
                                 <Card.Title>Fakta Binatang</Card.Title>
                                 <Card.Text className='card-description-home'>
@@ -169,7 +169,7 @@ function Home(props){
                         <Col className='quiz-col-home'>
                             <Link to='/fakta-angkasa' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./faktaangkasa.jpg`)} className='img-card-home' />
+                                <Card.Img variant="top" src={require(`./assets/images/faktaangkasa.jpg`)} className='img-card-home' />
                                 <Card.Body className='card-body-home'>
                                 <Card.Title>Fakta Angkasa</Card.Title>
                                 <Card.Text className='card-description-home'>
@@ -183,7 +183,7 @@ function Home(props){
                         <Col className='quiz-col-home'>
                             <Link to='/fakta-aneh' className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./faktasejarah.jpg`)} className='img-card-home' />
+                                <Card.Img variant="top" src={require(`./assets/images/faktasejarah.jpg`)} className='img-card-home' />
                                 <Card.Body className='card-body-home'>
                                 <Card.Title>Fakta Aneh</Card.Title>
                                 <Card.Text className='card-description-home'>
