@@ -65,7 +65,7 @@ function HistoryFacts(props){
                             <Col key={idx} className='facts-col-list'>
                             <Link to={`/fakta-aneh/${item.link_name}`} className='text-decoration-none'>
                             <Card className='link-card rounded-0'>
-                                <Card.Img variant="top" src={require(`./${item.image}.jpg`)} className='facts-img-card-list rounded-0' />
+                                <Card.Img variant="top" src={require(`./assets/images/${item.image}.jpg`)} className='facts-img-card-list rounded-0' />
                                 <Card.Body className='bg-black text-white facts-card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 </Card.Body>
