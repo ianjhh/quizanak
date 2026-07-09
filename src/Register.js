@@ -24,10 +24,10 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
-                navigate('/')
+                navigate('/', { replace: true })
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {
@@ -85,7 +85,7 @@ function Register(props){
             .then(function (response) {
                 /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
                 alert('Link verifikasi akun telah dikirim kepada email anda!')
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             })
             .catch(function (error) {
                 console.log(error.response.status);

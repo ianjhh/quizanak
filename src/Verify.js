@@ -19,7 +19,7 @@ function Verify(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setIsLoggedIn(true)
             if (response.data.verified === true){
-                navigate('/')
+                navigate('/', { replace: true })
             }
             else{
                 setUsername(response.data.authorizedData.username)
@@ -27,7 +27,7 @@ function Verify(props){
         })
         .catch(function (error) {
             console.log(error.response.status)
-            navigate('/login')
+            navigate('/login', { replace: true })
         });
     }
 
@@ -35,7 +35,7 @@ function Verify(props){
         axios.get('/api/logout', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            navigate('/login')
+            navigate('/login', { replace: true })
         })
         .catch(function (error) {
             alert(error.response.data)

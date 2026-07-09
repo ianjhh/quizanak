@@ -35,7 +35,7 @@ function AnimalFacts(props){
                 setIsLoggedIn(true)
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {
