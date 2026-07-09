@@ -8,7 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 import LoadingNav from './LoadingNav';
 
 function Sitemap(){
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [animalQuiz, setAnimalQuiz] = useState([]);
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
@@ -23,7 +23,7 @@ function Sitemap(){
                 setIsLoggedIn(true)
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {

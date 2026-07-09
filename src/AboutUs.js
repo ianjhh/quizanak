@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingNav from './LoadingNav';
 
 function AboutUs(){
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
 
     const verifyToken = () =>{
@@ -19,7 +19,7 @@ function AboutUs(){
                 setIsLoggedIn(true)
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {

@@ -65,11 +65,11 @@ function Quiz(props){
                 setUsername(response.data.authorizedData.username)
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {
-            navigate('/login')
+            navigate('/login', { replace: true })
             console.log(error.response.status)
         });
 }

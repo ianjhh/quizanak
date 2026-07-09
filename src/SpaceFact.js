@@ -39,11 +39,11 @@ function SpaceFact(){
                 setIsLoggedIn(true)
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {
-            navigate('/login')
+            navigate('/login', { replace: true })
             console.log(error.response.status)
         });
     }

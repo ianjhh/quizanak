@@ -11,7 +11,7 @@ import LoadingNav from './LoadingNav';
 import Spinner from 'react-bootstrap/Spinner';
 
 function Home(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [historyList, setHistoryList] = useState([]);
@@ -27,12 +27,12 @@ function Home(props){
                 fetchHistory(response.data.authorizedData.username)
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {
             setIsLoggedIn(false)
-            console.log(error.response.status)
+            console.log(error.response ? error.response.status : error)
         });
 }
 
@@ -47,7 +47,7 @@ function Home(props){
                 window.location.reload()
             }
             else{
-                navigate('/verify')
+                navigate('/verify', { replace: true })
             }
         })
         .catch(function (error) {
@@ -66,7 +66,7 @@ function Home(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
