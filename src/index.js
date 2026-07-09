@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './index.css';
+import axios from 'axios';
 import Home from './Home';
 import Register from './Register';
 import Login from './Login';
@@ -18,12 +19,30 @@ import HistoryFacts from './HistoryFacts';
 import HistoryFact from './HistoryFact';
 import Sitemap from './Sitemap';
 import reportWebVitals from './reportWebVitals';
-import {Routes, Route, BrowserRouter} from 'react-router-dom';
+import {Routes, Route, HashRouter} from 'react-router-dom';
+
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+axios.defaults.withCredentials = true;
+axios.defaults.timeout = 10000; // 10 second timeout to prevent infinite spinners on database hangs
+
+// Intercept network/CORS errors to prevent TypeError crashes in catch blocks
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (!error.response) {
+      error.response = {
+        status: 503,
+        data: 'Koneksi ke server gagal. Silakan coba beberapa saat lagi.'
+      };
+    }
+    return Promise.reject(error);
+  }
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/register' element={<Register />} />
@@ -40,7 +59,7 @@ root.render(
               <Route path='/fakta-aneh/:fact-title' element={<HistoryFact />} />
               <Route path='/quiz/:quiz-name' element={<Quiz />} />
           </Routes>
-      </BrowserRouter>
+      </HashRouter>
   </React.StrictMode>
 );
 
