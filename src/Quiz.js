@@ -8,6 +8,20 @@ import Footer from './Footer';
 import './Quiz.css';
 import Spinner from 'react-bootstrap/Spinner';
 
+
+// Safe image require helper to prevent crashes on missing database image references
+const safeRequire = (imageName) => {
+  try {
+    return require(`./assets/images/${imageName}.jpg`);
+  } catch (err) {
+    try {
+      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
+    } catch (e) {
+      return '';
+    }
+  }
+};
+
 function Quiz(props){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [score, setScore] = useState(0);
@@ -149,7 +163,7 @@ function Quiz(props){
         setAnswer(e.target.value)
     }
 
-    function LoggedInRender(isLoggedIn){
+    function LoggedInRender({isLoggedIn}){
         if (isLoggedIn){
             return (<div className='bg-warning'>  
             <LoggedInNav />
@@ -165,7 +179,7 @@ function Quiz(props){
                             {quizProperty && quizImage? 
                             <>
                                 <h1 className='mb-3'>Quiz {quizProperty}</h1>
-                                <img width={300} height={300} src={require(`./assets/images/${quizImage}.jpg`)} /><br/><br/>
+                                <img width={300} height={300} src={safeRequire(quizImage)} /><br/><br/>
                                 <Button variant='primary' className='mb-4 fs-3' onClick={startQuiz}>Mulai</Button>
                             </> 
                             : 
@@ -176,7 +190,7 @@ function Quiz(props){
                     :
                     (!quizEnded? <>
                         {quizList? <><h3>Q{currentQuestion}: {quizList[currentQuestion-1].question}</h3>
-                        {quizList[currentQuestion-1].imagesrc? <><img className='mb-3 questionImage' src={require(`./assets/images/${quizList[currentQuestion-1].imagesrc}.jpg`)} alt="Logo" /></> : null}
+                        {quizList[currentQuestion-1].imagesrc? <><img className='mb-3 questionImage' src={safeRequire(quizList[currentQuestion-1].imagesrc)} alt="Logo" /></> : null}
                         {!clickedNext? quizList[currentQuestion-1].options.map((option, index) =>
                         <div className="form-check radio-toolbar" key={index}>
                             <Row className="g-4 quiz-options-width col-10 col-sm-7 col-md-6 col-lg-5">
@@ -198,7 +212,7 @@ function Quiz(props){
                             {similarQuiz.map((item, idx) => (
                                     <Col key={idx} className='quiz-col-end'>
                                     <Card>
-                                        <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card' />
+                                        <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card' />
                                         <Card.Body>
                                         <Card.Title>{item.title}</Card.Title>
                                         <Button variant="primary" onClick={()=>{navigate(`/quiz/${item.name}`); window.location.reload()}}>Mulai!</Button>

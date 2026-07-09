@@ -8,8 +8,22 @@ import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap'
 import { useNavigate, Link } from "react-router-dom";
 import LoadingNav from './LoadingNav';
 
+
+// Safe image require helper to prevent crashes on missing database image references
+const safeRequire = (imageName) => {
+  try {
+    return require(`./assets/images/${imageName}.jpg`);
+  } catch (err) {
+    try {
+      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
+    } catch (e) {
+      return '';
+    }
+  }
+};
+
 function AnimalFacts(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [animalFacts, setAnimalFacts] = useState([]);
     const navigate = useNavigate();
 
@@ -65,7 +79,7 @@ function AnimalFacts(props){
                             <Col key={idx} className='facts-col-list'>
                             <Link to={`/fakta-binatang/${item.link_name}`} className='text-decoration-none'>
                             <Card className='link-card rounded-0'>
-                                <Card.Img variant="top" src={require(`./assets/images/${item.image}.jpg`)} className='facts-img-card-list rounded-0' />
+                                <Card.Img variant="top" src={safeRequire(item.image)} className='facts-img-card-list rounded-0' />
                                 <Card.Body className='bg-black text-white facts-card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 </Card.Body>

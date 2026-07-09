@@ -9,6 +9,20 @@ import axios from 'axios';
 import './Fact.css';
 import Spinner from 'react-bootstrap/Spinner';
 
+
+// Safe image require helper to prevent crashes on missing database image references
+const safeRequire = (imageName) => {
+  try {
+    return require(`./assets/images/${imageName}.jpg`);
+  } catch (err) {
+    try {
+      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
+    } catch (e) {
+      return '';
+    }
+  }
+};
+
 function SpaceFact(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [spaceFact, setSpaceFact] = useState([]);
@@ -62,7 +76,7 @@ function SpaceFact(){
                         <h2 className='mt-3 mb-4'>{title}</h2>
                         <ol>
                         {spaceFact.map((item, idx) => (
-                            <li className='mb-4 fs-5'>{item[0]}<br/>{item[1]? <img src={require(`./assets/images/${item[1]}.jpg`)} /> : null}</li> 
+                            <li className='mb-4 fs-5'>{item[0]}<br/>{item[1]? <img src={safeRequire(item[1])} /> : null}</li> 
                         ))}
                         </ol>
                         </div>

@@ -8,8 +8,22 @@ import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap'
 import { useNavigate, Link } from "react-router-dom";
 import LoadingNav from './LoadingNav';
 
+
+// Safe image require helper to prevent crashes on missing database image references
+const safeRequire = (imageName) => {
+  try {
+    return require(`./assets/images/${imageName}.jpg`);
+  } catch (err) {
+    try {
+      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
+    } catch (e) {
+      return '';
+    }
+  }
+};
+
 function QuizList(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [animalQuiz, setAnimalQuiz] = useState([]);
     const [mathQuiz, setMathQuiz] = useState([]);
     const [miscellaneousQuiz, setMiscellaneousQuiz] = useState([]);
@@ -29,7 +43,7 @@ function QuizList(props){
         })
         .catch(function (error) {
             setIsLoggedIn(false)
-            console.log(error.response.status)
+            console.log(error.response ? error.response.status : error)
         });
     }
 
@@ -42,7 +56,7 @@ function QuizList(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -55,7 +69,7 @@ function QuizList(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -68,7 +82,7 @@ function QuizList(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -81,7 +95,7 @@ function QuizList(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -107,7 +121,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
@@ -126,7 +140,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
@@ -145,7 +159,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>
@@ -164,7 +178,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'> 
                             <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                             <Card className='link-card'>
-                                <Card.Img variant="top" src={require(`./assets/images/${item.quizImage}.jpg`)} className='img-card-list' />
+                                <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
                                 <Card.Body className='card-body-list'>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text className='card-description-list'>

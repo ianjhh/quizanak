@@ -29,7 +29,7 @@ function Navapp(props){
                    <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown} onClick={manageShow}>
                         <NavDropdown.Item><Link to='/fakta-binatang' className='text-decoration-none text-black'>Binatang</Link></NavDropdown.Item>
                         <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link to='/fakta-sejarah' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
+                        <NavDropdown.Item><Link to='/fakta-aneh' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
                     </NavDropdown>
                     <Link to ='/login'><Button variant="primary">Login</Button></Link>&nbsp;
                     <Link to ='/register'><Button variant="success" className="register-button">Register</Button></Link>

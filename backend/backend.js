@@ -12,34 +12,42 @@ var redis = require("redis")
 const CryptoJS = require('crypto-js')
 const crypto = require('crypto')
 app.use(cookieParser());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://kuisanak.com',
+  'https://ianjhh-portfolio.netlify.app',
+  'https://ianjhh.github.io'
+];
 const corsOptions = {
-  origin: 'https://kuisanak.com',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.netlify.app') || origin.endsWith('.github.io')) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
     
-const cluster = redis.createCluster({
-    rootNodes: [
-        {
-            url: 'redis://127.0.0.1:7000'
-        },
-        {
-            url: 'redis://127.0.0.1:7001'
-        },
-        {
-            url: 'redis://127.0.0.1:7002'
-        },
-        // ...
-    ],
-    useReplicas: true,
-    /* minimizeConnections: true, //When true, .connect() will only discover the cluster topology, without actually connecting to all the nodes. Useful for short-term or Pub/Sub-only connections. */
-    defaults: {
-        password: 'ijh21999ijh21999!'
-    }
-    }).on('error', (err) => console.log('Redis Cluster Error', err));
+const cluster = process.env.REDIS_URL 
+    ? redis.createClient({ url: process.env.REDIS_URL }).on('error', (err) => console.log('Redis Error', err))
+    : redis.createCluster({
+        rootNodes: [
+            { url: 'redis://127.0.0.1:7000' },
+            { url: 'redis://127.0.0.1:7001' },
+            { url: 'redis://127.0.0.1:7002' },
+        ],
+        useReplicas: true,
+        defaults: { password: 'ijh21999ijh21999!' }
+      }).on('error', (err) => console.log('Redis Cluster Error', err));
 
 var MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient("mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload");
+const client = new MongoClient("mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload", {
+    serverSelectionTimeoutMS: 5000
+});
 
 const database = client.db('imgupload');
 const credentials = database.collection('credentials');
@@ -185,7 +193,7 @@ app.post('/api/login', async (req, res) => {
                   res.status.send('Error!')
                   console.log(err)
               }
-              res.status(200).cookie('jwt', token).json({verified: result.verified});
+              res.status(200).cookie('jwt', token, { sameSite: 'none', secure: true }).json({verified: result.verified});
           });
       }
       });
@@ -227,7 +235,7 @@ app.post('/api/register', async (req, res) => {
                   if(err) { 
                       res.status.send('Error!')
                   }
-                  res.status(200).cookie('jwt', token).send('Successful!');
+                  res.status(200).cookie('jwt', token, { sameSite: 'none', secure: true }).send('Successful!');
           });
 }
     catch(e){
@@ -474,7 +482,7 @@ app.post('/api/setVerified', async (req, res) => {
                   if(err) { 
                       res.status.send('Error!')
                   }
-                res.status(200).cookie('jwt', token).send('Successful!');
+                res.status(200).cookie('jwt', token, { sameSite: 'none', secure: true }).send('Successful!');
             });
           }
       }
@@ -490,7 +498,7 @@ app.post('/api/setVerified', async (req, res) => {
 
 app.get('/api/logout', async (req, res) => {
     try{
-        res.status(202).clearCookie('jwt').send('cookie cleared')
+        res.status(202).clearCookie('jwt', { sameSite: 'none', secure: true }).send('cookie cleared')
     }
     catch(e){
         res.status(400).send('error')
@@ -514,6 +522,7 @@ app.post('/api/quizHistory', async (req, res) => {
   }
 })
 
-app.listen(5000, () => {
-  console.log(`App listening on port 5000`)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`)
 })
