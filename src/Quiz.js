@@ -1,13 +1,11 @@
 import LoggedInNav from './LoggedInNav';
 import { useEffect, useState } from 'react';
-import Navapp from './Navapp';
 import axios from 'axios';
 import { Container, Row, Button, Col, Card } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import './Quiz.css';
 import Spinner from 'react-bootstrap/Spinner';
-
 
 // Safe image require helper to prevent crashes on missing database image references
 const safeRequire = (imageName) => {
@@ -26,7 +24,7 @@ function Quiz(props){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [score, setScore] = useState(0);
     const [quizList, setQuizList] = useState([]);
-    const [currentQuestion, setCurrentQuestion] = useState(1)
+    const [currentQuestion, setCurrentQuestion] = useState(1);
     const [quizStarted, setQuizStarted] = useState(false);
     const [quizEnded, setQuizEnded] = useState(false);
     const [answer, setAnswer] = useState("");
@@ -35,7 +33,7 @@ function Quiz(props){
     const [isCorrect, setIsCorrect] = useState();
     const [quizImage, setQuizImage] = useState();
     const [username, setUsername] = useState('');
-    const [similarQuiz, setSimilarQuiz] = useState([])
+    const [similarQuiz, setSimilarQuiz] = useState([]);
     const location = useLocation();
     const quizName = location.pathname.split('/')[2];
     const navigate = useNavigate();
@@ -70,9 +68,9 @@ function Quiz(props){
         })
         .catch(function (error) {
             navigate('/login', { replace: true })
-            console.log(error.response.status)
+            console.log(error.response ? error.response.status : error)
         });
-}
+    }
 
     const fetchQuiz = () =>{
         axios.post('/api/fetchQuiz', {
@@ -103,11 +101,11 @@ function Quiz(props){
                 }
             })
             .catch(function (error) {
-                console.log(error.response.status);
+                console.log(error.response ? error.response.status : error);
             });
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -116,9 +114,7 @@ function Quiz(props){
     };
 
     const handleNext = () => {
-        /* set answerArr[currentQuestion-1] === answer */
         setClickedNext(true);
-        setAnswer('');
         
         /* handle score adding */
         if (quizList[currentQuestion-1].answer === answer){
@@ -132,11 +128,11 @@ function Quiz(props){
 
     const handleMoveNextQ = () => {
         setClickedNext(false);
+        setAnswer('');
         setCurrentQuestion(currentQuestion+1);
     }
 
     const handleFinishQuiz = () => {
-        setCurrentQuestion(currentQuestion+1);
         if (quizList[currentQuestion-1].answer === answer){
             setScore(score+1)
         }
@@ -146,16 +142,13 @@ function Quiz(props){
         axios.post('/api/quizHistory', {
             username: username,
             quizname: quizName,
-            score: score
+            score: score + (quizList[currentQuestion-1].answer === answer ? 1 : 0)
         })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.status === 200){
-                
-            }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     };
 
@@ -165,73 +158,189 @@ function Quiz(props){
 
     function LoggedInRender({isLoggedIn}){
         if (isLoggedIn){
-            return (<div className='bg-warning'>  
-            <LoggedInNav />
-            <Container className='mt-3'>
-                <Row>
-                <div className='col-12 col-sm-12 col-lg-2'>
-                    <Link to='/quiz' className='text-decoration-none back-button'><Button variant='danger' className='mb-3'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
-                </div>
-                
-                    <div className='col-12 col-sm-12 col-lg-10 col-xl-8 quiz-container'>
-                        {!quizStarted? 
-                        <div className='text-center mt-3'>
-                            {quizProperty && quizImage? 
-                            <>
-                                <h1 className='mb-3'>Quiz {quizProperty}</h1>
-                                <img width={300} height={300} src={safeRequire(quizImage)} /><br/><br/>
-                                <Button variant='primary' className='mb-4 fs-3' onClick={startQuiz}>Mulai</Button>
-                            </> 
-                            : 
-                            <><Spinner animation="border" role="status" variant="dark" className='mt-5 mb-5'>
-                                <span className="visually-hidden">Loading...</span>
-                            </Spinner></>}
-                    </div>
-                    :
-                    (!quizEnded? <>
-                        {quizList? <><h3>Q{currentQuestion}: {quizList[currentQuestion-1].question}</h3>
-                        {quizList[currentQuestion-1].imagesrc? <><img className='mb-3 questionImage' src={safeRequire(quizList[currentQuestion-1].imagesrc)} alt="Logo" /></> : null}
-                        {!clickedNext? quizList[currentQuestion-1].options.map((option, index) =>
-                        <div className="form-check radio-toolbar" key={index}>
-                            <Row className="g-4 quiz-options-width col-10 col-sm-7 col-md-6 col-lg-5">
-                        <input className="form-check-input fs-5" type="radio" name="flexRadioDefault" id={`flexRadioDefault${index}`} value={option} checked={answer === option} onChange={onOptionChange} />
-                        <label className="form-check-label fs-5 py-1 px-3" htmlFor={`flexRadioDefault${index}`}>
-                            {option}
-                        </label>
+            return (
+                <div className="position-relative">
+                    <div className="glow-blob-1"></div>
+                    <div className="glow-blob-2"></div>
+                    <LoggedInNav />
+                    <Container className='mt-4 position-relative' style={{zIndex: 2}}>
+                        <Row>
+                            <Col xs={12} lg={2} className="mb-3">
+                                <Link to='/quiz' className='text-decoration-none back-button'>
+                                    <Button className='btn-danger-glow back-btn-custom w-100'>
+                                        <i className="bi bi-arrow-left-short"></i> Daftar Kuis
+                                    </Button>
+                                </Link>
+                            </Col>
+                            
+                            <Col xs={12} lg={8} className="mx-auto">
+                                <div className='glass-panel quiz-container-custom'>
+                                    {!quizStarted ? (
+                                        <div className='text-center py-4'>
+                                            {quizProperty && quizImage ? (
+                                                <>
+                                                    <h1 className='quiz-title-main'>Kuis {quizProperty}</h1>
+                                                    <img 
+                                                        width={300} 
+                                                        height={300} 
+                                                        src={safeRequire(quizImage)} 
+                                                        className="img-fluid rounded-4 mb-4 shadow"
+                                                        style={{objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)'}}
+                                                        alt="Cover Kuis"
+                                                    />
+                                                    <br/>
+                                                    <Button className='btn-primary-glow px-5 py-3 fs-4' onClick={startQuiz}>
+                                                        Mulai Kuis
+                                                    </Button>
+                                                </> 
+                                            ) : (
+                                                <div className="py-5">
+                                                    <Spinner animation="border" role="status" variant="light">
+                                                        <span className="visually-hidden">Loading...</span>
+                                                    </Spinner>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        !quizEnded ? (
+                                            <>
+                                                {quizList.length > 0 && (
+                                                    <>
+                                                        <div className="progress-container">
+                                                            <div 
+                                                                className="progress-bar-fill" 
+                                                                style={{ width: `${(currentQuestion - 1) * 10}%` }}
+                                                            ></div>
+                                                        </div>
+                                                        <p className="text-white-50 text-center mb-4">
+                                                            Pertanyaan <strong>{currentQuestion}</strong> dari 10
+                                                        </p>
+
+                                                        <div className="question-box mb-4">
+                                                            <h3 className="question-text">
+                                                                {quizList[currentQuestion-1].question}
+                                                            </h3>
+                                                        </div>
+
+                                                        {quizList[currentQuestion-1].imagesrc && (
+                                                            <div className="text-center mb-4">
+                                                                <img 
+                                                                    className='questionImage img-fluid shadow-lg' 
+                                                                    src={safeRequire(quizList[currentQuestion-1].imagesrc)} 
+                                                                    alt="Pertanyaan" 
+                                                                />
+                                                            </div>
+                                                        )}
+
+                                                        {!clickedNext ? (
+                                                            <div className="options-grid radio-toolbar">
+                                                                {quizList[currentQuestion-1].options.map((option, index) => (
+                                                                    <div key={index}>
+                                                                        <input 
+                                                                            type="radio" 
+                                                                            name="quizOptions" 
+                                                                            id={`option${index}`} 
+                                                                            value={option} 
+                                                                            checked={answer === option} 
+                                                                            onChange={onOptionChange} 
+                                                                        />
+                                                                        <label htmlFor={`option${index}`}>
+                                                                            {option}
+                                                                        </label>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-center">
+                                                                {isCorrect === 'Benar' ? (
+                                                                    <div className="correct-alert">
+                                                                        <i className="bi bi-check-circle-fill me-2"></i> Benar! Jawaban kamu tepat.
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="wrong-alert">
+                                                                        <i className="bi bi-x-circle-fill me-2"></i> Salah! Jawaban yang benar adalah: <strong>"{quizList[currentQuestion-1].answer}"</strong>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )}
+
+                                                {!clickedNext ? (
+                                                    <Button 
+                                                        className="btn-success-glow w-100 py-3 fs-5 mt-2" 
+                                                        onClick={handleNext}
+                                                        disabled={!answer}
+                                                    >
+                                                        Kirim Jawaban
+                                                    </Button>
+                                                ) : (
+                                                    currentQuestion >= 10 ? (
+                                                        <Button 
+                                                            className="btn-primary-glow w-100 py-3 fs-5 mt-2" 
+                                                            onClick={handleFinishQuiz}
+                                                        >
+                                                            Lihat Hasil Skor
+                                                        </Button>
+                                                    ) : (
+                                                        <Button 
+                                                            className="btn-primary-glow w-100 py-3 fs-5 mt-2" 
+                                                            onClick={handleMoveNextQ}
+                                                        >
+                                                            Pertanyaan Selanjutnya
+                                                        </Button>
+                                                    )
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="text-center py-4">
+                                                <h4 className="text-white-50 uppercase mb-2">Hasil Akhir</h4>
+                                                <h1 className="quiz-score-display">{score} / 10</h1>
+                                                <p className="text-white-50 mb-5">Kerja bagus! Teruslah berlatih kuis agar semakin pintar.</p>
+
+                                                <h4 className="text-start border-bottom pb-2 mb-3 border-secondary">Coba Kuis Lainnya:</h4>
+                                                <Row xs={1} sm={2} md={3} className="g-4 mb-4">
+                                                    {similarQuiz.map((item, idx) => (
+                                                        <Col key={idx}>
+                                                            <Card className="glass-panel glass-panel-hover quiz-card-custom text-start border-0">
+                                                                <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card' />
+                                                                <Card.Body className="d-flex flex-column justify-content-between p-3">
+                                                                    <Card.Title className="fs-6 fw-semibold text-white mb-3">{item.title}</Card.Title>
+                                                                    <Button 
+                                                                        className="btn-primary-glow py-2 w-100" 
+                                                                        onClick={()=>{navigate(`/quiz/${item.name}`); window.location.reload()}}
+                                                                    >
+                                                                        Mulai!
+                                                                    </Button>
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </Col>
+                                                    ))}
+                                                </Row>
+                                                <Link to='/quiz' className='text-decoration-none'>
+                                                    <Button className='btn-danger-glow back-btn-custom px-4 py-2 mt-2'>
+                                                        <i className="bi bi-arrow-left-short"></i> Daftar Kuis
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            </Col>
                         </Row>
-                        </div>
-                        ) : null}</> : null}
-                        {currentQuestion>=10 ? <Button variant='primary' className='fs-5 mt-3 mb-3 w-50' onClick={handleFinishQuiz}>Finish</Button> : (!clickedNext?<Button variant='success' onClick={handleNext} className='mb-3 mt-3 fs-5 w-50'>Next</Button> : null)}
-                        {clickedNext? <>{isCorrect==='Benar'? <p className='fs-4 correctanswer'><i class="bi bi-check"></i>{isCorrect}!</p> : <p className='fs-4 wronganswer'><i className="bi bi-x"></i>{isCorrect}! jawaban yang benar adalah "{quizList[currentQuestion-1].answer}"</p>}<br/><br/><br/><br/><br/><br/><br/><Button variant='primary' className='mb-3 mt-4 fs-5 w-50 next-question' onClick={handleMoveNextQ}>Next Question</Button></> : null}
-                    </>
-                    : 
-                    <>
-                        <h1 className='text-center mt-3 mb-0'>Skor Total: <br/><b>{score}/10</b></h1><br/><br/>
-                        <h3 className='text-center'>Coba juga:</h3>
-                        <Row xs={1} sm={2} md={3} className="g-4 mb-3 mx-auto">
-                            {similarQuiz.map((item, idx) => (
-                                    <Col key={idx} className='quiz-col-end'>
-                                    <Card>
-                                        <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card' />
-                                        <Card.Body>
-                                        <Card.Title>{item.title}</Card.Title>
-                                        <Button variant="primary" onClick={()=>{navigate(`/quiz/${item.name}`); window.location.reload()}}>Mulai!</Button>
-                                        </Card.Body>
-                                    </Card>
-                                    </Col>
-                            ))}
-                        </Row><br/>
-                    </>)}
+                    </Container>
+                    <br/>
+                    <Footer />
                 </div>
-                <Link to='/quiz' className='text-decoration-none back-button-bottom mt-3'><Button variant='danger' className='fs-5'><i className="bi bi-arrow-left-short"></i>Daftar Kuis</Button></Link>
-                </Row>
-            </Container><br/>
-            <Footer />
-            </div>)
+            )
         }
-        return <Spinner animation="border" role="status" variant="success">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{minHeight: '100vh', backgroundColor: 'var(--bg-main)'}}>
+                <Spinner animation="border" role="status" variant="light">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        )
     }
 
     useEffect(()=>{verifyToken(); fetchQuiz();}, [])

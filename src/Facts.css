@@ -1,74 +1,60 @@
-.link-style:hover{
-    background-color: #90EE90;
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: block;
+  clear: both;
 }
 
-.link-style{
-    text-decoration: none;
-    color: #008000;
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), #6366f1);
+  border-radius: 2px;
 }
 
-@media only screen and (max-width: 576px){
-    .facts-col-list{
-        width: 300px !important;
-        text-align: center;
-    }
-
-    .facts-img-card-list{
-        object-fit: cover;
-        height: 150px !important;
-    }
-
-    .facts-card-description-list{
-        display: none;
-    }
-
-    .facts-card-body-list{
-        margin: 0;
-        padding: 0;
-    }
+.facts-grid-custom {
+  margin-bottom: 3.5rem;
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px){
-    .facts-col-list{
-        width: 270px !important;
-        text-align: center;
-    }
-
-    .facts-img-card-list{
-        object-fit: cover;
-        height: 150px !important;
-    }
-
-    .facts-card-description-list{
-        display: none;
-    }
-
-    .facts-card-body-list{
-        margin: 0;
-        padding: 0;
-    }
+.facts-card-list {
+  border-radius: 16px !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1200px){
-    .facts-col-list{
-        width: 240px !important;
-        text-align: center;
-    }
-
-    .facts-img-card-list{
-        object-fit: cover;
-        height: 150px !important;
-    }
+.facts-img-card-list {
+  height: 160px !important;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
-@media only screen and (min-width: 1200px){
-    .facts-col-list{
-        width: 264px !important;
-        text-align: center;
-    }
+.facts-card-list:hover .facts-img-card-list {
+  transform: scale(1.05);
+}
 
-    .facts-img-card-list{
-        object-fit: cover;
-        height: 190px !important;
-    }
+.facts-card-body-list {
+  padding: 20px !important;
+  background: transparent !important;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.facts-card-title-list {
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--color-text);
+  margin: 0;
+  text-align: center;
 }
