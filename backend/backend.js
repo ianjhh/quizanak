@@ -96,13 +96,14 @@ const initBloomFilter = async () => {
 initBloomFilter();
 
 /* NODEMAILER */
+const emailUser = process.env.EMAIL_USER || "kuisanak.id@gmail.com";
 const transporter = nodemailer.createTransport({
-  host: "mail.privateemail.com",
-  port: 465,
-  secure: true,
+  host: process.env.EMAIL_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.EMAIL_PORT) || 465,
+  secure: process.env.EMAIL_SECURE !== "false",
   auth: {
-    user: "registrasi@kuisanak.com",
-    pass: "ijh21999",
+    user: emailUser,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -165,7 +166,7 @@ app.post('/api/resendCode', async (req, res) => {
             const mailOptions = {
                 from: {
                     name: 'KuisAnak',
-                    address: 'registrasi@kuisanak.com'
+                    address: emailUser
                 },
                 to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
@@ -228,7 +229,7 @@ app.post('/api/register', async (req, res) => {
           const mailOptions = {
             from: {
                     name: 'KuisAnak',
-                    address: 'registrasi@kuisanak.com'
+                    address: emailUser
                 },
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
