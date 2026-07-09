@@ -32,8 +32,23 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
     
-const cluster = process.env.REDIS_URL 
-    ? redis.createClient({ url: process.env.REDIS_URL }).on('error', (err) => console.log('Redis Error', err))
+let redisUrl = process.env.REDIS_URL;
+if (redisUrl) {
+  redisUrl = redisUrl.trim();
+  if (redisUrl.startsWith('redis-cli -u ')) {
+    redisUrl = redisUrl.replace('redis-cli -u ', '').trim();
+  }
+  // Strip quotes if present
+  if (redisUrl.startsWith('"') && redisUrl.endsWith('"')) {
+    redisUrl = redisUrl.slice(1, -1);
+  }
+  if (redisUrl.startsWith("'") && redisUrl.endsWith("'")) {
+    redisUrl = redisUrl.slice(1, -1);
+  }
+}
+
+const cluster = redisUrl 
+    ? redis.createClient({ url: redisUrl }).on('error', (err) => console.log('Redis Error', err))
     : redis.createCluster({
         rootNodes: [
             { url: 'redis://127.0.0.1:7000' },
