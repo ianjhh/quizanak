@@ -95,42 +95,17 @@ const initBloomFilter = async () => {
 }
 initBloomFilter();
 
-/* RESEND EMAIL CONFIGURATION */
-const sendEmail = async ({ to, subject, text }) => {
-  const fromEmail = process.env.EMAIL_FROM || "KuisAnak <registrasi@kuisanak.com>";
-  const apiKey = process.env.RESEND_API_KEY;
-
-  if (!apiKey) {
-    console.error("Error: RESEND_API_KEY environment variable is not set.");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: [to],
-        subject: subject,
-        text: text
-      })
-    });
-    
-    if (!res.ok) {
-      const errText = await res.text();
-      console.error("Resend API error:", errText);
-    } else {
-      const data = await res.json();
-      console.log("Email sent successfully via Resend:", data);
-    }
-  } catch (err) {
-    console.error("Network error sending email via Resend:", err);
-  }
-};
+/* NODEMAILER */
+const emailUser = process.env.EMAIL_USER || "kuisanak.id@gmail.com";
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.EMAIL_PORT) || 465,
+  secure: process.env.EMAIL_SECURE !== "false",
+  auth: {
+    user: emailUser,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 app.get('/api/', async (req, res) => {
     console.log('hello world')
@@ -188,12 +163,24 @@ app.post('/api/resendCode', async (req, res) => {
             const update = await credentials.updateOne({username: req.body.username}, {$set: {verificationCode: verificationCode, codeCreatedAt: new Date().getTime()}})
             const foundEmail = result.email
     
-            await sendEmail({
+            const mailOptions = {
+                from: {
+                    name: 'KuisAnak',
+                    address: emailUser
+                },
                 to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
                 text: `Kode verifikasi anda adalah:\n${verificationCode}`
-            });
-            res.status(200).send('Successfully resent email!')
+            };
+    
+              transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                  console.error("Error sending email: ", error);
+                } else {
+                  console.log("Email sent: ", info.response);
+                }
+              })
+              res.status(200).send('Successfully resent email!')
         }
         else{
             res.status(404).send('Not found!')
@@ -239,11 +226,23 @@ app.post('/api/register', async (req, res) => {
           let data = req.body;
           let verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
             
-          await sendEmail({
+          const mailOptions = {
+            from: {
+                    name: 'KuisAnak',
+                    address: emailUser
+                },
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
             text: `Kode verifikasi anda adalah:\n${verificationCode}`
-          });
+          };
+    
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error("Error sending email: ", error);
+            } else {
+              console.log("Email sent: ", info.response);
+            }
+          })
       
           await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode, codeCreatedAt: new Date().getTime()});
           await cluster.bf.add('emailBloom', data.email);
