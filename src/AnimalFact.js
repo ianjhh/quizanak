@@ -1,14 +1,10 @@
-import Navapp from './Navapp';
 import LoggedInNav from './LoggedInNav';
 import { useEffect, useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom";
+import { Container, Button, Spinner } from 'react-bootstrap';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Footer from './Footer';
 import axios from 'axios';
-import Spinner from 'react-bootstrap/Spinner';
 import './Fact.css';
-
 
 // Safe image require helper to prevent crashes on missing database image references
 const safeRequire = (imageName) => {
@@ -44,7 +40,7 @@ function AnimalFact(){
         })
         .catch(function (error) {
             navigate('/login', { replace: true })
-            console.log(error.response.status)
+            console.log(error.response ? error.response.status : error)
         });
     }
 
@@ -58,37 +54,62 @@ function AnimalFact(){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
     useEffect(()=>{verifyToken(); fetchAnimalFact();}, [])
 
-    function LoggedInRender(isLoggedIn){
+    function LoggedInRender({isLoggedIn}){
         if (isLoggedIn){
-            return <>
-            <LoggedInNav /> 
-            <div className='bg-warning'>
-                <br />
-                <Container>
-                    <Link to='/fakta-binatang' className='text-decoration-none'><Button variant='primary'><i className="bi bi-arrow-left-short"></i>Kembali</Button></Link>
-                    <div className='bg-white rounded p-1 mt-3'>
-                    <h2 className='mt-3 mb-4'>{title}</h2>
-                    <ol>
-                    {animalFact.map((item, idx) => (
-                        <li className='mb-4 fs-5'>{item[0]}<br/>{item[1]? <img src={safeRequire(item[1])} /> : null}</li>
-                    ))}
-                    </ol>
+            return (
+                <div className="position-relative">
+                    <div className="glow-blob-1"></div>
+                    <div className="glow-blob-2"></div>
+                    <LoggedInNav /> 
+                    <div className='main-content-wrapper'>
+                        <Container>
+                            <Link to='/fakta-binatang' className='text-decoration-none'>
+                                <Button className='btn-primary-glow mb-4'>
+                                    <i className="bi bi-arrow-left-short"></i> Kembali
+                                </Button>
+                            </Link>
+                            
+                            <div className='glass-panel p-4 p-md-5 mt-3 mx-auto' style={{maxWidth: '800px'}}>
+                                <h2 className='fw-bold mb-4' style={{background: 'linear-gradient(135deg, #fff, var(--color-warning))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block'}}>
+                                    {title}
+                                </h2>
+                                <ol className="list-styled-custom">
+                                    {animalFact.map((item, idx) => (
+                                        <li key={idx} className='mb-4 text-white-50 fs-5 leading-relaxed'>
+                                            <span className="text-white">{item[0]}</span>
+                                            {item[1] && (
+                                                <div className="mt-3">
+                                                    <img 
+                                                        src={safeRequire(item[1])} 
+                                                        className="img-fluid rounded-3 shadow" 
+                                                        style={{maxHeight: '300px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)'}}
+                                                        alt="Fakta gambar"
+                                                    />
+                                                </div>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ol>
+                            </div>
+                        </Container>
                     </div>
-                </Container>
-                <br /><br />
-            </div>
-            <Footer />
-            </>
+                    <Footer />
+                </div>
+            )
         }
-        return <Spinner animation="border" role="status" variant="success">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{minHeight: '100vh', backgroundColor: 'var(--bg-main)'}}>
+                <Spinner animation="border" role="status" variant="light">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        )
     }
 
     return(

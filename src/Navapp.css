@@ -1,33 +1,81 @@
-.nav-text:hover{
-    background-color: #157347;
-}
-
-.dropdown-menu{
-  margin-top: 0 !important;
-}
-
- /* if not touch screen */
-  @media not (hover: none){
-    #collapsible-nav-dropdown {
-      pointer-events: none;
-    }
-  }
-
-@media only screen and (max-width: 436px){
-     .register-button{
-        display: none;
-     }
-}
-
 @font-face {
   font-family: 'titlefont';
-  src: local('titlefont'), url(./fonts/titlefont.ttf) format('truetype'); /* or truetype */
+  src: local('titlefont'), url(./fonts/titlefont.ttf) format('truetype');
 }
 
 .navbar-title {
   font-family: 'titlefont';
+  font-weight: 800;
+  font-size: 1.5rem !important;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #a78bfa, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity 0.2s ease;
 }
 
-.navbar-title:hover{
-  background-color: #157347 !important;
+.navbar-title:hover {
+  opacity: 0.85;
+}
+
+.glass-navbar {
+  background: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 12px 0;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.dropdown-menu-custom {
+  background: rgba(15, 23, 42, 0.9) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  padding: 6px !important;
+}
+
+.dropdown-item-custom {
+  color: var(--color-text-secondary) !important;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  padding: 8px 16px !important;
+}
+
+.dropdown-item-custom:hover {
+  background: rgba(99, 102, 241, 0.15) !important;
+  color: var(--color-text) !important;
+}
+
+.dropdown-toggle-custom {
+  color: var(--color-text-secondary) !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dropdown-toggle-custom:hover {
+  color: var(--color-text) !important;
+}
+
+.nav-btn {
+  font-weight: 500;
+  border-radius: 8px !important;
+  padding: 6px 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* if not touch screen */
+@media not (hover: none){
+  #collapsible-nav-dropdown {
+    pointer-events: none;
+  }
+}
+
+@media only screen and (max-width: 436px){
+  .register-button {
+    display: none;
+  }
 }

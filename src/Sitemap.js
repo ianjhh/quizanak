@@ -3,7 +3,7 @@ import LoggedInNav from './LoggedInNav';
 import Footer from './Footer';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Row, Container, Modal, Button, Card, Col, Form } from 'react-bootstrap';
+import { Row, Container, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
 import LoadingNav from './LoadingNav';
 
@@ -28,9 +28,9 @@ function Sitemap(){
         })
         .catch(function (error) {
             setIsLoggedIn(false)
-            console.log(error.response.status)
+            console.log(error.response ? error.response.status : error)
         });
-}
+    }
 
     const fetchAnimalQuiz = () =>{
         axios.get('/api/fetchAnimalQuiz')
@@ -41,7 +41,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -54,7 +54,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -67,7 +67,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status);
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -80,7 +80,7 @@ function Sitemap(){
             }
         })
         .catch(function (error) {
-            console.log('error');
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -95,49 +95,62 @@ function Sitemap(){
 
     return(
         <>
+        <div className="glow-blob-1"></div>
+        <div className="glow-blob-2"></div>
         {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
-        <div className='bg-warning'>
-            <br/>
+        <div className="main-content-wrapper">
             <Container>
-                <h3 className='mb-3'>Quiz</h3>
-                <h5>Quiz Binatang</h5>
-                <Row xs={1} md={2} className="g-4">
-                    <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
-                    {animalQuiz.map((item, idx) => (
+                <div className="glass-panel p-4 p-md-5 mx-auto" style={{maxWidth: '800px'}}>
+                    <h3 className="fw-bold mb-4" style={{background: 'linear-gradient(135deg, #fff, var(--color-warning))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block'}}>
+                        Peta Situs (Sitemap)
+                    </h3>
+                    
+                    <h5 className="fw-bold text-white mt-4 mb-3 border-bottom pb-2 border-secondary">Kuis Binatang</h5>
+                    <Row xs={1} md={2} className="g-3 mb-4">
+                        {animalQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none text-info fw-semibold hover-opacity'>
+                                    <i className="bi bi-chevron-right me-2 small"></i>{item.title}
+                                </Link>
                             </Col>
-                    ))}</ul>
-                </Row>
-                <h5>Quiz Matematika</h5>
-                <Row xs={1} md={2} className="g-4">
-                <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
-                    {mathQuiz.map((item, idx) => (
+                        ))}
+                    </Row>
+                    
+                    <h5 className="fw-bold text-white mt-4 mb-3 border-bottom pb-2 border-secondary">Kuis Matematika</h5>
+                    <Row xs={1} md={2} className="g-3 mb-4">
+                        {mathQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none text-info fw-semibold hover-opacity'>
+                                    <i className="bi bi-chevron-right me-2 small"></i>{item.title}
+                                </Link>
                             </Col>
-                    ))}</ul>
-                </Row>
-                <h5>Quiz Bahasa</h5>
-                <Row xs={1} md={2} className="g-4">
-                <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
-                    {languageQuiz.map((item, idx) => (
+                        ))}
+                    </Row>
+
+                    <h5 className="fw-bold text-white mt-4 mb-3 border-bottom pb-2 border-secondary">Kuis Bahasa</h5>
+                    <Row xs={1} md={2} className="g-3 mb-4">
+                        {languageQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none text-info fw-semibold hover-opacity'>
+                                    <i className="bi bi-chevron-right me-2 small"></i>{item.title}
+                                </Link>
                             </Col>
-                    ))}</ul>
-                </Row>
-                <h5>Quiz Lain</h5>
-                <Row xs={1} md={2} className="g-4">
-                <ul style={{ columns: 2, "-webkit-columns": 2, "-moz-columns": 2}}>
-                {miscellaneousQuiz.map((item, idx) => (
+                        ))}
+                    </Row>
+
+                    <h5 className="fw-bold text-white mt-4 mb-3 border-bottom pb-2 border-secondary">Kuis Lain</h5>
+                    <Row xs={1} md={2} className="g-3 mb-4">
+                        {miscellaneousQuiz.map((item, idx) => (
                             <Col key={idx}>
-                                <Link to={`/quiz/${item.name}`} className='text-decoration-none'>{item.title}</Link>
+                                <Link to={`/quiz/${item.name}`} className='text-decoration-none text-info fw-semibold hover-opacity'>
+                                    <i className="bi bi-chevron-right me-2 small"></i>{item.title}
+                                </Link>
                             </Col>
-                    ))}
-                    </ul>
-                </Row>
+                        ))}
+                    </Row>
+                </div>
             </Container>
+            <br/><br/>
             <Footer />
         </div>
         </>

@@ -1,72 +1,110 @@
-.link-style:hover{
-    background-color: #90EE90;
+.main-content-wrapper {
+  min-height: calc(100vh - 80px);
+  padding: 40px 0;
+  position: relative;
+  z-index: 1;
 }
 
-.link-style{
-    text-decoration: none;
-    color: #008000;
+.main-heading {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b 30%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2rem;
 }
 
-.link-card:hover{
-    transform: scale(1.02);
+/* Glass Card Customizations */
+.quiz-card-custom {
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px !important;
 }
 
-.spinnerHome{
-    position: relative;
-    top: 100px;
-    left: 100px;
+.img-card-home {
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  transition: transform 0.5s ease;
 }
 
-@media only screen and (max-width: 576px){
-    .historylist, .loginarea{
-        display: none;
-    }
-
-    .quiz-col-home{
-        width: 300px !important;
-        text-align: center;
-    }
-
-    .img-card-home{
-        object-fit: cover;
-        height: 150px !important;
-    }
-
-    .card-description-home{
-        display: none;
-    }
-
-    .card-body-home{
-        margin: 0;
-        padding: 0;
-    }
+.quiz-card-custom:hover .img-card-home {
+  transform: scale(1.05);
 }
 
-@media only screen and (min-width: 577px) and (max-width: 768px){
-    .historylist, .loginarea{
-        display: none;
-    }
+.card-body-home {
+  padding: 20px !important;
+  background: transparent !important;
+  color: var(--color-text) !important;
+  flex-grow: 1;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1199px){
-    .quiz-col-home{
-        width: 240px !important;
-        text-align: center;
-    }
-    .img-card-home{
-        height: 179px !important;
-        object-fit: cover;
-    }
+.card-title-custom {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: var(--color-text);
 }
 
-@media only screen and (min-width: 1199px){
-    .quiz-col-home{
-        width: 260px;
-        text-align: center;
-    }
-    .img-card-home{
-        height: 180px;
-        object-fit: cover;
-    }
+.card-description-home {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
+/* Auth Cards */
+.auth-card {
+  padding: 30px !important;
+  border-radius: 16px;
+}
+
+.auth-card h3 {
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
+
+.auth-card label {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+/* History List Table */
+.history-table {
+  color: var(--color-text) !important;
+}
+
+.history-table th {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.history-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.spinnerHome {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-width: 576px) {
+  .main-heading {
+    font-size: 2rem;
+    text-align: center;
+  }
+}

@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Spinner from 'react-bootstrap/Spinner';
-import { useSearchParams } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
-import { Form, Button, Container, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Form, Button, Container } from "react-bootstrap";
+import { useNavigate, Link } from "react-router-dom";
 
 function Verify(props){
     const [verified, setVerified] = useState(false);
-    const [code, setCode] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [code, setCode] = useState("");
     const [username, setUsername] = useState("");
     const navigate = useNavigate();
 
@@ -17,7 +13,6 @@ function Verify(props){
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            setIsLoggedIn(true)
             if (response.data.verified === true){
                 navigate('/', { replace: true })
             }
@@ -26,7 +21,7 @@ function Verify(props){
             }
         })
         .catch(function (error) {
-            console.log(error.response.status)
+            console.log(error.response ? error.response.status : error)
             navigate('/login', { replace: true })
         });
     }
@@ -38,8 +33,8 @@ function Verify(props){
             navigate('/login', { replace: true })
         })
         .catch(function (error) {
-            alert(error.response.data)
-            console.log(error.response.status);
+            alert(error.response ? error.response.data : error)
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -51,8 +46,8 @@ function Verify(props){
                 setVerified(true)
         }})
         .catch(function (error) {
-            alert(error.response.data)
-            console.log(error.response.status);
+            alert(error.response ? error.response.data : error)
+            console.log(error.response ? error.response.status : error);
         });
     }
 
@@ -64,32 +59,64 @@ function Verify(props){
                 alert('Email telah dikirim!')
         }})
         .catch(function (error) {
-            console.log(error.response.status)
-            alert(error.response.data)
+            console.log(error.response ? error.response.status : error)
+            alert(error.response ? error.response.data : error)
         });
     }
 
     useEffect(()=>{verifyToken();}, [])
     
     return(
-        <>
-            {!verified?
-            <Container className='mt-4'>
-                <h3>Masukin kode verifikasi dari email dibawah</h3>
-                <Form.Group className="mb-3" controlId="formVerificationCode">
-                        <Form.Label>Kode Verifikasi (6-digit)</Form.Label>
-                        <Col xs={5} sm={4} md={3} lg={2}>
-                            <Form.Control type="text" onChange={(e)=>{setCode(e.target.value)}} value={code}  />
-                        </Col>
-                </Form.Group>
-        
-                <Button variant="primary" type="button" onClick={handleVerify}>Verifikasi!</Button>&nbsp;
-                <Button variant="danger" type="button" onClick={handleResendCode}>Kirim ulang kode verifikasi</Button>
-                <br/><br/>
-                <Button variant="danger" type="button" onClick={handleLogout}>Logout</Button>
+        <div className="position-relative d-flex justify-content-center align-items-center" style={{minHeight: '100vh', backgroundColor: 'var(--bg-main)'}}>
+            <div className="glow-blob-1"></div>
+            <div className="glow-blob-2"></div>
+            <Container className="position-relative" style={{zIndex: 2, maxWidth: '450px'}}>
+                <div className="glass-panel auth-card p-4 p-sm-5">
+                    {!verified ? (
+                        <>
+                            <h3 className="text-center fw-bold mb-3">Verifikasi Akun</h3>
+                            <p className="text-white-50 text-center small mb-4">
+                                Masukkan kode verifikasi 6-digit yang kami kirimkan ke email Anda.
+                            </p>
+                            <Form>
+                                <Form.Group className="mb-4 text-center" controlId="formVerificationCode">
+                                    <Form.Label className="d-block mb-2">Kode Verifikasi</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        className="form-input-custom text-center fs-4 letter-spacing-lg mx-auto" 
+                                        style={{maxWidth: '200px', letterSpacing: '4px'}}
+                                        onChange={(e)=>{setCode(e.target.value)}} 
+                                        value={code} 
+                                        maxLength="6"
+                                    />
+                                </Form.Group>
+                        
+                                <Button className="btn-primary-glow w-100 py-2 fs-5 mb-3" type="button" onClick={handleVerify}>
+                                    Verifikasi!
+                                </Button>
+                                
+                                <Button className="w-100 py-2 btn-success-glow mb-3" type="button" onClick={handleResendCode}>
+                                    Kirim Ulang Kode
+                                </Button>
+                                
+                                <Button className="w-100 py-2 btn-danger-glow" type="button" onClick={handleLogout}>
+                                    Logout
+                                </Button>
+                            </Form>
+                        </>
+                    ) : (
+                        <div className="text-center py-4">
+                            <div className="correct-alert mb-4 w-100">
+                                <i className="bi bi-check-circle-fill me-2 fs-4 d-block mb-2"></i> Akun telah diverifikasi!
+                            </div>
+                            <Link to="/" className="text-decoration-none">
+                                <Button className="btn-primary-glow px-4 py-2">Mulai Kuis</Button>
+                            </Link>
+                        </div>
+                    )}
+                </div>
             </Container>
-            : <Container><h3>Akun telah diverifikasi!</h3></Container>}
-        </>
+        </div>
     )
 }
 

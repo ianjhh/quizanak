@@ -19,21 +19,41 @@ function Navapp(props){
     }
     
     return (
-        <Navbar className="bg-black">
+        <Navbar expand="lg" className="glass-navbar" variant="dark">
             <Container>
-                <Navbar.Brand><Link to='/' className='text-decoration-none navbar-title text-white fs-5'>KuisAnak</Link></Navbar.Brand>
+                <Navbar.Brand>
+                    <Link to='/' className='text-decoration-none navbar-title'>KuisAnak</Link>
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto">
-                    <Navbar.Text><NavLink to='/quiz' className='text-white text-decoration-none nav-text'>Kuis</NavLink></Navbar.Text>
-                   <NavDropdown title={<span className='text-white'>Fakta</span>} id="collapsible-nav-dropdown" show={show} onMouseEnter={showDropdown} onMouseLeave={hideDropdown} onClick={manageShow}>
-                        <NavDropdown.Item><Link to='/fakta-binatang' className='text-decoration-none text-black'>Binatang</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link to='/fakta-angkasa' className='text-decoration-none text-black'>Angkasa</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link to='/fakta-aneh' className='text-decoration-none text-black'>Sejarah</Link></NavDropdown.Item>
-                    </NavDropdown>
-                    <Link to ='/login'><Button variant="primary">Login</Button></Link>&nbsp;
-                    <Link to ='/register'><Button variant="success" className="register-button">Register</Button></Link>
-                </Nav>
+                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                    <Nav className="align-items-center">
+                        <Nav.Link as={NavLink} to='/quiz' className='nav-link-custom text-white me-3'>Kuis</Nav.Link>
+                        <NavDropdown 
+                            title={<span className='text-white dropdown-toggle-custom'>Fakta</span>} 
+                            id="collapsible-nav-dropdown" 
+                            show={show} 
+                            onMouseEnter={showDropdown} 
+                            onMouseLeave={hideDropdown} 
+                            onClick={manageShow}
+                            className="me-3"
+                            menuVariant="dark"
+                            renderMenuOnMount={true}
+                        >
+                            <div className="dropdown-menu-custom">
+                                <NavDropdown.Item as={Link} to='/fakta-binatang' className='dropdown-item-custom'>Binatang</NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to='/fakta-angkasa' className='dropdown-item-custom'>Angkasa</NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to='/fakta-aneh' className='dropdown-item-custom'>Sejarah</NavDropdown.Item>
+                            </div>
+                        </NavDropdown>
+                        <Nav.Item className="d-flex align-items-center">
+                            <Link to='/login' className="text-decoration-none">
+                                <Button className="btn-primary-glow nav-btn me-2">Login</Button>
+                            </Link>
+                            <Link to='/register' className="text-decoration-none register-button">
+                                <Button className="btn-success-glow nav-btn">Register</Button>
+                            </Link>
+                        </Nav.Item>
+                    </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
