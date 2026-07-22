@@ -155,35 +155,6 @@ app.get('/api/', async (req, res) => {
     res.send('Quizanak API Server is running');
 });
 
-app.get('/api/test-email', async (req, res) => {
-  try {
-    await transporter.verify();
-    let sendResult = null;
-    if (req.query.to) {
-      sendResult = await transporter.sendMail({
-        from: { name: 'KuisAnak', address: emailUser },
-        to: req.query.to,
-        subject: "Tes Verifikasi Email KuisAnak",
-        text: "Jika Anda menerima email ini, sistem email KuisAnak berfungsi 100% sempurna!"
-      });
-    }
-    res.status(200).json({
-      status: "SUCCESS",
-      message: req.query.to ? `Email test successfully sent to ${req.query.to}!` : "Nodemailer is connected and verified to send emails!",
-      emailUser: emailUser,
-      passSet: !!emailPass,
-      sendResult: sendResult ? sendResult.response : null
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: "ERROR",
-      message: err.message || String(err),
-      emailUser: emailUser,
-      passSet: !!emailPass
-    });
-  }
-});
-
 app.post('/api/fetchSimilarQuiz', async (req, res) => {
   try{
       let result = await quiz.find({category: req.body.category, name: {$nin: [req.body.quizName] }}, {projection: {_id: 0, title: 1, quizImage: 1, name: 1}}).toArray();
@@ -237,16 +208,13 @@ app.post('/api/resendCode', async (req, res) => {
             const foundEmail = result.email
     
             const mailOptions = {
-                from: {
-                    name: 'KuisAnak',
-                    address: emailUser
-                },
+                from: `"KuisAnak" <${emailUser}>`,
                 to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
                 text: `Kode verifikasi anda adalah:\n${verificationCode}`
             };
     
-              try {
+            try {
               let info = await transporter.sendMail(mailOptions);
               console.log("Email sent: ", info.response);
             } catch (mailError) {
@@ -299,10 +267,7 @@ app.post('/api/register', async (req, res) => {
           let verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
             
           const mailOptions = {
-            from: {
-                    name: 'KuisAnak',
-                    address: emailUser
-                },
+            from: `"KuisAnak" <${emailUser}>`,
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
             text: `Kode verifikasi anda adalah:\n${verificationCode}`
@@ -316,7 +281,11 @@ app.post('/api/register', async (req, res) => {
           }
       
           await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode, codeCreatedAt: new Date().getTime()});
-          await cluster.bf.add('emailBloom', data.email);
+          try {
+            await cluster.bf.add('emailBloom', data.email);
+          } catch (bloomErr) {
+            console.log('Bloom filter add status:', bloomErr.message || bloomErr);
+          }
 
           jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
                   if(err) { 
