@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 var mongodb = require('mongodb');
 const app = express();
@@ -100,8 +102,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   secure: true,
   auth: {
-    user: "kuisanak.id@gmail.com",
-    pass: "kydzpysjzmbmycey",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -164,7 +166,7 @@ app.post('/api/resendCode', async (req, res) => {
             const mailOptions = {
                 from: {
                     name: 'KuisAnak',
-                    address: 'registrasi@kuisanak.com'
+                    address: process.env.EMAIL_USER
                 },
                 to: foundEmail,
                 subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
@@ -227,7 +229,7 @@ app.post('/api/register', async (req, res) => {
           const mailOptions = {
             from: {
                     name: 'KuisAnak',
-                    address: 'registrasi@kuisanak.com'
+                    address: process.env.EMAIL_USER
                 },
             to: data.email,
             subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
