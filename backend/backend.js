@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 var mongodb = require('mongodb');
 const app = express();
@@ -8,9 +9,9 @@ app.use(bodyParser.json());
 const cookieParser = require("cookie-parser");
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
-var redis = require("redis")
-const CryptoJS = require('crypto-js')
-const crypto = require('crypto')
+var redis = require("redis");
+const CryptoJS = require('crypto-js');
+const crypto = require('crypto');
 app.use(cookieParser());
 const allowedOrigins = [
   'http://localhost:3000',
@@ -32,6 +33,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
     
+/* REDIS CONFIGURATION */
 let redisUrl = process.env.REDIS_URL;
 if (redisUrl) {
   redisUrl = redisUrl.trim();
@@ -39,28 +41,30 @@ if (redisUrl) {
     redisUrl = redisUrl.replace('redis-cli -u ', '').trim();
   }
   // Strip quotes if present
-  if (redisUrl.startsWith('"') && redisUrl.endsWith('"')) {
-    redisUrl = redisUrl.slice(1, -1);
-  }
-  if (redisUrl.startsWith("'") && redisUrl.endsWith("'")) {
+  if ((redisUrl.startsWith('"') && redisUrl.endsWith('"')) || (redisUrl.startsWith("'") && redisUrl.endsWith("'"))) {
     redisUrl = redisUrl.slice(1, -1);
   }
 }
 
+const redisHost = process.env.REDIS_HOST || '127.0.0.1';
+const redisPort = parseInt(process.env.REDIS_PORT) || 7000;
+const redisPassword = process.env.REDIS_PASSWORD || 'ijh21999ijh21999!';
+
 const cluster = redisUrl 
-    ? redis.createClient({ url: redisUrl }).on('error', (err) => console.log('Redis Error', err))
+    ? redis.createClient({ url: redisUrl }).on('error', (err) => console.log('Redis Error:', err))
     : redis.createCluster({
         rootNodes: [
-            { url: 'redis://127.0.0.1:7000' },
-            { url: 'redis://127.0.0.1:7001' },
-            { url: 'redis://127.0.0.1:7002' },
+            { url: `redis://${redisHost}:${redisPort}` },
+            { url: `redis://${redisHost}:${redisPort + 1}` },
+            { url: `redis://${redisHost}:${redisPort + 2}` },
         ],
         useReplicas: true,
-        defaults: { password: 'ijh21999ijh21999!' }
-      }).on('error', (err) => console.log('Redis Cluster Error', err));
+        defaults: { password: redisPassword }
+      }).on('error', (err) => console.log('Redis Cluster Error:', err));
 
 var MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient("mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload", {
+const mongoUri = process.env.MONGODB_URI || "mongodb+srv://ianjhh:ijh21999@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload";
+const client = new MongoClient(mongoUri, {
     serverSelectionTimeoutMS: 5000
 });
 
@@ -80,31 +84,69 @@ const initBloomFilter = async () => {
         // Delete any pre-existing Bloom Filter
         await cluster.del('emailBloom');
             
-        // Reserve/Create(same meaning) a Bloom Filter with configurable error rate and capacity
+        // Reserve/Create a Bloom Filter with configurable error rate and capacity
         await cluster.bf.reserve('emailBloom', 0.01, 1000);
         console.log('Reserved Bloom Filter.');
         
         // Add multiple items to Bloom Filter at once with BF.MADD command
         await cluster.bf.mAdd('emailBloom', emailArr);
-    
-        //await cluster.close();
     }
     catch(e){
-        console.log(e)
+        console.log('Bloom filter initialization status:', e.message || e);
     }
 }
 initBloomFilter();
 
-/* NODEMAILER */
+/* NODEMAILER OAUTH2 & APP PASSWORD CONFIGURATION */
 const emailUser = process.env.EMAIL_USER || "kuisanak.id@gmail.com";
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.EMAIL_PORT) || 465,
-  secure: process.env.EMAIL_SECURE !== "false",
-  auth: {
-    user: emailUser,
-    pass: process.env.EMAIL_PASS,
-  },
+let rawPass = process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
+// Sanitize App Password by stripping spaces and quotes
+const emailPass = rawPass ? rawPass.replace(/\s+/g, '').replace(/['"]/g, '').trim() : null;
+
+let transporter;
+if (emailPass) {
+  // Option 1: Gmail App Password (RECOMMENDED - Most reliable for Gmail, avoids 7-day OAuth token expiration)
+  transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: emailUser,
+      pass: emailPass,
+    },
+  });
+} else if (process.env.GOOGLE_REFRESH_TOKEN && process.env.GOOGLE_CLIENT_ID) {
+  // Option 2: Google OAuth2
+  transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: emailUser,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+    },
+  });
+} else {
+  // Fallback SMTP
+  transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || "smtp.gmail.com",
+    port: parseInt(process.env.EMAIL_PORT) || 465,
+    secure: process.env.EMAIL_SECURE !== "false",
+    auth: {
+      user: emailUser,
+      pass: emailPass,
+    },
+  });
+}
+
+// Verify Nodemailer transporter connection on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Nodemailer transporter connection failed:", error.message || error);
+  } else {
+    console.log("✅ Nodemailer transporter connected successfully to Gmail SMTP!");
+  }
 });
 
 app.get('/api/', async (req, res) => {
@@ -173,14 +215,13 @@ app.post('/api/resendCode', async (req, res) => {
                 text: `Kode verifikasi anda adalah:\n${verificationCode}`
             };
     
-              transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                  console.error("Error sending email: ", error);
-                } else {
-                  console.log("Email sent: ", info.response);
-                }
-              })
-              res.status(200).send('Successfully resent email!')
+              try {
+              let info = await transporter.sendMail(mailOptions);
+              console.log("Email sent: ", info.response);
+            } catch (mailError) {
+              console.error("Error sending verification email: ", mailError);
+            }
+            res.status(200).send('Successfully resent email!')
         }
         else{
             res.status(404).send('Not found!')
@@ -236,13 +277,12 @@ app.post('/api/register', async (req, res) => {
             text: `Kode verifikasi anda adalah:\n${verificationCode}`
           };
     
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.error("Error sending email: ", error);
-            } else {
-              console.log("Email sent: ", info.response);
-            }
-          })
+          try {
+            let info = await transporter.sendMail(mailOptions);
+            console.log("Email sent: ", info.response);
+          } catch (mailError) {
+            console.error("Error sending registration email: ", mailError);
+          }
       
           await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode, codeCreatedAt: new Date().getTime()});
           await cluster.bf.add('emailBloom', data.email);
