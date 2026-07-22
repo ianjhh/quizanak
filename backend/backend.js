@@ -109,11 +109,9 @@ const emailPass = rawPass ? rawPass.replace(/\s+/g, '').replace(/['"]/g, '').tri
 
 let transporter;
 if (emailPass) {
-  // Option 1: Gmail App Password (RECOMMENDED - Most reliable for Gmail, avoids 7-day OAuth token expiration)
+  // Option 1: Gmail App Password (service: "gmail" handles port 587/465 STARTTLS automatically for Render)
   transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    service: "gmail",
     auth: {
       user: emailUser,
       pass: emailPass,
@@ -132,11 +130,11 @@ if (emailPass) {
     },
   });
 } else {
-  // Fallback SMTP
+  // Fallback SMTP (port 587)
   transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST || "smtp.gmail.com",
-    port: parseInt(process.env.EMAIL_PORT) || 465,
-    secure: process.env.EMAIL_SECURE !== "false",
+    port: parseInt(process.env.EMAIL_PORT) || 587,
+    secure: process.env.EMAIL_SECURE === "true",
     auth: {
       user: emailUser,
       pass: emailPass,
