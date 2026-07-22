@@ -52,15 +52,19 @@ function Verify(props){
     }
 
     const handleResendCode = () =>{
-        axios.post('/api/resendCode', {username: username})
+        if(!username){
+            alert('Sedang memuat data pengguna, silakan tunggu sebentar dan coba lagi.');
+            return;
+        }
+        axios.post('/api/resendCode', {username: username}, { withCredentials: true })
         .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if(response.status===200){
-                alert('Email telah dikirim!')
-        }})
+                alert('Email verifikasi telah berhasil dikirim ulang!')
+            }
+        })
         .catch(function (error) {
-            console.log(error.response ? error.response.status : error)
-            alert(error.response ? error.response.data : error)
+            console.log(error.response ? error.response.status : error);
+            alert(error.response && error.response.data ? error.response.data : 'Gagal mengirim ulang kode verifikasi!');
         });
     }
 

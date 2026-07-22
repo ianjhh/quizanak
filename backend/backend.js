@@ -200,12 +200,24 @@ app.post('/api/validateEmail', async (req, res) => {
 
 app.post('/api/resendCode', async (req, res) => {
     try{
-        let result = await credentials.findOne({username: req.body.username }, {projection: {_id: 0, email: 1}});
+        let targetUsername = req.body.username;
+        if (!targetUsername && req.cookies && req.cookies.jwt) {
+            try {
+                const decoded = jwt.verify(req.cookies.jwt, 'privatekey');
+                targetUsername = decoded.username;
+            } catch (jwtErr) {}
+        }
+
+        if (!targetUsername) {
+            return res.status(400).send('Username tidak ditemukan!');
+        }
+
+        let result = await credentials.findOne({username: targetUsername }, {projection: {_id: 0, email: 1}});
 
         if(result){
             const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
-            const update = await credentials.updateOne({username: req.body.username}, {$set: {verificationCode: verificationCode, codeCreatedAt: new Date().getTime()}})
-            const foundEmail = result.email
+            await credentials.updateOne({username: targetUsername}, {$set: {verificationCode: verificationCode, codeCreatedAt: new Date().getTime()}});
+            const foundEmail = result.email;
     
             const mailOptions = {
                 from: `"KuisAnak" <${emailUser}>`,
@@ -217,18 +229,19 @@ app.post('/api/resendCode', async (req, res) => {
             try {
               let info = await transporter.sendMail(mailOptions);
               console.log("Email sent: ", info.response);
+              return res.status(200).send('Berhasil mengirim ulang email verifikasi!');
             } catch (mailError) {
               console.error("Error sending verification email: ", mailError);
+              return res.status(500).send('Gagal mengirim email: ' + (mailError.message || mailError));
             }
-            res.status(200).send('Successfully resent email!')
         }
         else{
-            res.status(404).send('Not found!')
+            return res.status(404).send('Pengguna tidak ditemukan!');
         }
     }
     catch(e){
-        console.log(e)
-        res.status(400).send('Error!')
+        console.log(e);
+        return res.status(400).send('Error!');
     }
 })
 
