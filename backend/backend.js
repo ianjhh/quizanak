@@ -153,6 +153,8 @@ const sendVerificationEmail = async (toEmail, verificationCode) => {
   const subject = "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.";
   const textContent = `Kode verifikasi anda adalah:\n${verificationCode}`;
 
+  console.log(`🔑 [VERIFICATION CODE] For ${toEmail}: ${verificationCode}`);
+
   // 1. Primary: Resend HTTPS API (Port 443 - Never blocked on Render free tier)
   if (process.env.RESEND_API_KEY) {
     try {
