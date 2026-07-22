@@ -158,20 +158,28 @@ app.get('/api/', async (req, res) => {
 app.get('/api/test-email', async (req, res) => {
   try {
     await transporter.verify();
+    let sendResult = null;
+    if (req.query.to) {
+      sendResult = await transporter.sendMail({
+        from: { name: 'KuisAnak', address: emailUser },
+        to: req.query.to,
+        subject: "Tes Verifikasi Email KuisAnak",
+        text: "Jika Anda menerima email ini, sistem email KuisAnak berfungsi 100% sempurna!"
+      });
+    }
     res.status(200).json({
       status: "SUCCESS",
-      message: "Nodemailer is connected and verified to send emails!",
+      message: req.query.to ? `Email test successfully sent to ${req.query.to}!` : "Nodemailer is connected and verified to send emails!",
       emailUser: emailUser,
       passSet: !!emailPass,
-      mode: emailPass ? "Gmail App Password" : (process.env.GOOGLE_REFRESH_TOKEN ? "Google OAuth2" : "Fallback SMTP")
+      sendResult: sendResult ? sendResult.response : null
     });
   } catch (err) {
     res.status(500).json({
       status: "ERROR",
       message: err.message || String(err),
       emailUser: emailUser,
-      passSet: !!emailPass,
-      mode: emailPass ? "Gmail App Password" : (process.env.GOOGLE_REFRESH_TOKEN ? "Google OAuth2" : "Fallback SMTP")
+      passSet: !!emailPass
     });
   }
 });
