@@ -148,10 +148,54 @@ if (emailPass) {
   });
 }
 
+/* UNIFIED EMAIL DISPATCHER (Resend HTTPS API or Nodemailer SMTP) */
+const sendVerificationEmail = async (toEmail, verificationCode) => {
+  const subject = "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.";
+  const textContent = `Kode verifikasi anda adalah:\n${verificationCode}`;
+
+  // 1. Primary: Resend HTTPS API (Port 443 - Never blocked on Render free tier)
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY.trim()}`
+        },
+        body: JSON.stringify({
+          from: process.env.RESEND_FROM || 'KuisAnak <onboarding@resend.dev>',
+          to: [toEmail],
+          subject: subject,
+          text: textContent
+        })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log("✅ Resend HTTPS email sent successfully:", data);
+        return data;
+      } else {
+        console.error("❌ Resend HTTPS API error:", data);
+      }
+    } catch (resendErr) {
+      console.error("❌ Resend API fetch failed:", resendErr);
+    }
+  }
+
+  // 2. Fallback: Nodemailer SMTP
+  const mailOptions = {
+    from: `"KuisAnak" <${emailUser}>`,
+    to: toEmail,
+    subject: subject,
+    text: textContent
+  };
+  return transporter.sendMail(mailOptions);
+};
+
 // Verify Nodemailer transporter connection on startup
 transporter.verify((error, success) => {
   if (error) {
     console.error("❌ Nodemailer transporter connection failed:", error.message || error);
+    console.log("💡 Tip: Render free tier blocks outbound SMTP ports 465/587. Add RESEND_API_KEY to Render to send via HTTPS (Port 443).");
   } else {
     console.log("✅ Nodemailer transporter connected successfully to Gmail SMTP!");
   }
@@ -225,16 +269,9 @@ app.post('/api/resendCode', async (req, res) => {
             await credentials.updateOne({username: targetUsername}, {$set: {verificationCode: verificationCode, codeCreatedAt: new Date().getTime()}});
             const foundEmail = result.email;
     
-            const mailOptions = {
-                from: `"KuisAnak" <${emailUser}>`,
-                to: foundEmail,
-                subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
-                text: `Kode verifikasi anda adalah:\n${verificationCode}`
-            };
-    
-            // Dispatch email in background so HTTP response is instant and never hangs/times out
-            transporter.sendMail(mailOptions)
-              .then(info => console.log("Email sent successfully:", info.response))
+            // Dispatch email in background using Resend HTTPS API or Nodemailer SMTP fallback
+            sendVerificationEmail(foundEmail, verificationCode)
+              .then(info => console.log("Verification email dispatched successfully"))
               .catch(mailErr => console.error("Error sending verification email in background:", mailErr));
 
             return res.status(200).send('Berhasil mengirim ulang email verifikasi!');
@@ -283,16 +320,9 @@ app.post('/api/register', async (req, res) => {
           let data = req.body;
           let verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
             
-          const mailOptions = {
-            from: `"KuisAnak" <${emailUser}>`,
-            to: data.email,
-            subject: "Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.",
-            text: `Kode verifikasi anda adalah:\n${verificationCode}`
-          };
-    
-          // Dispatch email in background so HTTP response is instant
-          transporter.sendMail(mailOptions)
-            .then(info => console.log("Registration email sent successfully:", info.response))
+          // Dispatch email in background using Resend HTTPS API or Nodemailer SMTP fallback
+          sendVerificationEmail(data.email, verificationCode)
+            .then(info => console.log("Registration email dispatched successfully"))
             .catch(mailErr => console.error("Error sending registration email in background:", mailErr));
       
           await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode, codeCreatedAt: new Date().getTime()});
