@@ -1,4 +1,8 @@
-require('dotenv').config();
+try {
+  require('dotenv').config();
+} catch (e) {
+  // Dotenv is optional in production where variables are set directly in host dashboard
+}
 const express = require('express');
 var mongodb = require('mongodb');
 const app = express();
