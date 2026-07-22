@@ -72,86 +72,11 @@ function Home(props){
 
     useEffect(()=>{verifyToken();}, [])
 
-    function LoggedInRender({isLoggedIn}){
-        if(isLoggedIn){
-            return <LoggedInNav />
-        }
-        return <Navapp />
-    }
-
-    function RenderWhiteBox({isLoggedIn}){
-        if(isLoggedIn){
-            return (
-                <div className='col-12 col-md-4 mt-4 mt-md-0'>
-                    <div className="glass-panel auth-card historylist">
-                        <h3 className='fw-bold mb-3'>{username}</h3>
-                        <Table responsive className="history-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Aktivitas Terbaru</th>
-                                    <th>Skor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {historyList && historyList.length > 0 ? historyList.map((item, idx)=>{
-                                    return(
-                                        <tr key={idx}>
-                                            <td className="text-white-50">{item[0]}</td>
-                                            <td className="fw-semibold text-warning">{item[1]}</td>
-                                        </tr>
-                                    )
-                                }) : (
-                                    <tr>
-                                        <td colSpan="2" className="text-center text-white-50 py-3">Belum ada aktivitas</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </Table>
-                    </div>
-                </div>
-            )
-        }
-        return (
-            <div className='col-12 col-md-4 mt-4 mt-md-0'>
-                <div className="glass-panel auth-card loginarea">
-                    <h3 className="text-center fw-bold">Login</h3>
-                    <Form>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                className="form-input-custom" 
-                                onChange={(e)=>{setUsername(e.target.value)}} 
-                                value={username} 
-                            />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Kata Sandi</Form.Label>
-                            <Form.Control 
-                                type="password" 
-                                className="form-input-custom" 
-                                onChange={(e)=>{setPassword(e.target.value)}} 
-                                value={password} 
-                            />
-                        </Form.Group>
-                        <Button className="btn-primary-glow w-100 py-2 mt-2" type="button" onClick={handleLogin}>
-                            Masuk
-                        </Button>
-                    </Form>
-                    <p className='mt-4 text-center text-white-50 mb-0'>
-                        Belum daftar? <Link to='/register' className='text-decoration-none text-info fw-semibold'>Buat akun baru</Link>
-                    </p>
-                </div>
-            </div>
-        )
-    }
-
     return(
         <>
             <div className="glow-blob-1"></div>
             <div className="glow-blob-2"></div>
-            {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
+            {isLoggedIn === null ? <LoadingNav /> : (isLoggedIn ? <LoggedInNav /> : <Navapp />)}
             <div className='main-content-wrapper'>
                 <Container>
                     <Row>
@@ -222,8 +147,67 @@ function Home(props){
                                     <span className="visually-hidden">Loading...</span>
                                 </Spinner>
                             </div>
+                        ) : isLoggedIn ? (
+                            <div className='col-12 col-md-4 mt-4 mt-md-0'>
+                                <div className="glass-panel auth-card historylist">
+                                    <h3 className='fw-bold mb-3'>{username}</h3>
+                                    <Table responsive className="history-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Aktivitas Terbaru</th>
+                                                <th>Skor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {historyList && historyList.length > 0 ? historyList.map((item, idx)=>{
+                                                return(
+                                                    <tr key={idx}>
+                                                        <td className="text-white-50">{item[0]}</td>
+                                                        <td className="fw-semibold text-warning">{item[1]}</td>
+                                                    </tr>
+                                                )
+                                            }) : (
+                                                <tr>
+                                                    <td colSpan="2" className="text-center text-white-50 py-3">Belum ada aktivitas</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </div>
                         ) : (
-                            <RenderWhiteBox isLoggedIn={isLoggedIn} />
+                            <div className='col-12 col-md-4 mt-4 mt-md-0'>
+                                <div className="glass-panel auth-card loginarea">
+                                    <h3 className="text-center fw-bold">Login</h3>
+                                    <Form>
+                                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                                            <Form.Label>Username</Form.Label>
+                                            <Form.Control 
+                                                type="text" 
+                                                className="form-input-custom" 
+                                                onChange={(e)=>{setUsername(e.target.value)}} 
+                                                value={username} 
+                                            />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                                            <Form.Label>Kata Sandi</Form.Label>
+                                            <Form.Control 
+                                                type="password" 
+                                                className="form-input-custom" 
+                                                onChange={(e)=>{setPassword(e.target.value)}} 
+                                                value={password} 
+                                            />
+                                        </Form.Group>
+                                        <Button className="btn-primary-glow w-100 py-2 mt-2" type="button" onClick={handleLogin}>
+                                            Masuk
+                                        </Button>
+                                    </Form>
+                                    <p className='mt-4 text-center text-white-50 mb-0'>
+                                        Belum daftar? <Link to='/register' className='text-decoration-none text-info fw-semibold'>Buat akun baru</Link>
+                                    </p>
+                                </div>
+                            </div>
                         )}
                     </Row>
                 </Container>
