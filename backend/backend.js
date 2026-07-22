@@ -99,7 +99,7 @@ initBloomFilter();
 
 /* NODEMAILER OAUTH2 & APP PASSWORD CONFIGURATION */
 const emailUser = process.env.EMAIL_USER || "kuisanak.id@gmail.com";
-let rawPass = process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
+let rawPass = process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASSWORD || process.env.GMAIL_PASS || process.env.MAIL_PASS;
 // Sanitize App Password by stripping spaces and quotes
 const emailPass = rawPass ? rawPass.replace(/\s+/g, '').replace(/['"]/g, '').trim() : null;
 
@@ -150,8 +150,29 @@ transporter.verify((error, success) => {
 });
 
 app.get('/api/', async (req, res) => {
-    console.log('hello world')
-})
+    res.send('Quizanak API Server is running');
+});
+
+app.get('/api/test-email', async (req, res) => {
+  try {
+    await transporter.verify();
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Nodemailer is connected and verified to send emails!",
+      emailUser: emailUser,
+      passSet: !!emailPass,
+      mode: emailPass ? "Gmail App Password" : (process.env.GOOGLE_REFRESH_TOKEN ? "Google OAuth2" : "Fallback SMTP")
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "ERROR",
+      message: err.message || String(err),
+      emailUser: emailUser,
+      passSet: !!emailPass,
+      mode: emailPass ? "Gmail App Password" : (process.env.GOOGLE_REFRESH_TOKEN ? "Google OAuth2" : "Fallback SMTP")
+    });
+  }
+});
 
 app.post('/api/fetchSimilarQuiz', async (req, res) => {
   try{
