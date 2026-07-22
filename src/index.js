@@ -23,7 +23,7 @@ import {Routes, Route, HashRouter} from 'react-router-dom';
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 axios.defaults.withCredentials = true;
-axios.defaults.timeout = 10000; // 10 second timeout to prevent infinite spinners on database hangs
+axios.defaults.timeout = 30000; // 30 second timeout to accommodate Render server cold starts and SMTP email sending
 
 // Intercept network/CORS errors to prevent TypeError crashes in catch blocks
 axios.interceptors.response.use(
