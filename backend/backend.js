@@ -109,13 +109,15 @@ const emailPass = rawPass ? rawPass.replace(/\s+/g, '').replace(/['"]/g, '').tri
 
 let transporter;
 if (emailPass) {
-  // Option 1: Gmail App Password (service: "gmail" handles port 587/465 STARTTLS automatically for Render)
+  // Option 1: Gmail App Password
   transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: emailUser,
       pass: emailPass,
     },
+    connectionTimeout: 5000,
+    socketTimeout: 5000,
   });
 } else if (process.env.GOOGLE_REFRESH_TOKEN && process.env.GOOGLE_CLIENT_ID) {
   // Option 2: Google OAuth2
@@ -128,9 +130,11 @@ if (emailPass) {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
     },
+    connectionTimeout: 5000,
+    socketTimeout: 5000,
   });
 } else {
-  // Fallback SMTP (port 587)
+  // Fallback SMTP
   transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST || "smtp.gmail.com",
     port: parseInt(process.env.EMAIL_PORT) || 587,
@@ -139,6 +143,8 @@ if (emailPass) {
       user: emailUser,
       pass: emailPass,
     },
+    connectionTimeout: 5000,
+    socketTimeout: 5000,
   });
 }
 
@@ -226,14 +232,12 @@ app.post('/api/resendCode', async (req, res) => {
                 text: `Kode verifikasi anda adalah:\n${verificationCode}`
             };
     
-            try {
-              let info = await transporter.sendMail(mailOptions);
-              console.log("Email sent: ", info.response);
-              return res.status(200).send('Berhasil mengirim ulang email verifikasi!');
-            } catch (mailError) {
-              console.error("Error sending verification email: ", mailError);
-              return res.status(500).send('Gagal mengirim email: ' + (mailError.message || mailError));
-            }
+            // Dispatch email in background so HTTP response is instant and never hangs/times out
+            transporter.sendMail(mailOptions)
+              .then(info => console.log("Email sent successfully:", info.response))
+              .catch(mailErr => console.error("Error sending verification email in background:", mailErr));
+
+            return res.status(200).send('Berhasil mengirim ulang email verifikasi!');
         }
         else{
             return res.status(404).send('Pengguna tidak ditemukan!');
@@ -286,12 +290,10 @@ app.post('/api/register', async (req, res) => {
             text: `Kode verifikasi anda adalah:\n${verificationCode}`
           };
     
-          try {
-            let info = await transporter.sendMail(mailOptions);
-            console.log("Email sent: ", info.response);
-          } catch (mailError) {
-            console.error("Error sending registration email: ", mailError);
-          }
+          // Dispatch email in background so HTTP response is instant
+          transporter.sendMail(mailOptions)
+            .then(info => console.log("Registration email sent successfully:", info.response))
+            .catch(mailErr => console.error("Error sending registration email in background:", mailErr));
       
           await credentials.insertOne({username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode: verificationCode, codeCreatedAt: new Date().getTime()});
           try {
