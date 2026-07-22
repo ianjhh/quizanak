@@ -35,6 +35,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postinstall": "cd backend && npm install",
     "test": "react-scripts test --env=./test-env.js --transformIgnorePatterns \"node_modules/(?!msw)/\"",
     "eject": "react-scripts eject"
   },
