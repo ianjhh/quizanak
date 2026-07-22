@@ -97,12 +97,11 @@ initBloomFilter();
 
 /* NODEMAILER */
 const transporter = nodemailer.createTransport({
-  host: "mail.privateemail.com",
-  port: 465,
+  service: "gmail",
   secure: true,
   auth: {
-    user: "registrasi@kuisanak.com",
-    pass: "ijh21999",
+    user: "kuisanak.id@gmail.com",
+    pass: "kydzpysjzmbmycey",
   },
 });
 
