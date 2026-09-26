@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { authRoutes } = require('./routes/auth');
 const { quizRoutes } = require('./routes/quizzes');
@@ -23,7 +22,7 @@ function corsOptions(allowedOrigins) {
 // point and the tests can each supply their own.
 function createApp({ config, db, bloom, mailer }) {
   const app = express();
-  app.use(bodyParser.json());
+  app.use(express.json());
   app.use(cookieParser());
   app.use(cors(corsOptions(config.corsOrigins)));
 
