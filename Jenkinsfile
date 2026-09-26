@@ -22,7 +22,7 @@ pipeline {
                 
                 echo 'Installing backend dependencies...'
                 dir('backend') {
-                    sh 'npm install'
+                    sh 'npm ci'
                 }
             }
         }
@@ -34,9 +34,9 @@ pipeline {
             }
         }
         
-        stage('Backend Syntax Check') {
+        stage('Test Backend') {
             steps {
-                echo 'Checking backend syntax...'
+                echo 'Running backend tests...'
                 dir('backend') {
                     sh 'npm test'
                 }
