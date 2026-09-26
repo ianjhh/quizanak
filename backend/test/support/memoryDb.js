@@ -129,6 +129,19 @@ class MemoryCollection {
     return { acknowledged: true, insertedId: stored._id };
   }
 
+  async replaceOne(filter, replacement, options = {}) {
+    const index = this.docs.findIndex((d) => matches(d, filter));
+    if (index === -1) {
+      if (!options.upsert) {
+        return { acknowledged: true, matchedCount: 0, modifiedCount: 0 };
+      }
+      const { insertedId } = await this.insertOne(replacement);
+      return { acknowledged: true, matchedCount: 0, modifiedCount: 0, upsertedId: insertedId };
+    }
+    this.docs[index] = { _id: this.docs[index]._id, ...structuredClone(replacement) };
+    return { acknowledged: true, matchedCount: 1, modifiedCount: 1 };
+  }
+
   async updateOne(filter, update) {
     const doc = this.docs.find((d) => matches(d, filter));
     if (!doc) {
