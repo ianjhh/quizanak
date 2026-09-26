@@ -12,7 +12,7 @@ var jwt = require('jsonwebtoken');
 app.use(bodyParser.json());
 const cookieParser = require("cookie-parser");
 const nodemailer = require("nodemailer");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 var redis = require("redis");
 const CryptoJS = require('crypto-js');
 const crypto = require('crypto');
