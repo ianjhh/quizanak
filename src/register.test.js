@@ -1,9 +1,7 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import Register from './Register';
-import Home from './Home';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {http, HttpResponse} from 'msw';
-import {setupServer} from 'msw/node';
+import { BrowserRouter } from "react-router-dom";
+import { mockApi } from './testing/mockApi';
 
 const mockUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -12,19 +10,43 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe("Register", ()=>{
-    const handleSubmit = jest.fn();
+    let alertSpy;
+    let requests;
 
-    /* Register renders react-router links, so it needs a Router above it.
-       Rendering per test also keeps the two cases independent. */
-    beforeEach(() => {
+    // Renders the page against a fake API; `register` answers the sign-up request.
+    const renderWith = (register) => {
+        requests = mockApi({
+            'GET /api/verifyToken': () => [401, 'Sesi tidak valid'],
+            'POST /api/validateEmail': () => [200, 'Email does not exist!'],
+            'POST /api/register': register,
+        });
         render(
             <BrowserRouter>
-                <Register url='/register' onSubmit={handleSubmit} />
+                <Register />
             </BrowserRouter>
         );
+    };
+
+    beforeEach(() => {
+        mockUsedNavigate.mockClear();
+        alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
     });
 
+    afterEach(() => {
+        alertSpy.mockRestore();
+        requests.restore();
+    });
+
+    const fillForm = () => {
+        fireEvent.change(screen.getByLabelText('Username'), {target: {value: 'dewi'}});
+        fireEvent.change(screen.getByLabelText('Kata Sandi'), {target: {value: 'rahasia123'}});
+        fireEvent.change(screen.getByLabelText('Ketik Ulang Kata Sandi'), {target: {value: 'rahasia123'}});
+        fireEvent.change(screen.getByLabelText('Email'), {target: {value: 'dewi@example.com'}});
+        fireEvent.click(screen.getByText('Daftar Sekarang'));
+    };
+
     test("Shows validation errors when username is under 3 and password is under 8 characters", async () =>{
+        renderWith(() => [500, 'unused']);
         /* username and password field test */
         const usernameInput = screen.getByLabelText('Username');
         const passwordInput = screen.getByLabelText('Kata Sandi');
@@ -43,19 +65,30 @@ describe("Register", ()=>{
         );
     })
 
-    test("Expect submit function to not accept if username length is less than 6 and password length is less than 8", async () =>{
-        const username = 'a';
-        const password = 'b';
-        const mockHandleSubmit = jest.fn((username, password)=>{
-            if (username.length < 6 || password.length < 8){
-                return false;
-            }
-            else{
-                return true
-            }
-        })
+    test("Sends only the username, password and email, then opens the verify page", async () =>{
+        renderWith(() => [200, { message: 'Successful!', token: 'token', emailSent: true }]);
+        fillForm();
 
-        mockHandleSubmit(username, password)
-        expect(mockHandleSubmit.mock.results[0].value).toBe(false)
+        await waitFor(() => expect(mockUsedNavigate).toHaveBeenCalledWith('/verify', { replace: true }));
+        /* the server hashes the password and decides the account's other fields */
+        const signUp = requests.find((r) => r.url === '/api/register');
+        expect(signUp.body).toEqual({ username: 'dewi', password: 'rahasia123', email: 'dewi@example.com' });
+        expect(alertSpy).toHaveBeenCalledWith('Kode verifikasi telah dikirim ke email anda!');
+    })
+
+    test("Explains when the account was created but the email could not be sent", async () =>{
+        renderWith(() => [200, { message: 'Successful!', token: 'token', emailSent: false }]);
+        fillForm();
+
+        await waitFor(() => expect(mockUsedNavigate).toHaveBeenCalledWith('/verify', { replace: true }));
+        expect(alertSpy.mock.calls[0][0]).toMatch(/email verifikasi gagal dikirim/);
+    })
+
+    test("Shows the server's reason when the username is taken", async () =>{
+        renderWith(() => [409, 'Username sudah dipakai!']);
+        fillForm();
+
+        await waitFor(() => expect(alertSpy).toHaveBeenCalledWith('Username sudah dipakai!'));
+        expect(mockUsedNavigate).not.toHaveBeenCalled();
     })
 })

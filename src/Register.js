@@ -3,7 +3,6 @@ import { Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
-import bcrypt from 'bcryptjs';
 
 function Register(props){
     const [username, setUsername] = useState("");
@@ -58,45 +57,38 @@ function Register(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             setEmailIsValid(true)
-            const saltRounds = 11;
 
             if (username.length < 3 || password.length < 8 || password !== password2){
                 alert('Input tidak valid!')
                 return;
             }
-    
-            /* generate password hash */
-            bcrypt
-            .genSalt(saltRounds)
-            .then(salt => {
-                return bcrypt.hash(password, salt)
+
+            /* the server validates the account and hashes the password */
+            return axios.post('/api/register', {
+                username: username,
+                password: password,
+                email: email
             })
-            .then(hash => {
-                axios.post('/api/register', {
-                    username: username,
-                    password: hash,
-                    email: email,
-                    verified: false,
-                    createdAt: new Date(),
-                    history: []
-                })
-                .then(function (response) {
-                    /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-                    alert('Link verifikasi akun telah dikirim kepada email anda!')
-                    navigate('/verify', { replace: true })
-                })
-                .catch(function (error) {
-                    console.log(error.response ? error.response.status : error);
-                });
+            .then(function (response) {
+                if (response.data.emailSent === false){
+                    alert('Akun berhasil dibuat, tetapi email verifikasi gagal dikirim. Tekan "Kirim Ulang Kode" di halaman berikutnya.')
+                }
+                else{
+                    alert('Kode verifikasi telah dikirim ke email anda!')
+                }
+                navigate('/verify', { replace: true })
             })
-            .catch(error => console.log(error.response ? error.response.status : error))
+            .catch(function (error) {
+                /* for example "Username sudah dipakai!" */
+                alert(error.response.data)
+            });
         })
         .catch(function (e) {
             if(e.response && e.response.status === 409){
                 setEmailIsValid(false)
             }
             else{
-                alert('Oops ada error!')
+                alert(e.response && typeof e.response.data === 'string' ? e.response.data : 'Oops ada error!')
             }
         });
     }
