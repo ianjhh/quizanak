@@ -7,19 +7,7 @@ import axios from 'axios';
 import { Row, Container, Button, Card, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
 import LoadingNav from './LoadingNav';
-
-// Safe image require helper to prevent crashes on missing database image references
-const safeRequire = (imageName) => {
-  try {
-    return require(`./assets/images/${imageName}.jpg`);
-  } catch (err) {
-    try {
-      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
-    } catch (e) {
-      return '';
-    }
-  }
-};
+import { imageFor } from './images';
 
 function QuizList(props){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -126,7 +114,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                                 <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                                     <Card className='glass-panel glass-panel-hover quiz-card-list'>
-                                        <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
+                                        <Card.Img variant="top" src={imageFor(item.quizImage)} className='img-card-list' />
                                         <Card.Body className='card-body-list'>
                                             <Card.Title className="card-title-list">{item.title}</Card.Title>
                                             <Card.Text className='card-description-list'>
@@ -145,7 +133,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                                 <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                                     <Card className='glass-panel glass-panel-hover quiz-card-list'>
-                                        <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
+                                        <Card.Img variant="top" src={imageFor(item.quizImage)} className='img-card-list' />
                                         <Card.Body className='card-body-list'>
                                             <Card.Title className="card-title-list">{item.title}</Card.Title>
                                             <Card.Text className='card-description-list'>
@@ -164,7 +152,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'>
                                 <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                                     <Card className='glass-panel glass-panel-hover quiz-card-list'>
-                                        <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
+                                        <Card.Img variant="top" src={imageFor(item.quizImage)} className='img-card-list' />
                                         <Card.Body className='card-body-list'>
                                             <Card.Title className="card-title-list">{item.title}</Card.Title>
                                             <Card.Text className='card-description-list'>
@@ -183,7 +171,7 @@ function QuizList(props){
                             <Col key={idx} className='quiz-col-list'> 
                                 <Link to={`/quiz/${item.name}`} className='text-decoration-none'>
                                     <Card className='glass-panel glass-panel-hover quiz-card-list'>
-                                        <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card-list' />
+                                        <Card.Img variant="top" src={imageFor(item.quizImage)} className='img-card-list' />
                                         <Card.Body className='card-body-list'>
                                             <Card.Title className="card-title-list">{item.title}</Card.Title>
                                             <Card.Text className='card-description-list'>

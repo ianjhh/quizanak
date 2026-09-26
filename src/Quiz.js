@@ -6,19 +6,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import './Quiz.css';
 import Spinner from 'react-bootstrap/Spinner';
-
-// Safe image require helper to prevent crashes on missing database image references
-const safeRequire = (imageName) => {
-  try {
-    return require(`./assets/images/${imageName}.jpg`);
-  } catch (err) {
-    try {
-      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
-    } catch (e) {
-      return '';
-    }
-  }
-};
+import { imageFor } from './images';
 
 function Quiz(props){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -198,7 +186,7 @@ function Quiz(props){
                                                     <img 
                                                         width={300} 
                                                         height={300} 
-                                                        src={safeRequire(quizImage)} 
+                                                        src={imageFor(quizImage)} 
                                                         className="img-fluid rounded-4 mb-4 shadow"
                                                         style={{objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)'}}
                                                         alt="Cover Kuis"
@@ -241,7 +229,7 @@ function Quiz(props){
                                                             <div className="text-center mb-4">
                                                                 <img 
                                                                     className='questionImage img-fluid shadow-lg' 
-                                                                    src={safeRequire(quizList[currentQuestion-1].imagesrc)} 
+                                                                    src={imageFor(quizList[currentQuestion-1].imagesrc)} 
                                                                     alt="Pertanyaan" 
                                                                 />
                                                             </div>
@@ -318,7 +306,7 @@ function Quiz(props){
                                                     {similarQuiz.map((item, idx) => (
                                                         <Col key={idx}>
                                                             <Card className="glass-panel glass-panel-hover quiz-card-custom text-start border-0">
-                                                                <Card.Img variant="top" src={safeRequire(item.quizImage)} className='img-card' />
+                                                                <Card.Img variant="top" src={imageFor(item.quizImage)} className='img-card' />
                                                                 <Card.Body className="d-flex flex-column justify-content-between p-3">
                                                                     <Card.Title className="fs-6 fw-semibold text-white mb-3">{item.title}</Card.Title>
                                                                     <Button 

@@ -5,19 +5,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Footer from './Footer';
 import axios from 'axios';
 import './Fact.css';
-
-// Safe image require helper to prevent crashes on missing database image references
-const safeRequire = (imageName) => {
-  try {
-    return require(`./assets/images/${imageName}.jpg`);
-  } catch (err) {
-    try {
-      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
-    } catch (e) {
-      return '';
-    }
-  }
-};
+import { imageFor } from './images';
 
 function AnimalFact(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -86,7 +74,7 @@ function AnimalFact(){
                                             {item[1] && (
                                                 <div className="mt-3">
                                                     <img 
-                                                        src={safeRequire(item[1])} 
+                                                        src={imageFor(item[1])} 
                                                         className="img-fluid rounded-3 shadow" 
                                                         style={{maxHeight: '300px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)'}}
                                                         alt="Fakta gambar"

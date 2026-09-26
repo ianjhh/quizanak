@@ -7,19 +7,7 @@ import axios from 'axios';
 import { Row, Container, Button, Card, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
 import LoadingNav from './LoadingNav';
-
-// Safe image require helper to prevent crashes on missing database image references
-const safeRequire = (imageName) => {
-  try {
-    return require(`./assets/images/${imageName}.jpg`);
-  } catch (err) {
-    try {
-      return require('./assets/images/binatang-laut1.jpg'); // secure fallback
-    } catch (e) {
-      return '';
-    }
-  }
-};
+import { imageFor } from './images';
 
 function HistoryFacts(props){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -84,7 +72,7 @@ function HistoryFacts(props){
                             <Col key={idx} className='facts-col-list'>
                                 <Link to={`/fakta-aneh/${item.link_name}`} className='text-decoration-none'>
                                     <Card className='glass-panel glass-panel-hover facts-card-list'>
-                                        <Card.Img variant="top" src={safeRequire(item.image)} className='facts-img-card-list' />
+                                        <Card.Img variant="top" src={imageFor(item.image)} className='facts-img-card-list' />
                                         <Card.Body className='facts-card-body-list'>
                                             <Card.Title className="facts-card-title-list">{item.title}</Card.Title>
                                         </Card.Body>
