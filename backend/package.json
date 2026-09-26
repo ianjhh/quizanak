@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node backend.js",
     "build": "npm install",
-    "test": "node --check backend.js"
+    "test": "node --test test/*.test.js"
   },
   "author": "",
   "license": "ISC",
