@@ -7,7 +7,7 @@ try {
 }
 
 const { loadConfig } = require('./src/config');
-const { connectDatabase } = require('./src/db');
+const { connectDatabase, ensureIndexes } = require('./src/db');
 const { createEmailBloom } = require('./src/emailBloom');
 const { createMailer } = require('./src/mailer');
 const { createApp } = require('./src/app');
@@ -17,6 +17,7 @@ const db = connectDatabase(config.mongoUri);
 const bloom = createEmailBloom(config.redis, db.credentials);
 const mailer = createMailer(config.email);
 
+ensureIndexes(db);
 bloom.init();
 mailer.verifyConnection();
 

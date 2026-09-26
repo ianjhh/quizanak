@@ -18,4 +18,16 @@ function connectDatabase(uri) {
   };
 }
 
-module.exports = { connectDatabase };
+// Usernames and emails must be unique. The sign-up route checks first, and
+// these indexes also stop two simultaneous sign-ups from both succeeding.
+async function ensureIndexes({ credentials }) {
+  for (const field of ['username', 'email']) {
+    try {
+      await credentials.createIndex({ [field]: 1 }, { unique: true });
+    } catch (err) {
+      console.error(`Could not create a unique index on credentials.${field} (are there duplicates?):`, err.message);
+    }
+  }
+}
+
+module.exports = { connectDatabase, ensureIndexes };

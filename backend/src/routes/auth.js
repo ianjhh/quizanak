@@ -3,6 +3,32 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { asyncHandler } = require('../http');
 
+const PASSWORD_SALT_ROUNDS = 11;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Frontend builds from before server-side hashing send a bcrypt hash instead
+// of the password. Accept those until every deployed frontend is rebuilt.
+const BCRYPT_HASH = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/;
+
+function normalizeEmail(email) {
+  return typeof email === 'string' ? email.trim().toLowerCase() : '';
+}
+
+// Returns why the sign-up data is invalid, or null when it is fine.
+function signUpProblem({ username, password, email }) {
+  const name = typeof username === 'string' ? username.trim() : '';
+  if (name.length < 3 || name.length > 30) {
+    return 'Username harus 3 sampai 30 karakter.';
+  }
+  const passwordBytes = typeof password === 'string' ? Buffer.byteLength(password) : 0;
+  if (!BCRYPT_HASH.test(password) && (passwordBytes < 8 || passwordBytes > 72)) {
+    return 'Kata sandi harus 8 sampai 72 karakter.';
+  }
+  if (!EMAIL_PATTERN.test(normalizeEmail(email))) {
+    return 'Format email salah!';
+  }
+  return null;
+}
+
 // Treats a missing or malformed stored hash as a wrong password.
 async function passwordMatches(password, hash) {
   if (typeof password !== 'string' || typeof hash !== 'string') {
@@ -21,12 +47,14 @@ function authRoutes({ db, bloom, mailer, sessions }) {
   const { credentials } = db;
 
   router.post('/api/validateEmail', asyncHandler(async (req, res) => {
+    const email = normalizeEmail(req.body.email);
+
     /* check whether email exists in bloom filter */
-    const emailExists = await bloom.exists(req.body.email);
+    const emailExists = await bloom.exists(email);
 
     if (emailExists) {
       /* cross check with database since it could be false positive */
-      const found = await credentials.findOne({ email: req.body.email }, { projection: { _id: 0, email: 1 } });
+      const found = await credentials.findOne({ email }, { projection: { _id: 0, email: 1 } });
       if (found) {
         return res.status(409).send('Email exists already!');
       }
@@ -70,22 +98,58 @@ function authRoutes({ db, bloom, mailer, sessions }) {
   }));
 
   router.post('/api/register', asyncHandler(async (req, res) => {
-    const data = req.body;
+    const problem = signUpProblem(req.body);
+    if (problem) {
+      return res.status(400).send(problem);
+    }
+
+    const username = req.body.username.trim();
+    const email = normalizeEmail(req.body.email);
+    if (await credentials.findOne({ username }, { projection: { _id: 1 } })) {
+      return res.status(409).send('Username sudah dipakai!');
+    }
+    if (await credentials.findOne({ email }, { projection: { _id: 1 } })) {
+      return res.status(409).send('Email sudah terdaftar!');
+    }
+
+    const password = BCRYPT_HASH.test(req.body.password)
+      ? req.body.password
+      : await bcrypt.hash(req.body.password, PASSWORD_SALT_ROUNDS);
     const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
 
-    // Dispatch email in background using Resend HTTPS API or Nodemailer SMTP fallback
-    mailer.sendVerificationEmail(data.email, verificationCode)
-      .then(() => console.log('Registration email dispatched successfully'))
-      .catch((mailErr) => console.error('Error sending registration email in background:', mailErr));
-
-    await credentials.insertOne({ username: data.username, password: data.password, email: data.email, verified: data.verified, createdAt: data.createdAt, verificationCode, codeCreatedAt: new Date().getTime() });
     try {
-      await bloom.add(data.email);
+      // Only server-chosen fields are stored: a client cannot mark itself verified.
+      // createdAt is removed once the email is verified.
+      await credentials.insertOne({
+        username,
+        email,
+        password,
+        verified: false,
+        createdAt: new Date(),
+        history: [],
+        verificationCode,
+        codeCreatedAt: new Date().getTime(),
+      });
+    } catch (err) {
+      // The unique indexes catch sign-ups racing each other for the same name or email.
+      if (err.code === 11000) {
+        return res.status(409).send(err.keyPattern && err.keyPattern.email ? 'Email sudah terdaftar!' : 'Username sudah dipakai!');
+      }
+      throw err;
+    }
+
+    try {
+      await bloom.add(email);
     } catch (bloomErr) {
       console.log('Bloom filter add status:', bloomErr.message || bloomErr);
     }
 
-    sessions.start(res, data.username);
+    // Dispatch email in background using Resend HTTPS API or Nodemailer SMTP fallback
+    mailer.sendVerificationEmail(email, verificationCode)
+      .then(() => console.log('Registration email dispatched successfully'))
+      .catch((mailErr) => console.error('Error sending registration email in background:', mailErr));
+
+    sessions.start(res, username);
     res.status(200).send('Successful!');
   }));
 
