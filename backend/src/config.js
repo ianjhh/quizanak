@@ -1,5 +1,18 @@
 // Reads the API settings from environment variables once at startup.
 
+// Browser origins allowed to call the API when CORS_ORIGINS is not set.
+const DEFAULT_CORS_ORIGINS = ['http://localhost:3000', 'https://ian-joseph.netlify.app'];
+
+function parseOrigins(value) {
+  if (!value) {
+    return DEFAULT_CORS_ORIGINS;
+  }
+  return value
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+}
+
 function cleanRedisUrl(value) {
   if (!value) {
     return value;
@@ -30,6 +43,7 @@ function loadConfig(env = process.env) {
     port: env.PORT || 5000,
     mongoUri: env.MONGODB_URI,
     jwtSecret: env.JWT_SECRET,
+    corsOrigins: parseOrigins(env.CORS_ORIGINS),
     redis: {
       url: cleanRedisUrl(env.REDIS_URL),
       host: env.REDIS_HOST || '127.0.0.1',
