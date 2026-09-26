@@ -7,34 +7,15 @@ import axios from 'axios';
 import { Row, Container, Form, Button, Card, Table, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
 import img1 from './assets/images/binatang-laut1.jpg';
-import LoadingNav from './LoadingNav';
-import Spinner from 'react-bootstrap/Spinner';
+import { useSession } from './useSession';
 
 function Home(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { status, username: signedInAs, refresh } = useSession('public');
+    const isLoggedIn = status === 'verified';
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [historyList, setHistoryList] = useState([]);
     const navigate = useNavigate();
-
-    const verifyToken = () =>{
-        axios.get('/api/verifyToken', { withCredentials: true })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.data.verified === true){
-                setIsLoggedIn(true)
-                setUsername(response.data.authorizedData.username)
-                fetchHistory(response.data.authorizedData.username)
-            }
-            else{
-                navigate('/verify', { replace: true })
-            }
-        })
-        .catch(function (error) {
-            setIsLoggedIn(false)
-            console.log(error.response ? error.response.status : error)
-        });
-    }
 
     const handleLogin = () =>{
         axios.post('/api/login', {
@@ -44,7 +25,8 @@ function Home(props){
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if(response.data.verified === true){
-                window.location.reload()
+                /* check the session again instead of reloading the page */
+                refresh()
             }
             else{
                 navigate('/verify', { replace: true })
@@ -55,10 +37,12 @@ function Home(props){
         });
     }
 
-    const fetchHistory = async (username) =>{
-        axios.post('/api/fetchHistory', {
-            username: username
-        })
+    /* the server reads the user from the session */
+    useEffect(()=>{
+        if (!isLoggedIn){
+            return;
+        }
+        axios.post('/api/fetchHistory')
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
@@ -68,15 +52,13 @@ function Home(props){
         .catch(function (error) {
             console.log(error.response ? error.response.status : error);
         });
-    }
-
-    useEffect(()=>{verifyToken();}, [])
+    }, [isLoggedIn])
 
     return(
         <>
             <div className="glow-blob-1"></div>
             <div className="glow-blob-2"></div>
-            {isLoggedIn === null ? <LoadingNav /> : (isLoggedIn ? <LoggedInNav /> : <Navapp />)}
+            {isLoggedIn ? <LoggedInNav /> : <Navapp />}
             <div className='main-content-wrapper'>
                 <Container>
                     <Row>
@@ -141,16 +123,10 @@ function Home(props){
                                 </Col>
                             </Row>
                         </div>
-                        {isLoggedIn === null ? (
-                            <div className="col-12 col-md-4 d-flex justify-content-center align-items-center" style={{minHeight: '200px'}}>
-                                <Spinner animation="border" role="status" variant="light">
-                                    <span className="visually-hidden">Loading...</span>
-                                </Spinner>
-                            </div>
-                        ) : isLoggedIn ? (
+                        {isLoggedIn ? (
                             <div className='col-12 col-md-4 mt-4 mt-md-0'>
                                 <div className="glass-panel auth-card historylist">
-                                    <h3 className='fw-bold mb-3'>{username}</h3>
+                                    <h3 className='fw-bold mb-3'>{signedInAs}</h3>
                                     <Table responsive className="history-table mb-0">
                                         <thead>
                                             <tr>

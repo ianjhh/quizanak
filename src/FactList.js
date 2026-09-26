@@ -5,31 +5,15 @@ import Footer from './Footer';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Container, Button, Card, Col } from 'react-bootstrap';
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { imageFor } from './images';
+import { useSession } from './useSession';
 
 // Lists the articles of one fact category (see factCategories.js).
 function FactList({ category }){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { status } = useSession('public');
+    const isLoggedIn = status === 'verified';
     const [facts, setFacts] = useState([]);
-    const navigate = useNavigate();
-
-    useEffect(()=>{
-        axios.get('/api/verifyToken', { withCredentials: true })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.data.verified === true){
-                setIsLoggedIn(true)
-            }
-            else{
-                navigate('/verify', { replace: true })
-            }
-        })
-        .catch(function (error) {
-            setIsLoggedIn(false)
-            console.log(error.response ? error.response.status : error)
-        });
-    }, [navigate])
 
     useEffect(()=>{
         axios.get(category.listEndpoint)

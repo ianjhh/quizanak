@@ -7,9 +7,11 @@ import Footer from './Footer';
 import './Quiz.css';
 import Spinner from 'react-bootstrap/Spinner';
 import { imageFor } from './images';
+import { useSession } from './useSession';
 
 function Quiz(props){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { status } = useSession('members');
+    const isLoggedIn = status === 'verified';
     const [score, setScore] = useState(0);
     const [quizList, setQuizList] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -42,23 +44,6 @@ function Quiz(props){
           [array[currentIndex], array[randomIndex]] = [
             array[randomIndex], array[currentIndex]];
         }
-    }
-
-    const verifyToken = () =>{
-        axios.get('/api/verifyToken', { withCredentials: true })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.data.verified === true){
-                setIsLoggedIn(true)
-            }
-            else{
-                navigate('/verify', { replace: true })
-            }
-        })
-        .catch(function (error) {
-            navigate('/login', { replace: true })
-            console.log(error.response ? error.response.status : error)
-        });
     }
 
     const fetchQuiz = () =>{
@@ -346,7 +331,7 @@ function Quiz(props){
         )
     }
 
-    useEffect(()=>{verifyToken(); fetchQuiz();}, [])
+    useEffect(()=>{fetchQuiz();}, [])
 
     return(
         <>

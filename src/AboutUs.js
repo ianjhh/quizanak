@@ -1,47 +1,18 @@
 import Footer from './Footer';
 import { Container } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import LoggedInNav from './LoggedInNav';
 import Navapp from './Navapp';
-import { useNavigate } from "react-router-dom";
-import LoadingNav from './LoadingNav';
+import { useSession } from './useSession';
 
 function AboutUs(){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigate = useNavigate();
-
-    const verifyToken = () =>{
-        axios.get('/api/verifyToken', { withCredentials: true })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.data.verified === true){
-                setIsLoggedIn(true)
-            }
-            else{
-                navigate('/verify', { replace: true })
-            }
-        })
-        .catch(function (error) {
-            setIsLoggedIn(false)
-            console.log(error.response ? error.response.status : error)
-        });
-    }
-
-    function LoggedInRender({isLoggedIn}){
-        if(isLoggedIn){
-            return <LoggedInNav />
-        }
-        return <Navapp />
-    }
-
-    useEffect(()=>{verifyToken();}, [])
+    const { status } = useSession('public');
+    const isLoggedIn = status === 'verified';
 
     return(
         <>
         <div className="glow-blob-1"></div>
         <div className="glow-blob-2"></div>
-        {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
+        {isLoggedIn ? <LoggedInNav /> : <Navapp />}
         <div className="main-content-wrapper">
             <Container>
                 <div className="glass-panel p-4 p-md-5 mx-auto" style={{maxWidth: '800px'}}>

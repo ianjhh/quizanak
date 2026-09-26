@@ -1,26 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
+import { useSession } from './useSession';
 
 function Verify(props){
+    useSession('verify');
     const [verified, setVerified] = useState(false);
     const [code, setCode] = useState("");
     const navigate = useNavigate();
-
-    const verifyToken = () =>{
-        axios.get('/api/verifyToken', { withCredentials: true })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.data.verified === true){
-                navigate('/', { replace: true })
-            }
-        })
-        .catch(function (error) {
-            console.log(error.response ? error.response.status : error)
-            navigate('/login', { replace: true })
-        });
-    }
 
     const handleLogout = () =>{
         axios.get('/api/logout', { withCredentials: true })
@@ -62,8 +50,6 @@ function Verify(props){
         });
     }
 
-    useEffect(()=>{verifyToken();}, [])
-    
     return(
         <div className="position-relative d-flex justify-content-center align-items-center" style={{minHeight: '100vh', backgroundColor: 'var(--bg-main)'}}>
             <div className="glow-blob-1"></div>

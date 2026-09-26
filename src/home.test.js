@@ -1,70 +1,71 @@
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import Home from './Home';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {http, HttpResponse} from 'msw';
-import {setupServer} from 'msw/node';
-
-const server = setupServer(
-    /* mocks the /login endpoint */
-        http.post('/login', async ({request}) => {
-        const info = await request.formData();
-        const username = info.get('username');
-        const password = info.get('password');
-        
-        /* check if user credential matches one in database */
-        if (username === 'a' && password === 'a'){
-            return HttpResponse.status(200);
-        }
-        else{
-            return HttpResponse.status(400);
-        }
-    }),
-)
-
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+import { mockApi } from './testing/mockApi';
 
 describe("Home", ()=>{
+    let alertSpy;
+    let requests;
+    let signedIn;
 
-    test("Expect username field to set value as user input", async () =>{
-        const handleSubmit = jest.fn();
-        /* if Home is successfully rendered, handleSubmit will be called */
-        render (
-            <BrowserRouter>
-                <Routes>
-                    <Route path='/' element={<Home onSubmit={handleSubmit} />} />
-                </Routes>
-            </BrowserRouter>
+    beforeEach(() => {
+        signedIn = false;
+        alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+        requests = mockApi({
+            'GET /api/verifyToken': () => (signedIn
+                ? [200, { verified: true, authorizedData: { username: 'budi' } }]
+                : [401, 'Sesi tidak valid']),
+            'POST /api/login': ({ body }) => {
+                if (body.password !== 'rahasia123') {
+                    return [404, 'Username atau kata sandi salah!'];
+                }
+                signedIn = true;
+                return [200, { verified: true, token: 'token' }];
+            },
+            'POST /api/fetchHistory': () => [200, [['penjumlahan', 8], ['warna', 10]]],
+        });
+        render(
+            <MemoryRouter>
+                <Home />
+            </MemoryRouter>
         );
-
-        const usernameInput = screen.getByLabelText('Username');
-        await waitFor(() =>expect(usernameInput.value).toBe(''));
-        /* mock input of value 'a'*/
-        fireEvent.change(usernameInput, {target: {value: 'a'}});
-        await waitFor(() =>expect(usernameInput.value).toBe('a'));
     });
 
-    test("Handles server error", async () =>{
-        server.use(
-            http.post('/login', ({request}) =>{
-                return new HttpResponse(null, {status: 400})
-            })
-        )
+    afterEach(() => {
+        alertSpy.mockRestore();
+        requests.restore();
+    });
 
-        render(
-            <BrowserRouter>
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                </Routes>
-            </BrowserRouter>
-        )
-       
-        fireEvent.change(screen.getByLabelText("Username"), { target: { value: 'b' } })
-        fireEvent.change(screen.getByLabelText("Kata Sandi"), { target: { value: 'b' } })
-        fireEvent.click(screen.getByText('Masuk'))
-        await waitFor(() =>expect(screen.getByLabelText('Username')).toHaveValue('b'));
-        await waitFor(() =>expect(screen.getByLabelText('Kata Sandi')).toHaveValue('b'));
-        await waitFor(() =>expect(screen.getByText('Masuk')).not.toBeDisabled())
-    })
+    const logIn = (password) => {
+        fireEvent.change(screen.getByLabelText("Username"), { target: { value: 'budi' } });
+        fireEvent.change(screen.getByLabelText("Kata Sandi"), { target: { value: password } });
+        fireEvent.click(screen.getByText('Masuk'));
+    };
+
+    test("Expect username field to set value as user input", async () =>{
+        const usernameInput = screen.getByLabelText('Username');
+        expect(usernameInput.value).toBe('');
+        fireEvent.change(usernameInput, {target: {value: 'a'}});
+        expect(usernameInput.value).toBe('a');
+    });
+
+    test("Shows the server's message when the login fails", async () =>{
+        logIn('salah');
+
+        await waitFor(() => expect(alertSpy).toHaveBeenCalledWith('Username atau kata sandi salah!'));
+        expect(screen.getByLabelText('Username')).toHaveValue('budi');
+        expect(screen.getByText('Masuk')).not.toBeDisabled();
+    });
+
+    test("Shows the user's name and recent scores after logging in, without reloading", async () =>{
+        logIn('rahasia123');
+
+        expect(await screen.findByText('budi')).toBeInTheDocument();
+        await screen.findByText('warna');
+        /* newest first */
+        const rows = screen.getAllByRole('row');
+        expect(rows[1]).toHaveTextContent('warna10');
+        expect(rows[2]).toHaveTextContent('penjumlahan8');
+        expect(screen.queryByText('Masuk')).not.toBeInTheDocument();
+    });
 })

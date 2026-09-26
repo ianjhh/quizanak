@@ -1,38 +1,22 @@
 import LoggedInNav from './LoggedInNav';
 import { useEffect, useState } from 'react';
 import { Container, Button, Spinner } from 'react-bootstrap';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import Footer from './Footer';
 import axios from 'axios';
 import './Fact.css';
 import { imageFor } from './images';
+import { useSession } from './useSession';
 
 // One article of a fact category (see factCategories.js). Signed-in,
 // verified users only.
 function FactArticle({ category }){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { status } = useSession('members');
+    const isLoggedIn = status === 'verified';
     const [facts, setFacts] = useState([]);
     const [title, setTitle] = useState('');
     const location = useLocation();
     const linkName = location.pathname.split('/')[2];
-    const navigate = useNavigate();
-
-    useEffect(()=>{
-        axios.get('/api/verifyToken', { withCredentials: true })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.data.verified === true){
-                setIsLoggedIn(true)
-            }
-            else{
-                navigate('/verify', { replace: true })
-            }
-        })
-        .catch(function (error) {
-            navigate('/login', { replace: true })
-            console.log(error.response ? error.response.status : error)
-        });
-    }, [navigate])
 
     useEffect(()=>{
         axios.post(category.articleEndpoint, {link_name: linkName})

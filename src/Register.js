@@ -1,10 +1,12 @@
 import { Container } from "react-bootstrap";
 import { Form, Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
+import { useSession } from './useSession';
 
 function Register(props){
+    useSession('guests');
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
@@ -15,22 +17,6 @@ function Register(props){
     const [email, setEmail] = useState("");
     const [correctEmailFormat, setCorrectEmailFormat] = useState(true);
     const navigate = useNavigate();
-
-    const verifyToken = () =>{
-        axios.get('/api/verifyToken', { withCredentials: true })
-        .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
-            if (response.data.verified === true){
-                navigate('/', { replace: true })
-            }
-            else{
-                navigate('/verify', { replace: true })
-            }
-        })
-        .catch(function (error) {
-            console.log(error.response ? error.response.status : error)
-        });
-    }
 
     const validateEmailFormat = (email) => {
       return String(email)
@@ -120,10 +106,6 @@ function Register(props){
         }
     }
 
-    useEffect(() => {
-        verifyToken();
-    }, []);
-    
     return(
         <div className="position-relative d-flex justify-content-center align-items-center py-5" style={{minHeight: '100vh', backgroundColor: 'var(--bg-main)'}}>
             <div className="glow-blob-1"></div>
