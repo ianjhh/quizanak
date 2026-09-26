@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './index.css';
-import axios from 'axios';
+import { configureApi } from './api';
 import Home from './Home';
 import Register from './Register';
 import Login from './Login';
@@ -21,23 +21,7 @@ import Sitemap from './Sitemap';
 import reportWebVitals from './reportWebVitals';
 import {Routes, Route, HashRouter} from 'react-router-dom';
 
-axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
-axios.defaults.withCredentials = true;
-axios.defaults.timeout = 30000; // 30 second timeout to accommodate Render server cold starts and SMTP email sending
-
-// Intercept network/CORS errors to prevent TypeError crashes in catch blocks
-axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (!error.response) {
-      error.response = {
-        status: 503,
-        data: 'Koneksi ke server gagal. Silakan coba beberapa saat lagi.'
-      };
-    }
-    return Promise.reject(error);
-  }
-);
+configureApi();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
