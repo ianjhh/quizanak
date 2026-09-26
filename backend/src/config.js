@@ -46,7 +46,8 @@ function loadConfig(env = process.env) {
     corsOrigins: parseOrigins(env.CORS_ORIGINS),
     redis: {
       url: cleanRedisUrl(env.REDIS_URL),
-      host: env.REDIS_HOST || '127.0.0.1',
+      // Redis is optional: without REDIS_URL or REDIS_HOST the Bloom filter is off.
+      host: env.REDIS_HOST,
       port: parseInt(env.REDIS_PORT) || 7000,
       password: env.REDIS_PASSWORD,
     },

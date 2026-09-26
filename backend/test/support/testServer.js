@@ -14,10 +14,11 @@ function createFakeBloom() {
   return {
     emails,
     init: async () => {},
-    exists: async (email) => emails.has(email),
+    mightContain: async (email) => emails.has(email),
     add: async (email) => {
       emails.add(email);
     },
+    close: async () => {},
   };
 }
 

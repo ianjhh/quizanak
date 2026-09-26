@@ -48,16 +48,15 @@ function authRoutes({ db, bloom, mailer, sessions }) {
 
   router.post('/api/validateEmail', asyncHandler(async (req, res) => {
     const email = normalizeEmail(req.body.email);
+    if (!EMAIL_PATTERN.test(email)) {
+      return res.status(400).send('Format email salah!');
+    }
 
-    /* check whether email exists in bloom filter */
-    const emailExists = await bloom.exists(email);
-
-    if (emailExists) {
-      /* cross check with database since it could be false positive */
-      const found = await credentials.findOne({ email }, { projection: { _id: 0, email: 1 } });
-      if (found) {
-        return res.status(409).send('Email exists already!');
-      }
+    // The Bloom filter can rule an address out without a database query. When it
+    // says "maybe" (or Redis is unavailable), MongoDB decides.
+    const maybeTaken = await bloom.mightContain(email).catch(() => true);
+    if (maybeTaken && (await credentials.findOne({ email }, { projection: { _id: 1 } }))) {
+      return res.status(409).send('Email exists already!');
     }
     res.status(200).send('Email does not exist! You can use that email!');
   }));

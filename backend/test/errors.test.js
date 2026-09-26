@@ -48,17 +48,15 @@ describe('error handling', () => {
     }
   });
 
-  test('answers the email check even when Redis fails', async () => {
-    const bloom = { init: async () => {}, add: async () => {}, exists: async () => { throw new Error('Redis is down'); } };
-    const api = await start({ bloom });
-    const originalError = console.error;
-    console.error = () => {};
-    try {
-      const res = await api.request('POST', '/api/validateEmail', { body: { email: 'baru@example.com' } });
-      assert.ok(res.status >= 200 && res.status < 600);
-    } finally {
-      console.error = originalError;
-    }
+  test('answers the email check from MongoDB when Redis fails', async () => {
+    const bloom = { init: async () => {}, add: async () => {}, close: async () => {}, mightContain: async () => { throw new Error('Redis is down'); } };
+    const db = createMemoryDb({ credentials: [{ username: 'budi', email: 'budi@example.com' }] });
+    const api = await start({ bloom, db });
+
+    const free = await api.request('POST', '/api/validateEmail', { body: { email: 'baru@example.com' } });
+    assert.equal(free.status, 200);
+    const taken = await api.request('POST', '/api/validateEmail', { body: { email: 'budi@example.com' } });
+    assert.equal(taken.status, 409);
   });
 
   test('rejects malformed JSON with a 400', async () => {
