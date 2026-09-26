@@ -71,6 +71,11 @@ const mongoUri = process.env.MONGODB_URI;
 if (!mongoUri) {
   throw new Error('MONGODB_URI is not set. Copy backend/.env.example to backend/.env and fill it in.');
 }
+
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error('JWT_SECRET is not set. Copy backend/.env.example to backend/.env and fill it in.');
+}
 const client = new MongoClient(mongoUri, {
     serverSelectionTimeoutMS: 5000
 });
@@ -258,7 +263,7 @@ app.post('/api/resendCode', async (req, res) => {
         let targetUsername = req.body.username;
         if (!targetUsername && req.cookies && req.cookies.jwt) {
             try {
-                const decoded = jwt.verify(req.cookies.jwt, 'privatekey');
+                const decoded = jwt.verify(req.cookies.jwt, jwtSecret);
                 targetUsername = decoded.username;
             } catch (jwtErr) {}
         }
@@ -303,7 +308,7 @@ app.post('/api/login', async (req, res) => {
           res.status(404).send('Username atau kata sandi salah!')
       }
       else{
-          jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+          jwt.sign({username: req.body.username}, jwtSecret, { expiresIn: '1h' },(err, token) => {
               if(err) { 
                   res.status.send('Error!')
                   console.log(err)
@@ -337,7 +342,7 @@ app.post('/api/register', async (req, res) => {
             console.log('Bloom filter add status:', bloomErr.message || bloomErr);
           }
 
-          jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+          jwt.sign({username: req.body.username}, jwtSecret, { expiresIn: '1h' },(err, token) => {
                   if(err) { 
                       res.status.send('Error!')
                   }
@@ -355,7 +360,7 @@ app.get('/api/homepage', async (req, res) => {
       res.status(400).send('Token otentikasi tidak valid, tolong coba lagi.')
     }
     else{
-        jwt.verify(req.cookies.jwt, 'privatekey', async (err, authorizedData) => {
+        jwt.verify(req.cookies.jwt, jwtSecret, async (err, authorizedData) => {
           if(err){
               //If error send Forbidden (403)
               console.log(err)
@@ -386,7 +391,7 @@ app.get('/api/verifyToken', async (req, res) => {
       res.status(400).send('error')
     }
     else{
-        jwt.verify(req.cookies.jwt, 'privatekey', async (err, authorizedData) => {
+        jwt.verify(req.cookies.jwt, jwtSecret, async (err, authorizedData) => {
           if(err){
               //If error send Forbidden (403)
               console.log(err)
@@ -462,7 +467,7 @@ app.post('/api/submitQuiz', async (req, res) => {
         return res.status(403).send('Not authorized!');
     }
 
-    jwt.verify(req.cookies.jwt, 'privatekey', async (err, authorizedData) => {
+    jwt.verify(req.cookies.jwt, jwtSecret, async (err, authorizedData) => {
         if(err){
             return res.status(403).send('Not authorized!');
         }
@@ -660,7 +665,7 @@ app.post('/api/setVerified', async (req, res) => {
             res.status(404).send('Not found!');
           }
           else{
-                jwt.sign({username: req.body.username}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+                jwt.sign({username: req.body.username}, jwtSecret, { expiresIn: '1h' },(err, token) => {
                   if(err) { 
                       res.status.send('Error!')
                   }
