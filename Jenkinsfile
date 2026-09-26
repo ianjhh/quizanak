@@ -17,8 +17,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing frontend dependencies...'
-                // Using npm ci if package-lock.json is committed, otherwise npm install
-                sh 'npm install'
+                // npm ci installs exactly what the committed package-lock.json lists
+                sh 'npm ci'
                 
                 echo 'Installing backend dependencies...'
                 dir('backend') {
@@ -46,9 +46,8 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 echo 'Building production build for frontend...'
-                // CI=true makes react-scripts treat lint warnings as errors.
-                // Tests still run with CI=true above; the build only needs it off.
-                sh 'CI=false npm run build'
+                // With CI=true, react-scripts fails the build on lint warnings.
+                sh 'npm run build'
             }
         }
         

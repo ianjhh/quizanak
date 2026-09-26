@@ -15,7 +15,7 @@ export function useQuizCategories() {
 
     useEffect(() => {
         let active = true;
-        for (const category of QUIZ_CATEGORIES) {
+        QUIZ_CATEGORIES.forEach((category) => {
             axios.get(category.endpoint)
             .then(function (response) {
                 if (active) {
@@ -25,7 +25,7 @@ export function useQuizCategories() {
             .catch(function (error) {
                 console.log(error.response ? error.response.status : error);
             });
-        }
+        });
         return () => {
             active = false;
         };
