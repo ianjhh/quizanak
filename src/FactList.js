@@ -6,15 +6,15 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Container, Button, Card, Col } from 'react-bootstrap';
 import { useNavigate, Link } from "react-router-dom";
-import LoadingNav from './LoadingNav';
 import { imageFor } from './images';
 
-function HistoryFacts(props){
+// Lists the articles of one fact category (see factCategories.js).
+function FactList({ category }){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [historyFacts, setHistoryFacts] = useState([]);
+    const [facts, setFacts] = useState([]);
     const navigate = useNavigate();
 
-    const verifyToken = () =>{
+    useEffect(()=>{
         axios.get('/api/verifyToken', { withCredentials: true })
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
@@ -29,35 +29,26 @@ function HistoryFacts(props){
             setIsLoggedIn(false)
             console.log(error.response ? error.response.status : error)
         });
-    }
+    }, [navigate])
 
-    const fetchRandomFacts = () =>{
-        axios.get('/api/fetchRandomFacts')
+    useEffect(()=>{
+        axios.get(category.listEndpoint)
         .then(function (response) {
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.status === 200){
-                setHistoryFacts(response.data);
+                setFacts(response.data);
             }
         })
         .catch(function (error) {
             console.log(error.response ? error.response.status : error);
         });
-    }
-
-    function LoggedInRender({isLoggedIn}){
-        if(isLoggedIn){
-            return <LoggedInNav />
-        }
-        return <Navapp />
-    }
-
-    useEffect(()=>{verifyToken(); fetchRandomFacts();}, [])
+    }, [category.listEndpoint])
 
     return(
-         <>
+        <>
             <div className="glow-blob-1"></div>
             <div className="glow-blob-2"></div>
-            {isLoggedIn === null ? <LoadingNav /> : <LoggedInRender isLoggedIn={isLoggedIn} />}
+            {isLoggedIn ? <LoggedInNav /> : <Navapp />}
             <div className='main-content-wrapper'>
                 <Container>
                     <Link to='/' className='text-decoration-none'>
@@ -66,11 +57,11 @@ function HistoryFacts(props){
                         </Button>
                     </Link>
                     <br/>
-                    <h3 className='section-title'>Fakta-Fakta Aneh Tapi Nyata</h3>
+                    <h3 className='section-title'>{category.title}</h3>
                     <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4 facts-grid-custom">
-                        {historyFacts.map((item, idx) => (
+                        {facts.map((item, idx) => (
                             <Col key={idx} className='facts-col-list'>
-                                <Link to={`/fakta-aneh/${item.link_name}`} className='text-decoration-none'>
+                                <Link to={`${category.path}/${item.link_name}`} className='text-decoration-none'>
                                     <Card className='glass-panel glass-panel-hover facts-card-list'>
                                         <Card.Img variant="top" src={imageFor(item.image)} className='facts-img-card-list' />
                                         <Card.Body className='facts-card-body-list'>
@@ -88,4 +79,4 @@ function HistoryFacts(props){
     );
 }
 
-export default HistoryFacts;
+export default FactList;

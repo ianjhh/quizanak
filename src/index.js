@@ -11,12 +11,9 @@ import Verify from './Verify';
 import Quiz from './Quiz';
 import QuizList from './QuizList';
 import AboutUs from './AboutUs';
-import AnimalFacts from './AnimalFacts';
-import AnimalFact from './AnimalFact';
-import SpaceFacts from './SpaceFacts';
-import SpaceFact from './SpaceFact';
-import HistoryFacts from './HistoryFacts';
-import HistoryFact from './HistoryFact';
+import FactList from './FactList';
+import FactArticle from './FactArticle';
+import { FACT_CATEGORIES } from './factCategories';
 import Sitemap from './Sitemap';
 import reportWebVitals from './reportWebVitals';
 import {Routes, Route, HashRouter} from 'react-router-dom';
@@ -35,12 +32,11 @@ root.render(
               <Route path='/quiz' element={<QuizList />} />
               <Route path='/about-us' element={<AboutUs />} />
               <Route path='/sitemap' element={<Sitemap />} />
-              <Route path='/fakta-binatang' element={<AnimalFacts />} />
-              <Route path='/fakta-binatang/:fact-title' element={<AnimalFact />} />
-              <Route path='/fakta-angkasa' element={<SpaceFacts />} />
-              <Route path='/fakta-angkasa/:fact-title' element={<SpaceFact />} />
-              <Route path='/fakta-aneh' element={<HistoryFacts />} />
-              <Route path='/fakta-aneh/:fact-title' element={<HistoryFact />} />
+              {/* keys make React start fresh when switching between categories */}
+              {FACT_CATEGORIES.map((category) => [
+                  <Route key={category.key} path={category.path} element={<FactList key={category.key} category={category} />} />,
+                  <Route key={`${category.key}-article`} path={`${category.path}/:fact-title`} element={<FactArticle key={category.key} category={category} />} />,
+              ])}
               <Route path='/quiz/:quiz-name' element={<Quiz />} />
           </Routes>
       </HashRouter>
