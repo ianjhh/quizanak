@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const { authRoutes } = require('./routes/auth');
 const { quizRoutes } = require('./routes/quizzes');
 const { factRoutes } = require('./routes/facts');
-const { gameRoutes } = require('./routes/games');
 
 const allowedOrigins = [
   'http://localhost:3000',
@@ -41,7 +40,6 @@ function createApp({ config, db, bloom, mailer }) {
   app.use(quizRoutes({ config, db }));
   app.use(authRoutes({ config, db, bloom, mailer }));
   app.use(factRoutes({ db }));
-  app.use(gameRoutes({ db }));
 
   return app;
 }

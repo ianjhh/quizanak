@@ -12,7 +12,6 @@ function connectDatabase(uri) {
     client,
     credentials: database.collection('credentials'),
     quiz: database.collection('quiz'),
-    game: database.collection('game'),
     animalFact: database.collection('animalFact'),
     spaceFact: database.collection('spaceFact'),
     historyFact: database.collection('historyFact'),

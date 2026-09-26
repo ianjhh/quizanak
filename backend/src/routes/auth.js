@@ -128,34 +128,6 @@ function authRoutes({ config, db, bloom, mailer }) {
     }
   });
 
-  router.get('/api/homepage', async (req, res) => {
-    if (!req.cookies.jwt) {
-      res.status(400).send('Token otentikasi tidak valid, tolong coba lagi.');
-    } else {
-      jwt.verify(req.cookies.jwt, jwtSecret, async (err, authorizedData) => {
-        if (err) {
-          //If error send Forbidden (403)
-          console.log(err);
-          res.status(403);
-        } else {
-          let found = await credentials.findOne({ username: authorizedData.username }, { verified: 1, _id: 0 });
-          if (found) {
-            if (found.verified !== true) {
-              res.status(400).send('Akun belum diverifikasi!');
-            } else {
-              console.log('verified!');
-              //If token is successfully verified, we can send the authorized data
-              res.status(200).json({
-                message: 'Successful log in',
-                authorizedData,
-              });
-            }
-          }
-        }
-      });
-    }
-  });
-
   router.get('/api/verifyToken', async (req, res) => {
     try {
       if (!req.cookies.jwt) {

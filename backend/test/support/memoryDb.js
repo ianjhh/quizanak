@@ -173,7 +173,6 @@ function createMemoryDb(seed = {}) {
   return {
     credentials: new MemoryCollection(seed.credentials),
     quiz: new MemoryCollection(seed.quiz),
-    game: new MemoryCollection(seed.game),
     animalFact: new MemoryCollection(seed.animalFact),
     spaceFact: new MemoryCollection(seed.spaceFact),
     historyFact: new MemoryCollection(seed.historyFact),
