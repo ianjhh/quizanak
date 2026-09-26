@@ -32,8 +32,10 @@ function Quiz(props){
     const [quizProperty, setQuizProperty] = useState();
     const [isCorrect, setIsCorrect] = useState();
     const [quizImage, setQuizImage] = useState();
-    const [username, setUsername] = useState('');
     const [similarQuiz, setSimilarQuiz] = useState([]);
+    const [userAnswers, setUserAnswers] = useState([]);
+    const [correctAnswer, setCorrectAnswer] = useState('');
+    const [totalQuestions, setTotalQuestions] = useState(10);
     const location = useLocation();
     const quizName = location.pathname.split('/')[2];
     const navigate = useNavigate();
@@ -60,7 +62,6 @@ function Quiz(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
                 setIsLoggedIn(true)
-                setUsername(response.data.authorizedData.username)
             }
             else{
                 navigate('/verify', { replace: true })
@@ -115,15 +116,28 @@ function Quiz(props){
 
     const handleNext = () => {
         setClickedNext(true);
-        
-        /* handle score adding */
-        if (quizList[currentQuestion-1].answer === answer){
-            setScore(score+1)
-            setIsCorrect('Benar')
-        }
-        else{
-            setIsCorrect('Salah')
-        }
+
+        /* the browser no longer receives the answers, so the server grades it */
+        axios.post('/api/checkAnswer', {
+            name: quizName,
+            question: quizList[currentQuestion-1].question,
+            answer: answer
+        })
+        .then(function (response) {
+            setIsCorrect(response.data.correct ? 'Benar' : 'Salah')
+            setCorrectAnswer(response.data.answer)
+        })
+        .catch(function (error) {
+            console.log(error.response ? error.response.status : error);
+        });
+
+        /* keep the attempt so the server can score it as a whole at the end */
+        setUserAnswers(function (previous) {
+            return previous.concat([{
+                question: quizList[currentQuestion-1].question,
+                answer: answer
+            }]);
+        });
     };
 
     const handleMoveNextQ = () => {
@@ -133,19 +147,20 @@ function Quiz(props){
     }
 
     const handleFinishQuiz = () => {
-        if (quizList[currentQuestion-1].answer === answer){
-            setScore(score+1)
-        }
         setQuizEnded(true)
 
-        /* store quiz result for user */
-        axios.post('/api/quizHistory', {
-            username: username,
-            quizname: quizName,
-            score: score + (quizList[currentQuestion-1].answer === answer ? 1 : 0)
-        })
+        /* handleNext already recorded every answer, including this one. The
+           server grades the attempt and stores it against the JWT's user, so
+           the score never travels from the browser. */
+        axios.post('/api/submitQuiz', {
+            name: quizName,
+            answers: userAnswers
+        }, { withCredentials: true })
         .then(function (response) {
-            /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
+            setScore(response.data.score)
+            if (response.data.total) {
+                setTotalQuestions(response.data.total)
+            }
         })
         .catch(function (error) {
             console.log(error.response ? error.response.status : error);
@@ -258,7 +273,7 @@ function Quiz(props){
                                                                     </div>
                                                                 ) : (
                                                                     <div className="wrong-alert">
-                                                                        <i className="bi bi-x-circle-fill me-2"></i> Salah! Jawaban yang benar adalah: <strong>"{quizList[currentQuestion-1].answer}"</strong>
+                                                                        <i className="bi bi-x-circle-fill me-2"></i> Salah! Jawaban yang benar adalah: <strong>"{correctAnswer}"</strong>
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -295,7 +310,7 @@ function Quiz(props){
                                         ) : (
                                             <div className="text-center py-4">
                                                 <h4 className="text-white-50 uppercase mb-2">Hasil Akhir</h4>
-                                                <h1 className="quiz-score-display">{score} / 10</h1>
+                                                <h1 className="quiz-score-display">{score} / {totalQuestions}</h1>
                                                 <p className="text-white-50 mb-5">Kerja bagus! Teruslah berlatih kuis agar semakin pintar.</p>
 
                                                 <h4 className="text-start border-bottom pb-2 mb-3 border-secondary">Coba Kuis Lainnya:</h4>

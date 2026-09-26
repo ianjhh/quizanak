@@ -415,12 +415,88 @@ app.get('/api/verifyToken', async (req, res) => {
 app.post('/api/fetchQuiz', async (req, res) => {
     try{
         let result = await quiz.findOne({name: req.body.name });
+
+        /* Never ship answers to the browser. Grading happens in /api/checkAnswer
+           and /api/submitQuiz so the client cannot read or fabricate a result. */
+        if (result && Array.isArray(result.array)) {
+            result.array = result.array.map(({ answer, ...question }) => question);
+        }
+
         res.status(200).json(result);
     }
     catch(e){
         console.log(e)
         res.status(400).send('Error!')
     }
+})
+
+/* Grades a single question so the UI can still show instant feedback.
+   Only reveals the answer to the question the user just submitted. */
+app.post('/api/checkAnswer', async (req, res) => {
+    try{
+        let found = await quiz.findOne({name: req.body.name}, {projection: {array: 1}});
+        if(!found){
+            return res.status(404).send('Not found!');
+        }
+
+        let question = (found.array || []).find(item => item.question === req.body.question);
+        if(!question){
+            return res.status(404).send('Question not found!');
+        }
+
+        res.status(200).json({ correct: question.answer === req.body.answer, answer: question.answer });
+    }
+    catch(e){
+        console.log(e)
+        res.status(400).send('Error!')
+    }
+})
+
+/* Scores the whole attempt server-side and records it against the user named in
+   the JWT, so neither the score nor the account can be supplied by the client. */
+app.post('/api/submitQuiz', async (req, res) => {
+    if(!req.cookies.jwt){
+        return res.status(403).send('Not authorized!');
+    }
+
+    jwt.verify(req.cookies.jwt, 'privatekey', async (err, authorizedData) => {
+        if(err){
+            return res.status(403).send('Not authorized!');
+        }
+
+        try{
+            let found = await quiz.findOne({name: req.body.name}, {projection: {array: 1}});
+            if(!found){
+                return res.status(404).send('Not found!');
+            }
+
+            let key = new Map((found.array || []).map(item => [item.question, item.answer]));
+            let submitted = Array.isArray(req.body.answers) ? req.body.answers : [];
+
+            /* one point per question, and each question counts only once */
+            let seen = new Set();
+            let score = 0;
+            for (const item of submitted){
+                if(seen.has(item.question)) continue;
+                seen.add(item.question);
+                if(key.get(item.question) === item.answer) score++;
+            }
+
+            await credentials.updateOne({ username: authorizedData.username },
+                {$push: {
+                    history: {
+                        $each: [[req.body.name, score]],
+                        $slice: 10
+                    }
+                }});
+
+            res.status(200).json({ score: score, total: key.size });
+        }
+        catch(e){
+            console.log(e)
+            res.status(400).send('Error!')
+        }
+    })
 })
 
 app.get('/api/fetchAnimalQuiz', async (req, res) => {
@@ -606,23 +682,6 @@ app.get('/api/logout', async (req, res) => {
     catch(e){
         res.status(400).send('error')
     }
-})
-
-app.post('/api/quizHistory', async (req, res) => {
-  try{
-      let result = await credentials.updateOne({ username: req.body.username }, 
-        {$push: {
-            history: {
-                $each: [[req.body.quizname, req.body.score]],
-                $slice: 10
-            }
-        }});
-      res.status(200).json(result);
-  }
-  catch(e){
-      console.log(e)
-      res.status(400).send('Error!')
-  }
 })
 
 const PORT = process.env.PORT || 5000;
