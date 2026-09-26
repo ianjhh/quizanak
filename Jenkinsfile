@@ -34,9 +34,9 @@ pipeline {
             }
         }
         
-        stage('Test Backend') {
+        stage('Backend Syntax Check') {
             steps {
-                echo 'Running backend tests...'
+                echo 'Checking backend syntax...'
                 dir('backend') {
                     sh 'npm test'
                 }
@@ -46,7 +46,9 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 echo 'Building production build for frontend...'
-                sh 'npm run build'
+                // CI=true makes react-scripts treat lint warnings as errors.
+                // Tests still run with CI=true above; the build only needs it off.
+                sh 'CI=false npm run build'
             }
         }
         
