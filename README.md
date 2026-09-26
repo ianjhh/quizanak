@@ -4,6 +4,8 @@
 
 **A full-stack quiz and learning web app for primary-school children in Indonesia**
 
+**[Live demo](https://ian-joseph.netlify.app/quizanak/build/index.html)** · [Portfolio](https://ian-joseph.netlify.app/)
+
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=nodedotjs&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)
@@ -124,4 +126,4 @@ quizanak/
 
 ## Author
 
-Built by [@ianjhh](https://github.com/ianjhh) · [LinkedIn](https://linkedin.com/in/ianjhh)
+Built by [@ianjhh](https://github.com/ianjhh) · [Portfolio](https://ian-joseph.netlify.app/) · [LinkedIn](https://linkedin.com/in/ianjhh)
