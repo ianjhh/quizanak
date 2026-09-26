@@ -1,42 +1,24 @@
 {
-  "name": "app",
+  "name": "quizanak",
   "version": "0.1.0",
   "homepage": ".",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
-    "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "crypto-js": "^4.2.0",
-    "msw": "^2.4.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
-    "react-confetti": "^6.1.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.2.3",
-    "mongodb": "^6.5.0",
-    "nodemailer": "^6.9.13",
-    "redis": "^4.6.13"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "postinstall": "cd backend && npm install",
-    "test": "react-scripts test --env=./test-env.js --transformIgnorePatterns \"node_modules/(?!msw)/\"",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -58,6 +40,12 @@
     ]
   },
   "devDependencies": {
-    "jest": "^27.5.1"
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^axios$": "axios/dist/browser/axios.cjs"
+    }
   }
 }
