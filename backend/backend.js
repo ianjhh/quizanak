@@ -305,7 +305,7 @@ app.post('/api/login', async (req, res) => {
                   res.status.send('Error!')
                   console.log(err)
               }
-              res.status(200).cookie('jwt', token, { sameSite: 'none', secure: true }).json({verified: result.verified});
+              res.status(200).cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true }).json({verified: result.verified});
           });
       }
       });
@@ -338,7 +338,7 @@ app.post('/api/register', async (req, res) => {
                   if(err) { 
                       res.status.send('Error!')
                   }
-                  res.status(200).cookie('jwt', token, { sameSite: 'none', secure: true }).send('Successful!');
+                  res.status(200).cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true }).send('Successful!');
           });
 }
     catch(e){
@@ -585,7 +585,7 @@ app.post('/api/setVerified', async (req, res) => {
                   if(err) { 
                       res.status.send('Error!')
                   }
-                res.status(200).cookie('jwt', token, { sameSite: 'none', secure: true }).send('Successful!');
+                res.status(200).cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true }).send('Successful!');
             });
           }
       }
@@ -601,7 +601,7 @@ app.post('/api/setVerified', async (req, res) => {
 
 app.get('/api/logout', async (req, res) => {
     try{
-        res.status(202).clearCookie('jwt', { sameSite: 'none', secure: true }).send('cookie cleared')
+        res.status(202).clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true }).send('cookie cleared')
     }
     catch(e){
         res.status(400).send('error')
