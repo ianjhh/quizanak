@@ -12,6 +12,7 @@ describe('login sessions', () => {
       db: createMemoryDb({
         credentials: [
           { username: 'budi', email: 'budi@example.com', password: bcrypt.hashSync('rahasia123', 4), verified: true, history: [] },
+          { username: 'sari', email: 'sari@example.com', password: bcrypt.hashSync('rahasia456', 4), verified: false, history: [] },
         ],
       }),
     });
@@ -23,6 +24,15 @@ describe('login sessions', () => {
     const res = await api.request('POST', '/api/login', { body: { username: 'budi', password: 'rahasia123' } });
     assert.equal(res.status, 200);
     assert.ok(jwtCookie(res));
+  });
+
+  test("login reports whether the account's email is verified", async () => {
+    const verified = await api.request('POST', '/api/login', { body: { username: 'budi', password: 'rahasia123' } });
+    assert.equal(verified.data.verified, true);
+
+    const unverified = await api.request('POST', '/api/login', { body: { username: 'sari', password: 'rahasia456' } });
+    assert.equal(unverified.status, 200);
+    assert.equal(unverified.data.verified, false);
   });
 
   test('rejects a wrong password or unknown user', async () => {

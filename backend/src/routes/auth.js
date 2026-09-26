@@ -75,11 +75,11 @@ function authRoutes({ config, db, bloom, mailer }) {
 
   router.post('/api/login', async (req, res) => {
     try {
-      let result = await credentials.findOne({ username: req.body.username });
-      if (!result) {
+      let user = await credentials.findOne({ username: req.body.username });
+      if (!user) {
         res.status(404).send('Username atau kata sandi salah!');
       } else {
-        bcrypt.compare(req.body.password, result.password, function (err, result) {
+        bcrypt.compare(req.body.password, user.password, function (err, result) {
           if (result !== true) {
             res.status(404).send('Username atau kata sandi salah!');
           } else {
@@ -88,7 +88,7 @@ function authRoutes({ config, db, bloom, mailer }) {
                 res.status.send('Error!');
                 console.log(err);
               }
-              res.status(200).cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true }).json({ verified: result.verified });
+              res.status(200).cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true }).json({ verified: user.verified });
             });
           }
         });
