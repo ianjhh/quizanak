@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
 const { asyncHandler } = require('../http');
+const { CODE_TTL_MS, MAX_ATTEMPTS, RESEND_COOLDOWN_MS, generateCode } = require('../verification');
 
 const PASSWORD_SALT_ROUNDS = 11;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,26 +62,34 @@ function authRoutes({ db, bloom, mailer, sessions }) {
     res.status(200).send('Email does not exist! You can use that email!');
   }));
 
+  // Sends a fresh code to the signed-in user's own address. The username used
+  // to come from the request body, which let anyone email any user.
   router.post('/api/resendCode', asyncHandler(async (req, res) => {
-    let targetUsername = req.body.username;
-    if (!targetUsername) {
-      const session = sessions.read(req);
-      targetUsername = session && session.username;
-    }
-    if (!targetUsername) {
-      return res.status(400).send('Username tidak ditemukan!');
+    const session = sessions.read(req);
+    if (!session) {
+      return res.status(401).send('Silakan login terlebih dahulu.');
     }
 
-    const result = await credentials.findOne({ username: targetUsername }, { projection: { _id: 0, email: 1 } });
-    if (!result) {
-      return res.status(404).send('Pengguna tidak ditemukan!');
+    const user = await credentials.findOne({ username: session.username }, { projection: { _id: 0, email: 1, verified: 1, codeCreatedAt: 1 } });
+    if (!user) {
+      return res.status(401).send('Silakan login terlebih dahulu.');
+    }
+    if (user.verified === true) {
+      return res.status(409).send('Akun sudah diverifikasi.');
     }
 
-    const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
-    await credentials.updateOne({ username: targetUsername }, { $set: { verificationCode, codeCreatedAt: new Date().getTime() } });
+    const waitMs = (user.codeCreatedAt || 0) + RESEND_COOLDOWN_MS - Date.now();
+    if (waitMs > 0) {
+      const seconds = Math.ceil(waitMs / 1000);
+      res.set('Retry-After', String(seconds));
+      return res.status(429).send(`Tunggu ${seconds} detik sebelum meminta kode baru.`);
+    }
+
+    const verificationCode = generateCode();
+    await credentials.updateOne({ username: session.username }, { $set: { verificationCode, codeCreatedAt: Date.now(), verifyAttempts: 0 } });
 
     // Dispatch email in background using Resend HTTPS API or Nodemailer SMTP fallback
-    mailer.sendVerificationEmail(result.email, verificationCode)
+    mailer.sendVerificationEmail(user.email, verificationCode)
       .then(() => console.log('Verification email dispatched successfully'))
       .catch((mailErr) => console.error('Error sending verification email in background:', mailErr));
 
@@ -115,7 +123,7 @@ function authRoutes({ db, bloom, mailer, sessions }) {
     const password = BCRYPT_HASH.test(req.body.password)
       ? req.body.password
       : await bcrypt.hash(req.body.password, PASSWORD_SALT_ROUNDS);
-    const verificationCode = crypto.randomInt(100000).toString().padStart(5, '0');
+    const verificationCode = generateCode();
 
     try {
       // Only server-chosen fields are stored: a client cannot mark itself verified.
@@ -128,7 +136,8 @@ function authRoutes({ db, bloom, mailer, sessions }) {
         createdAt: new Date(),
         history: [],
         verificationCode,
-        codeCreatedAt: new Date().getTime(),
+        codeCreatedAt: Date.now(),
+        verifyAttempts: 0,
       });
     } catch (err) {
       // The unique indexes catch sign-ups racing each other for the same name or email.
@@ -172,20 +181,41 @@ function authRoutes({ db, bloom, mailer, sessions }) {
     });
   }));
 
+  // Checks the code against the signed-in user's own code. It used to match a
+  // code against every account, and then replaced the session with a token
+  // that had no username.
   router.post('/api/setVerified', asyncHandler(async (req, res) => {
-    const verifySuccess = await credentials.findOne({ verificationCode: req.body.verificationCode }, { projection: { _id: 0, verificationCode: 1, codeCreatedAt: 1 } });
-    if (!verifySuccess) {
-      return res.status(404).send('Wrong verification code!');
+    const session = sessions.read(req);
+    if (!session) {
+      return res.status(401).send('Silakan login terlebih dahulu.');
     }
 
-    /* if verification code expired */
-    if ((verifySuccess.codeCreatedAt + 86400000) < new Date().getTime()) {
-      return res.status(498).send('Code Expired!');
+    const { username } = session;
+    const user = await credentials.findOne({ username }, { projection: { _id: 0, verified: 1, verificationCode: 1, codeCreatedAt: 1, verifyAttempts: 1 } });
+    if (!user) {
+      return res.status(401).send('Silakan login terlebih dahulu.');
+    }
+    if (user.verified === true) {
+      return res.status(200).json({ verified: true });
+    }
+    if (!user.verificationCode || (user.verifyAttempts || 0) >= MAX_ATTEMPTS) {
+      return res.status(429).send('Terlalu banyak percobaan. Minta kode baru lalu coba lagi.');
+    }
+    if (Date.now() > user.codeCreatedAt + CODE_TTL_MS) {
+      return res.status(410).send('Kode verifikasi sudah kedaluwarsa. Minta kode baru.');
     }
 
-    await credentials.updateOne({ verificationCode: req.body.verificationCode }, { $set: { verified: true }, $unset: { createdAt: '', verificationCode: '', codeCreatedAt: '' } });
-    sessions.start(res, req.body.username);
-    res.status(200).send('Successful!');
+    const code = String(req.body.verificationCode || '').trim();
+    if (code !== user.verificationCode) {
+      await credentials.updateOne({ username }, { $inc: { verifyAttempts: 1 } });
+      return res.status(400).send('Kode verifikasi salah!');
+    }
+
+    await credentials.updateOne({ username }, {
+      $set: { verified: true },
+      $unset: { createdAt: '', verificationCode: '', codeCreatedAt: '', verifyAttempts: '' },
+    });
+    res.status(200).json({ verified: true });
   }));
 
   router.get('/api/logout', (req, res) => {
