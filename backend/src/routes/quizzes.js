@@ -1,6 +1,9 @@
 const express = require('express');
 const { asyncHandler } = require('../http');
 
+// How many recent quiz scores each user keeps.
+const HISTORY_LENGTH = 10;
+
 // Quiz catalogue, quiz questions, grading and the per-user score history.
 function quizRoutes({ db, sessions }) {
   const router = express.Router();
@@ -42,9 +45,9 @@ function quizRoutes({ db, sessions }) {
   /* Scores the whole attempt server-side and records it against the user named in
      the JWT, so neither the score nor the account can be supplied by the client. */
   router.post('/api/submitQuiz', asyncHandler(async (req, res) => {
-    const authorizedData = sessions.read(req);
-    if (!authorizedData) {
-      return res.status(403).send('Not authorized!');
+    const session = sessions.read(req);
+    if (!session) {
+      return res.status(401).send('Silakan login terlebih dahulu.');
     }
 
     const found = await quiz.findOne({ name: req.body.name }, { projection: { array: 1 } });
@@ -59,21 +62,25 @@ function quizRoutes({ db, sessions }) {
     const seen = new Set();
     let score = 0;
     for (const item of submitted) {
-      if (seen.has(item.question)) continue;
+      if (!item || !key.has(item.question) || seen.has(item.question)) continue;
       seen.add(item.question);
       if (key.get(item.question) === item.answer) score++;
     }
 
-    await credentials.updateOne({ username: authorizedData.username }, {
+    // A negative $slice keeps the most recent entries; the old positive one kept
+    // the first ten forever, so history stopped updating after ten quizzes.
+    await credentials.updateOne({ username: session.username }, {
       $push: {
         history: {
           $each: [[req.body.name, score]],
-          $slice: 10,
+          $slice: -HISTORY_LENGTH,
         },
       },
     });
 
-    res.status(200).json({ score, total: key.size });
+    // The total is the number of questions answered: quizzes can hold more
+    // questions than one attempt asks.
+    res.status(200).json({ score, total: seen.size });
   }));
 
   for (const [path, category] of [
@@ -88,9 +95,15 @@ function quizRoutes({ db, sessions }) {
     }));
   }
 
+  // The signed-in user's recent scores, oldest first. The username used to come
+  // from the request body, so anyone could read anyone's history.
   router.post('/api/fetchHistory', asyncHandler(async (req, res) => {
-    const result = await credentials.findOne({ username: req.body.username }, { history: 1, _id: 0 });
-    res.status(200).json(result.history);
+    const session = sessions.read(req);
+    if (!session) {
+      return res.status(401).send('Silakan login terlebih dahulu.');
+    }
+    const user = await credentials.findOne({ username: session.username }, { projection: { _id: 0, history: 1 } });
+    res.status(200).json((user && user.history) || []);
   }));
 
   return router;

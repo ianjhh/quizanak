@@ -1,5 +1,6 @@
 const { describe, test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
+const bcrypt = require('bcryptjs');
 const { startTestServer } = require('./support/testServer');
 const { createMemoryDb } = require('./support/memoryDb');
 
@@ -72,6 +73,62 @@ describe('quiz endpoints', () => {
 
     const missing = await api.request('POST', '/api/checkAnswer', { body: { name: 'binatang-laut', question: 'nope', answer: 'x' } });
     assert.equal(missing.status, 404);
+  });
+
+  describe('scores and history', () => {
+    const q1 = 'Hewan apa yang bernapas dengan insang?';
+    const q2 = 'Mamalia laut terbesar?';
+    let budi;
+    let sari;
+
+    const login = async (username) => {
+      const res = await api.request('POST', '/api/login', { body: { username, password: 'rahasia123' } });
+      return { Authorization: `Bearer ${res.data.token}` };
+    };
+    const submit = (auth, answers) => api.request('POST', '/api/submitQuiz', { headers: auth, body: { name: 'binatang-laut', answers } });
+
+    before(async () => {
+      const hash = bcrypt.hashSync('rahasia123', 4);
+      await api.db.credentials.insertOne({ username: 'budi', email: 'budi@example.com', password: hash, verified: true, history: [] });
+      await api.db.credentials.insertOne({ username: 'sari', email: 'sari@example.com', password: hash, verified: true, history: [['burung', 1]] });
+      budi = await login('budi');
+      sari = await login('sari');
+    });
+
+    test('scores the attempt on the server, counting each answered question once', async () => {
+      const res = await submit(budi, [
+        { question: q1, answer: 'Ikan' },
+        { question: q1, answer: 'Ikan' },
+        { question: q2, answer: 'Hiu' },
+        { question: 'not in this quiz', answer: 'x' },
+      ]);
+      assert.equal(res.status, 200);
+      assert.deepEqual(res.data, { score: 1, total: 2 });
+    });
+
+    test('requires a signed-in user', async () => {
+      const res = await api.request('POST', '/api/submitQuiz', { body: { name: 'binatang-laut', answers: [] } });
+      assert.equal(res.status, 401);
+    });
+
+    test('keeps the 10 most recent scores', async () => {
+      await api.db.credentials.updateOne({ username: 'budi' }, { $set: { history: [] } });
+      for (let attempt = 1; attempt <= 12; attempt++) {
+        await submit(budi, attempt % 2 ? [{ question: q1, answer: 'Ikan' }] : []);
+      }
+      const res = await api.request('POST', '/api/fetchHistory', { headers: budi });
+      assert.equal(res.data.length, 10);
+      // Attempts 3 to 12 remain; odd attempts scored 1.
+      assert.deepEqual(res.data.map(([, score]) => score), [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]);
+    });
+
+    test("returns only the signed-in user's history", async () => {
+      const res = await api.request('POST', '/api/fetchHistory', { headers: sari, body: { username: 'budi' } });
+      assert.deepEqual(res.data, [['burung', 1]]);
+
+      const anonymous = await api.request('POST', '/api/fetchHistory', { body: { username: 'budi' } });
+      assert.equal(anonymous.status, 401);
+    });
   });
 
   test('suggests other quizzes from the same category', async () => {
