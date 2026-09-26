@@ -52,7 +52,8 @@ function loadConfig(env = process.env) {
       password: env.REDIS_PASSWORD,
     },
     email: {
-      user: env.EMAIL_USER || 'kuisanak.id@gmail.com',
+      // The sender address: the Gmail account behind the OAuth token or App Password.
+      user: env.EMAIL_USER,
       // Sanitize App Password by stripping spaces and quotes
       pass: rawPass ? rawPass.replace(/\s+/g, '').replace(/['"]/g, '').trim() : null,
       google: {
@@ -61,7 +62,7 @@ function loadConfig(env = process.env) {
         refreshToken: env.GOOGLE_REFRESH_TOKEN,
       },
       smtp: {
-        host: env.EMAIL_HOST || 'smtp.gmail.com',
+        host: env.EMAIL_HOST,
         port: parseInt(env.EMAIL_PORT) || 587,
         secure: env.EMAIL_SECURE === 'true',
       },

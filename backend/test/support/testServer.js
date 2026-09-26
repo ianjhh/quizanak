@@ -22,13 +22,17 @@ function createFakeBloom() {
   };
 }
 
-function createFakeMailer() {
+// Records every code it is asked to send. With deliver: false it reports
+// failure, like a mailer whose transports are all down.
+function createFakeMailer({ deliver = true } = {}) {
   const sent = [];
   return {
     sent,
-    verifyConnection: () => {},
-    sendVerificationEmail: async (to, code) => {
+    transports: ['Fake'],
+    checkConfiguration: async () => {},
+    sendVerificationCode: async (to, code) => {
       sent.push({ to, code });
+      return deliver;
     },
   };
 }

@@ -19,7 +19,7 @@ const mailer = createMailer(config.email);
 
 ensureIndexes(db);
 bloom.init();
-mailer.verifyConnection();
+mailer.checkConfiguration();
 
 const app = createApp({ config, db, bloom, mailer });
 app.listen(config.port, () => {

@@ -1,6 +1,6 @@
 const { describe, test, beforeEach, afterEach } = require('node:test');
 const assert = require('node:assert/strict');
-const { startTestServer, jwtCookie } = require('./support/testServer');
+const { startTestServer, createFakeMailer, jwtCookie } = require('./support/testServer');
 
 const MINUTE = 60 * 1000;
 
@@ -127,6 +127,25 @@ describe('email verification', () => {
     await ageCode('dewi', 2 * MINUTE);
     const res = await api.request('POST', '/api/resendCode', { headers: auth });
     assert.equal(res.status, 409);
+  });
+
+  test('tells the client when the email could not be delivered', async () => {
+    await api.close();
+    api = await startTestServer({ mailer: createFakeMailer({ deliver: false }) });
+
+    const signUpRes = await api.request('POST', '/api/register', { body: { username: 'dewi', email: 'dewi@example.com', password: 'rahasia123' } });
+    assert.equal(signUpRes.status, 200, 'the account is still created');
+    assert.equal(signUpRes.data.emailSent, false);
+    assert.ok(await storedUser('dewi'));
+
+    await ageCode('dewi', 2 * MINUTE);
+    const resend = await api.request('POST', '/api/resendCode', { headers: { Authorization: `Bearer ${signUpRes.data.token}` } });
+    assert.equal(resend.status, 502);
+  });
+
+  test('reports a delivered sign-up email', async () => {
+    const res = await api.request('POST', '/api/register', { body: { username: 'dewi', email: 'dewi@example.com', password: 'rahasia123' } });
+    assert.equal(res.data.emailSent, true);
   });
 
   test('verifying an already verified account is harmless', async () => {

@@ -87,11 +87,9 @@ function authRoutes({ db, bloom, mailer, sessions }) {
     const verificationCode = generateCode();
     await credentials.updateOne({ username: session.username }, { $set: { verificationCode, codeCreatedAt: Date.now(), verifyAttempts: 0 } });
 
-    // Dispatch email in background using Resend HTTPS API or Nodemailer SMTP fallback
-    mailer.sendVerificationEmail(user.email, verificationCode)
-      .then(() => console.log('Verification email dispatched successfully'))
-      .catch((mailErr) => console.error('Error sending verification email in background:', mailErr));
-
+    if (!(await mailer.sendVerificationCode(user.email, verificationCode))) {
+      return res.status(502).send('Email verifikasi gagal dikirim. Coba lagi dalam 1 menit.');
+    }
     res.status(200).send('Berhasil mengirim ulang email verifikasi!');
   }));
 
@@ -152,13 +150,12 @@ function authRoutes({ db, bloom, mailer, sessions }) {
       console.log('Bloom filter add status:', bloomErr.message || bloomErr);
     }
 
-    // Dispatch email in background using Resend HTTPS API or Nodemailer SMTP fallback
-    mailer.sendVerificationEmail(email, verificationCode)
-      .then(() => console.log('Registration email dispatched successfully'))
-      .catch((mailErr) => console.error('Error sending registration email in background:', mailErr));
+    // The account exists either way; if the email fails, the verify page
+    // offers to send the code again.
+    const emailSent = await mailer.sendVerificationCode(email, verificationCode);
 
     const token = sessions.start(res, username);
-    res.status(200).json({ message: 'Successful!', token });
+    res.status(200).json({ message: 'Successful!', token, emailSent });
   }));
 
   router.get('/api/verifyToken', asyncHandler(async (req, res) => {

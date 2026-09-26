@@ -1,100 +1,205 @@
 const nodemailer = require('nodemailer');
 
-// Sends verification codes through the Resend HTTPS API when it is configured,
-// falling back to Gmail through Nodemailer.
-function createMailer(emailConfig) {
-  const { user, pass, google, smtp, resend } = emailConfig;
+// Verification emails can go out three ways, tried in this order:
+//
+// 1. Gmail API over HTTPS, using a Google OAuth refresh token. Works on hosts
+//    that block SMTP (such as Render's free tier) and delivers to any address.
+// 2. Resend's HTTPS API. Until a domain is verified in Resend, it only
+//    delivers to the Resend account owner's own address.
+// 3. SMTP through Nodemailer: Gmail with an App Password, or a custom relay.
+//
+// When none is configured (local development) the code is printed to the log.
 
-  let transporter;
-  if (pass) {
-    // Option 1: Gmail App Password
-    transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user, pass },
-      connectionTimeout: 5000,
-      socketTimeout: 5000,
-    });
-  } else if (google.refreshToken && google.clientId) {
-    // Option 2: Google OAuth2
-    transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        type: 'OAuth2',
-        user,
-        clientId: google.clientId,
-        clientSecret: google.clientSecret,
-        refreshToken: google.refreshToken,
-      },
-      connectionTimeout: 5000,
-      socketTimeout: 5000,
-    });
-  } else {
-    // Fallback SMTP
-    transporter = nodemailer.createTransport({
-      host: smtp.host,
-      port: smtp.port,
-      secure: smtp.secure,
-      auth: { user, pass },
-      connectionTimeout: 5000,
-      socketTimeout: 5000,
-    });
-  }
+const SEND_TIMEOUT_MS = 8000;
+const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
+const GMAIL_SEND_URL = 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
+const RESEND_URL = 'https://api.resend.com/emails';
 
-  const sendVerificationEmail = async (toEmail, verificationCode) => {
-    const subject = 'Masukin kode 6-digit yang diberikan untuk verifikasi akun anda.';
-    const textContent = `Kode verifikasi anda adalah:\n${verificationCode}`;
-
-    console.log(`🔑 [VERIFICATION CODE] For ${toEmail}: ${verificationCode}`);
-
-    // 1. Primary: Resend HTTPS API (Port 443 - Never blocked on Render free tier)
-    if (resend.apiKey) {
-      try {
-        const response = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${resend.apiKey}`,
-          },
-          body: JSON.stringify({
-            from: resend.from,
-            to: [toEmail],
-            subject,
-            text: textContent,
-          }),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          console.log('✅ Resend HTTPS email sent successfully:', data);
-          return data;
-        }
-        console.error('❌ Resend HTTPS API error:', data);
-      } catch (resendErr) {
-        console.error('❌ Resend API fetch failed:', resendErr);
-      }
-    }
-
-    // 2. Fallback: Nodemailer SMTP
-    return transporter.sendMail({
-      from: `"KuisAnak" <${user}>`,
-      to: toEmail,
-      subject,
-      text: textContent,
-    });
-  };
-
-  // Verify Nodemailer transporter connection on startup
-  const verifyConnection = () => {
-    transporter.verify((error) => {
-      if (error) {
-        console.error('❌ Nodemailer transporter connection failed:', error.message || error);
-        console.log('💡 Tip: Render free tier blocks outbound SMTP ports 465/587. Add RESEND_API_KEY to Render to send via HTTPS (Port 443).');
-      } else {
-        console.log('✅ Nodemailer transporter connected successfully to Gmail SMTP!');
-      }
-    });
-  };
-
-  return { sendVerificationEmail, verifyConnection };
+function withTimeout(promise, ms, label) {
+  let timer;
+  return Promise.race([
+    Promise.resolve(promise).finally(() => clearTimeout(timer)),
+    new Promise((resolve, reject) => {
+      timer = setTimeout(() => reject(new Error(`${label} did not answer within ${ms / 1000} s`)), ms);
+    }),
+  ]);
 }
 
-module.exports = { createMailer };
+// "dewi@example.com" -> "d***@example.com", to keep addresses out of the logs.
+function maskEmail(email) {
+  const [name, domain] = String(email).split('@');
+  return domain ? `${name.slice(0, 1)}***@${domain}` : '***';
+}
+
+function verificationEmail(code) {
+  return {
+    subject: `Kode verifikasi KuisAnak: ${code}`,
+    text: [
+      'Halo!',
+      '',
+      `Kode verifikasi akun KuisAnak kamu adalah: ${code}`,
+      '',
+      'Masukkan kode ini di halaman verifikasi. Kode berlaku selama 24 jam.',
+      'Kalau kamu tidak mendaftar di KuisAnak, abaikan saja email ini.',
+    ].join('\n'),
+    html: `<p>Halo!</p>
+<p>Kode verifikasi akun KuisAnak kamu adalah:</p>
+<p style="font-size:28px;font-weight:bold;letter-spacing:6px">${code}</p>
+<p>Masukkan kode ini di halaman verifikasi. Kode berlaku selama 24 jam.</p>
+<p>Kalau kamu tidak mendaftar di KuisAnak, abaikan saja email ini.</p>`,
+  };
+}
+
+// Renders a message to the raw RFC 5322 format the Gmail API expects.
+const messageComposer = nodemailer.createTransport({ streamTransport: true, buffer: true, newline: 'windows' });
+
+function gmailApiTransport({ user, google }, fetchImpl) {
+  let cachedToken = null;
+
+  async function accessToken() {
+    if (cachedToken && cachedToken.expiresAt > Date.now() + 60 * 1000) {
+      return cachedToken.value;
+    }
+    const response = await fetchImpl(GOOGLE_TOKEN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: google.clientId,
+        client_secret: google.clientSecret,
+        refresh_token: google.refreshToken,
+        grant_type: 'refresh_token',
+      }).toString(),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const hint = data.error === 'invalid_grant'
+        ? ' The refresh token was revoked or expired. Tokens from an OAuth app in "Testing" mode expire after 7 days; publish the app and create a new token.'
+        : '';
+      throw new Error(`Google rejected the OAuth credentials (${response.status} ${data.error || ''}).${hint}`);
+    }
+    cachedToken = { value: data.access_token, expiresAt: Date.now() + (data.expires_in || 3600) * 1000 };
+    return cachedToken.value;
+  }
+
+  return {
+    name: 'Gmail API',
+    check: accessToken,
+    async send(message) {
+      const { message: raw } = await messageComposer.sendMail({
+        ...message,
+        // Gmail fills in the account's own address when From is omitted.
+        from: user ? { name: 'KuisAnak', address: user } : undefined,
+      });
+      const response = await fetchImpl(GMAIL_SEND_URL, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${await accessToken()}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw: raw.toString('base64url') }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        const reason = (data.error && data.error.message) || response.statusText;
+        throw new Error(`Gmail API refused the message (${response.status}): ${reason}`);
+      }
+    },
+  };
+}
+
+function resendTransport({ resend }, fetchImpl) {
+  return {
+    name: 'Resend',
+    async check() {
+      // A sending-only API key cannot list domains; that is not an error.
+      const response = await fetchImpl('https://api.resend.com/domains', { headers: { Authorization: `Bearer ${resend.apiKey}` } });
+      if (response.status === 401 || response.status === 403) {
+        return;
+      }
+      const data = await response.json().catch(() => ({}));
+      const verified = (data.data || []).filter((domain) => domain.status === 'verified');
+      if (verified.length === 0) {
+        throw new Error('no verified domain, so Resend only delivers to the account owner. Verify a domain and set RESEND_FROM to an address on it.');
+      }
+    },
+    async send({ to, subject, text, html }) {
+      const response = await fetchImpl(RESEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resend.apiKey}` },
+        body: JSON.stringify({ from: resend.from, to: [to], subject, text, html }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        const sandbox = /testing emails|verify a domain/i.test(data.message || '');
+        const hint = sandbox ? ' Resend only delivers to your own address until you verify a domain and set RESEND_FROM to an address on it.' : '';
+        throw new Error(`Resend refused the message (${response.status}): ${data.message || response.statusText}.${hint}`);
+      }
+    },
+  };
+}
+
+function smtpTransport({ user, pass, smtp }) {
+  const timeouts = { connectionTimeout: 5000, greetingTimeout: 5000, socketTimeout: 5000 };
+  const transporter = pass
+    ? nodemailer.createTransport({ service: 'gmail', auth: { user, pass }, ...timeouts })
+    : nodemailer.createTransport({ host: smtp.host, port: smtp.port, secure: smtp.secure, ...timeouts });
+  return {
+    name: pass ? 'Gmail SMTP' : `SMTP (${smtp.host})`,
+    check: () => transporter.verify(),
+    send: (message) => transporter.sendMail({ ...message, from: user ? { name: 'KuisAnak', address: user } : undefined }),
+  };
+}
+
+function createMailer(emailConfig, { fetch: fetchImpl = fetch, timeoutMs = SEND_TIMEOUT_MS } = {}) {
+  const { google, resend, pass, smtp } = emailConfig;
+  const transports = [];
+  if (google.clientId && google.clientSecret && google.refreshToken) {
+    transports.push(gmailApiTransport(emailConfig, fetchImpl));
+  }
+  if (resend.apiKey) {
+    transports.push(resendTransport(emailConfig, fetchImpl));
+  }
+  if (pass || smtp.host) {
+    transports.push(smtpTransport(emailConfig));
+  }
+
+  return {
+    transports: transports.map((transport) => transport.name),
+
+    // Tries each transport in turn. Resolves to true once one delivers the
+    // email, false when none could; it never rejects.
+    async sendVerificationCode(to, code) {
+      if (transports.length === 0) {
+        console.log(`No email transport is configured. Verification code for ${maskEmail(to)}: ${code}`);
+        return false;
+      }
+      const message = { to, ...verificationEmail(code) };
+      for (const transport of transports) {
+        try {
+          await withTimeout(transport.send(message), timeoutMs, transport.name);
+          console.log(`Verification email sent to ${maskEmail(to)} via ${transport.name}.`);
+          return true;
+        } catch (err) {
+          console.error(`Could not send the verification email via ${transport.name}: ${err.message}`);
+        }
+      }
+      return false;
+    },
+
+    // Logs, at startup, which transports are configured and whether their
+    // credentials work, so delivery problems show up in the server log early.
+    async checkConfiguration() {
+      if (transports.length === 0) {
+        console.log('No email transport is configured; verification codes will be printed to this log.');
+        return;
+      }
+      for (const transport of transports) {
+        try {
+          await withTimeout(transport.check(), timeoutMs, transport.name);
+          console.log(`Email transport ready: ${transport.name}`);
+        } catch (err) {
+          console.error(`Email transport ${transport.name} is not working: ${err.message}`);
+        }
+      }
+    },
+  };
+}
+
+module.exports = { createMailer, verificationEmail };
