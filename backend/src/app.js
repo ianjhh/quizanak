@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const { authRoutes } = require('./routes/auth');
 const { quizRoutes } = require('./routes/quizzes');
 const { factRoutes } = require('./routes/facts');
+const { errorHandler } = require('./http');
+const { createSessions } = require('./session');
 
 const allowedOrigins = [
   'http://localhost:3000',
@@ -37,9 +39,11 @@ function createApp({ config, db, bloom, mailer }) {
     res.send('Quizanak API Server is running');
   });
 
-  app.use(quizRoutes({ config, db }));
-  app.use(authRoutes({ config, db, bloom, mailer }));
+  const sessions = createSessions(config.jwtSecret);
+  app.use(quizRoutes({ db, sessions }));
+  app.use(authRoutes({ db, bloom, mailer, sessions }));
   app.use(factRoutes({ db }));
+  app.use(errorHandler);
 
   return app;
 }
