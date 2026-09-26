@@ -52,7 +52,7 @@ if (redisUrl) {
 
 const redisHost = process.env.REDIS_HOST || '127.0.0.1';
 const redisPort = parseInt(process.env.REDIS_PORT) || 7000;
-const redisPassword = process.env.REDIS_PASSWORD || '***REMOVED***';
+const redisPassword = process.env.REDIS_PASSWORD;
 
 const cluster = redisUrl 
     ? redis.createClient({ url: redisUrl }).on('error', (err) => console.log('Redis Error:', err))
@@ -67,7 +67,10 @@ const cluster = redisUrl
       }).on('error', (err) => console.log('Redis Cluster Error:', err));
 
 var MongoClient = require('mongodb').MongoClient;
-const mongoUri = process.env.MONGODB_URI || "mongodb+srv://ianjhh:***REMOVED***@imgupload.l8bfttd.mongodb.net/?retryWrites=true&w=majority&appName=imgupload";
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  throw new Error('MONGODB_URI is not set. Copy backend/.env.example to backend/.env and fill it in.');
+}
 const client = new MongoClient(mongoUri, {
     serverSelectionTimeoutMS: 5000
 });
