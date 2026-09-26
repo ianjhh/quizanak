@@ -13,21 +13,34 @@ jest.mock('react-router-dom', () => ({
 
 describe("Register", ()=>{
     const handleSubmit = jest.fn();
-    /* if Register is successfully rendered, handleSubmit will be called */
-    render (<Register url='/register' onSubmit={handleSubmit} />);
 
-    test("Expect username field to be unable to accept length less than 6 and password field to not accept less than 8 characters", async () =>{
+    /* Register renders react-router links, so it needs a Router above it.
+       Rendering per test also keeps the two cases independent. */
+    beforeEach(() => {
+        render(
+            <BrowserRouter>
+                <Register url='/register' onSubmit={handleSubmit} />
+            </BrowserRouter>
+        );
+    });
+
+    test("Shows validation errors when username is under 3 and password is under 8 characters", async () =>{
         /* username and password field test */
         const usernameInput = screen.getByLabelText('Username');
-        const passwordInput = screen.getByLabelText('Password');
+        const passwordInput = screen.getByLabelText('Kata Sandi');
 
+        /* validation runs on blur, so each field must be changed then blurred */
         fireEvent.change(usernameInput, {target: {value: 'a'}});
+        fireEvent.blur(usernameInput);
         fireEvent.change(passwordInput, {target: {value: 'a'}});
+        fireEvent.blur(passwordInput);
 
-        const usernameText = screen.getByText('Username length cannot be less than 6!');
-        await waitFor(() => expect(usernameText).toBeInTheDocument())
-        const passwordText = screen.getByText('Password length cannot be less than 8!');
-        await waitFor(() => expect(passwordText).toBeInTheDocument())
+        await waitFor(() =>
+            expect(screen.getByText('Panjang username tidak boleh kurang dari 3!')).toBeInTheDocument()
+        );
+        await waitFor(() =>
+            expect(screen.getByText('Panjang kata sandi tidak boleh kurang dari 8!')).toBeInTheDocument()
+        );
     })
 
     test("Expect submit function to not accept if username length is less than 6 and password length is less than 8", async () =>{
