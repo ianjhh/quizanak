@@ -3,6 +3,8 @@ const { asyncHandler } = require('../http');
 
 // How many recent quiz scores each user keeps.
 const HISTORY_LENGTH = 10;
+// What the quiz list pages show for each quiz.
+const QUIZ_CARD_FIELDS = { _id: 0, name: 1, title: 1, description: 1, quizImage: 1, category: 1 };
 
 // Quiz catalogue, quiz questions, grading and the per-user score history.
 function quizRoutes({ db, sessions }) {
@@ -89,8 +91,9 @@ function quizRoutes({ db, sessions }) {
     ['/api/fetchMiscellaneousQuiz', 'miscellaneous'],
     ['/api/fetchLanguageQuiz', 'language'],
   ]) {
+    // Only the card fields: the full documents included every question and its answer.
     router.get(path, asyncHandler(async (req, res) => {
-      const result = await quiz.find({ category }).toArray();
+      const result = await quiz.find({ category }, { projection: QUIZ_CARD_FIELDS }).toArray();
       res.status(200).json(result);
     }));
   }

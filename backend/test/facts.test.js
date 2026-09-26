@@ -34,6 +34,8 @@ describe('fact endpoints', () => {
       const all = await api.request('GET', list);
       assert.equal(all.status, 200);
       assert.deepEqual(all.data.map((a) => a.link_name), [linkName]);
+      assert.equal(all.data[0].factsarr, undefined, 'the list leaves out the article body');
+      assert.ok(all.data[0].title && all.data[0].image);
 
       const one = await api.request('POST', single, { body: { link_name: linkName } });
       assert.equal(one.status, 200);

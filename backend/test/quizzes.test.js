@@ -52,6 +52,17 @@ describe('quiz endpoints', () => {
     assert.deepEqual(math.data.map((q) => q.name), ['penjumlahan']);
   });
 
+  test('quiz lists carry only card fields, not the questions and answers', async () => {
+    const res = await api.request('GET', '/api/fetchAnimalQuiz');
+    assert.deepEqual(res.data[0], {
+      name: 'binatang-laut',
+      title: 'Binatang Laut',
+      description: 'Kenali hewan laut',
+      quizImage: 'binatang-laut1',
+      category: 'animal',
+    });
+  });
+
   test('sends quiz questions without their answers', async () => {
     const res = await api.request('POST', '/api/fetchQuiz', { body: { name: 'binatang-laut' } });
     assert.equal(res.status, 200);
