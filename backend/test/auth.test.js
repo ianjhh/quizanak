@@ -52,6 +52,39 @@ describe('login sessions', () => {
     assert.equal(res.data.authorizedData.username, 'budi');
   });
 
+  test('returns the session token so clients without cookies can send it as a Bearer header', async () => {
+    const login = await api.request('POST', '/api/login', { body: { username: 'budi', password: 'rahasia123' } });
+    assert.equal(typeof login.data.token, 'string');
+
+    const res = await api.request('GET', '/api/verifyToken', { headers: { Authorization: `Bearer ${login.data.token}` } });
+    assert.equal(res.status, 200);
+    assert.equal(res.data.authorizedData.username, 'budi');
+  });
+
+  test('ignores an invalid Bearer token and falls back to a valid cookie', async () => {
+    const login = await api.request('POST', '/api/login', { body: { username: 'budi', password: 'rahasia123' } });
+
+    const onlyBad = await api.request('GET', '/api/verifyToken', { headers: { Authorization: 'Bearer not-a-token' } });
+    assert.equal(onlyBad.status, 401);
+
+    const withCookie = await api.request('GET', '/api/verifyToken', {
+      headers: { Authorization: 'Bearer not-a-token', Cookie: `jwt=${jwtCookie(login)}` },
+    });
+    assert.equal(withCookie.status, 200);
+  });
+
+  test('allows the Authorization header in CORS preflight requests', async () => {
+    const res = await fetch(`${api.baseUrl}/api/verifyToken`, {
+      method: 'OPTIONS',
+      headers: {
+        Origin: 'https://ian-joseph.netlify.app',
+        'Access-Control-Request-Method': 'GET',
+        'Access-Control-Request-Headers': 'authorization',
+      },
+    });
+    assert.match(res.headers.get('access-control-allow-headers') || '', /authorization/i);
+  });
+
   test('logout clears the session cookie', async () => {
     const res = await api.request('GET', '/api/logout');
     assert.equal(res.status, 202);

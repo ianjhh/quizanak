@@ -93,8 +93,8 @@ function authRoutes({ db, bloom, mailer, sessions }) {
     if (!user || !(await passwordMatches(req.body.password, user.password))) {
       return res.status(404).send('Username atau kata sandi salah!');
     }
-    sessions.start(res, user.username);
-    res.status(200).json({ verified: user.verified });
+    const token = sessions.start(res, user.username);
+    res.status(200).json({ verified: user.verified, token });
   }));
 
   router.post('/api/register', asyncHandler(async (req, res) => {
@@ -149,8 +149,8 @@ function authRoutes({ db, bloom, mailer, sessions }) {
       .then(() => console.log('Registration email dispatched successfully'))
       .catch((mailErr) => console.error('Error sending registration email in background:', mailErr));
 
-    sessions.start(res, username);
-    res.status(200).send('Successful!');
+    const token = sessions.start(res, username);
+    res.status(200).json({ message: 'Successful!', token });
   }));
 
   router.get('/api/verifyToken', asyncHandler(async (req, res) => {
