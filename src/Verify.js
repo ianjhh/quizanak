@@ -6,7 +6,6 @@ import { useNavigate, Link } from "react-router-dom";
 function Verify(props){
     const [verified, setVerified] = useState(false);
     const [code, setCode] = useState("");
-    const [username, setUsername] = useState("");
     const navigate = useNavigate();
 
     const verifyToken = () =>{
@@ -15,9 +14,6 @@ function Verify(props){
             /* ONLY RUNS IF SUCCESS, NOT EVEN WHEN CODE 404 */
             if (response.data.verified === true){
                 navigate('/', { replace: true })
-            }
-            else{
-                setUsername(response.data.authorizedData.username)
             }
         })
         .catch(function (error) {
@@ -51,12 +47,9 @@ function Verify(props){
         });
     }
 
+    /* the server sends the code to the signed-in user's own email */
     const handleResendCode = () =>{
-        if(!username){
-            alert('Sedang memuat data pengguna, silakan tunggu sebentar dan coba lagi.');
-            return;
-        }
-        axios.post('/api/resendCode', {username: username}, { withCredentials: true })
+        axios.post('/api/resendCode')
         .then(function (response) {
             if(response.status===200){
                 alert('Email verifikasi telah berhasil dikirim ulang!')
@@ -64,6 +57,7 @@ function Verify(props){
         })
         .catch(function (error) {
             console.log(error.response ? error.response.status : error);
+            /* for example the one-minute wait between codes */
             alert(error.response && error.response.data ? error.response.data : 'Gagal mengirim ulang kode verifikasi!');
         });
     }
@@ -85,12 +79,14 @@ function Verify(props){
                             <Form>
                                 <Form.Group className="mb-4 text-center" controlId="formVerificationCode">
                                     <Form.Label className="d-block mb-2">Kode Verifikasi</Form.Label>
-                                    <Form.Control 
-                                        type="text" 
-                                        className="form-input-custom text-center fs-4 letter-spacing-lg mx-auto" 
+                                    <Form.Control
+                                        type="text"
+                                        inputMode="numeric"
+                                        autoComplete="one-time-code"
+                                        className="form-input-custom text-center fs-4 letter-spacing-lg mx-auto"
                                         style={{maxWidth: '200px', letterSpacing: '4px'}}
-                                        onChange={(e)=>{setCode(e.target.value)}} 
-                                        value={code} 
+                                        onChange={(e)=>{setCode(e.target.value.replace(/\D/g, ''))}}
+                                        value={code}
                                         maxLength="6"
                                     />
                                 </Form.Group>
