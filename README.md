@@ -20,7 +20,7 @@
 
 KuisAnak ("kids' quiz" in Indonesian) lets children take short multiple-choice quizzes and read illustrated fact articles about animals, space and history. Players create an account, verify it by email and can review the scores of their past attempts. The interface is in Bahasa Indonesia.
 
-The project covers the full stack: a React single-page app, a REST API built with Express, MongoDB for accounts and content, and Redis for fast sign-up checks, deployed on Netlify and Render.
+The project covers the full stack: a React single-page app, a REST API built with Express, MongoDB for accounts and content, and an optional Redis Bloom filter for fast sign-up checks, deployed on Netlify and Render.
 
 ## Features
 
@@ -36,36 +36,37 @@ The project covers the full stack: a React single-page app, a REST API built wit
 | Layer | Technologies |
 | --- | --- |
 | Frontend | React 18, React Router 6, React-Bootstrap (Bootstrap 5), Axios |
-| Backend | Node.js, Express 4, JSON Web Tokens, bcrypt, Nodemailer, Resend API |
-| Data | MongoDB Atlas (official Node.js driver), Redis with the RedisBloom module |
-| Testing & CI | Jest, React Testing Library, Mock Service Worker, Jenkins |
+| Backend | Node.js, Express 4, JSON Web Tokens, bcryptjs, Gmail API, Resend, Nodemailer |
+| Data | MongoDB Atlas (official Node.js driver), Redis with the RedisBloom module (optional) |
+| Testing & CI | Jest, React Testing Library, Node's built-in test runner, Jenkins |
 | Hosting | Netlify (frontend), Render (API) |
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    Browser["React SPA<br/>(Netlify)"] -->|"REST + JWT cookie"| API["Express API<br/>(Render)"]
+    Browser["React SPA<br/>(Netlify)"] -->|"REST + JWT"| API["Express API<br/>(Render)"]
     API --> Mongo[("MongoDB Atlas<br/>accounts, quizzes, facts")]
-    API --> Redis[("Redis<br/>email Bloom filter")]
-    API -->|"verification codes"| Mail["Resend API<br/>or Gmail SMTP"]
+    API -.->|optional| Redis[("Redis<br/>email Bloom filter")]
+    API -->|"verification codes<br/>over HTTPS"| Mail["Gmail API<br/>or Resend"]
 ```
 
 ## Technical highlights
 
-- **Bloom filter for email checks.** On startup the API loads every registered email into a RedisBloom filter. Sign-up checks ask Redis first and only query MongoDB when the filter reports a possible match, so most new addresses never touch the database.
-- **Email delivery on a restricted host.** Render's free tier blocks outbound SMTP ports, so verification emails go through Resend's HTTPS API, with Gmail via Nodemailer (App Password or OAuth2) as the fallback. Emails are sent in the background, so sign-up requests don't wait on the mail server.
-- **Resilient API client.** A shared Axios setup sends credentials with every request, allows 30 seconds for the API to wake from a cold start, and turns network failures into readable error messages.
-- **Session handling.** Logging in issues a JWT in a cookie. Each protected page checks it through `/api/verifyToken` and redirects to login or email verification as needed.
+- **Email delivery on a restricted host.** Render's free tier blocks outbound SMTP, so verification codes go out through the Gmail API over HTTPS using an OAuth refresh token, with Resend and SMTP as fallbacks. Every attempt has a timeout, the result is reported to the user, and at startup the API logs whether each configured transport actually works.
+- **Server-side grading.** The browser never receives the answers. Each answer is checked by the API for instant feedback, and the final score is computed and stored on the server for the signed-in user.
+- **Sessions that work across sites.** The frontend and API live on different domains, where Safari and iOS block third-party cookies. The API returns its JWT in the response as well as in an httpOnly cookie, and the app sends it back as a Bearer header.
+- **Bloom filter for email checks.** When Redis is configured, the API keeps a RedisBloom filter of registered emails, so most "is this email free?" checks skip MongoDB. If Redis is down, checks fall back to MongoDB instead of blocking sign-up.
+- **Verification codes that can't be guessed or abused.** 6-digit codes are tied to the signed-in user, lock after 5 wrong attempts, expire after 24 hours, and can be re-sent once a minute.
 
 ## Getting started
 
 ### Prerequisites
 
-- Node.js 18 or later (the API uses the built-in `fetch`)
+- Node.js 18 or later (the API uses the built-in `fetch` and test runner)
 - A MongoDB database, such as a free Atlas cluster
-- Redis with the RedisBloom module, such as Redis Stack locally or Upstash
-- Optional: a Resend API key or a Gmail App Password for sending email. Without one, verification codes are still printed to the API log.
+- Optional: Redis with the RedisBloom module (Redis Stack or Redis Cloud)
+- Optional: Gmail API credentials or a Resend key for sending email ([setup guide](docs/email-setup.md)). Without them, verification codes are printed to the API log.
 
 ### Setup
 
@@ -75,7 +76,8 @@ cd quizanak
 npm install                              # also installs backend/ through postinstall
 
 cp .env.example .env
-cp backend/.env.example backend/.env     # then fill in your own values
+cp backend/.env.example backend/.env     # set MONGODB_URI and JWT_SECRET at least
+cd backend && npm run seed && cd ..      # load starter quizzes and fact articles
 ```
 
 Start the API and the React app in two terminals:
@@ -88,31 +90,41 @@ cd backend && npm start                  # API on http://localhost:5000
 npm start                                # app on http://localhost:3000
 ```
 
-Quiz and fact content is stored in MongoDB (the `imgupload` database, in the `quiz`, `animalFact`, `spaceFact` and `historyFact` collections). The repository doesn't include seed data, so a new database starts empty.
+Content lives in MongoDB (the `imgupload` database: `quiz`, `animalFact`, `spaceFact` and `historyFact`). `npm run seed` adds six starter quizzes and three articles, and is safe to run again.
 
 ### Scripts
 
 | Command | Description |
 | --- | --- |
 | `npm start` | Run the React dev server |
-| `npm test` | Run the frontend tests in watch mode |
+| `npm test` | Run the frontend tests |
 | `npm run build` | Create a production build in `build/` |
 | `cd backend && npm start` | Run the API |
+| `cd backend && npm test` | Run the API tests |
+| `cd backend && npm run seed` | Load the starter content into MongoDB |
 
 ## Project structure
 
 ```
 quizanak/
 ├── backend/
-│   ├── backend.js          # Express API: auth, quizzes, facts, email
-│   └── .env.example
+│   ├── backend.js          # entry point: reads config, starts the server
+│   ├── src/
+│   │   ├── app.js          # Express app, CORS, error handling
+│   │   ├── routes/         # auth, quizzes, facts
+│   │   ├── mailer.js       # Gmail API, Resend and SMTP transports
+│   │   ├── emailBloom.js   # optional Redis Bloom filter
+│   │   └── session.js, verification.js, config.js, db.js
+│   ├── scripts/seed.js     # starter content
+│   └── test/               # API tests with an in-memory database
+├── docs/email-setup.md     # how to configure verification emails
 ├── public/                 # HTML template, icons, web manifest
 ├── src/
-│   ├── index.js            # routes and Axios configuration
-│   ├── Home.js             # landing page, login panel, score history
-│   ├── QuizList.js         # quiz catalogue
-│   ├── Quiz.js             # quiz player
-│   ├── *Facts.js, *Fact.js # fact categories and articles
+│   ├── App.js              # routes
+│   ├── api.js              # Axios setup and session token handling
+│   ├── useSession.js       # session check and redirects for each page
+│   ├── Home.js, QuizList.js, Quiz.js
+│   ├── FactList.js, FactArticle.js   # the three fact sections
 │   ├── Register.js, Login.js, Verify.js
 │   ├── assets/images/      # quiz and article images
 │   └── *.test.js           # component tests
@@ -122,7 +134,9 @@ quizanak/
 
 ## Testing
 
-`npm test` runs the component tests with Jest and React Testing Library, using Mock Service Worker to mock API responses. The `Jenkinsfile` defines a CI pipeline that installs dependencies, runs the tests and builds the production bundle.
+- **Frontend:** `npm test` runs component tests with Jest and React Testing Library against a fake API, covering sign-up, verification, login, quizzes and routing.
+- **API:** `cd backend && npm test` starts the real Express app with in-memory stand-ins for MongoDB, Redis and email, and covers sign-up validation, verification codes, sessions, CORS, grading and error handling.
+- **CI:** the `Jenkinsfile` installs dependencies with `npm ci`, runs both test suites, and builds the frontend with lint warnings treated as errors.
 
 ## Author
 
