@@ -86,6 +86,34 @@ describe('quiz endpoints', () => {
     assert.equal(missing.status, 404);
   });
 
+  test('tells picture questions with the same text apart by their picture', async () => {
+    await api.db.quiz.insertOne({
+      name: 'ikan-tebak',
+      title: 'Ikan',
+      category: 'picture-test',
+      array: [
+        { question: 'Ikan apa ini?', imagesrc: 'ikan1', options: ['cupang', 'lele'], answer: 'cupang' },
+        { question: 'Ikan apa ini?', imagesrc: 'ikan2', options: ['cupang', 'lele'], answer: 'lele' },
+      ],
+    });
+    const check = (imagesrc, answer) => api.request('POST', '/api/checkAnswer',
+      { body: { name: 'ikan-tebak', question: 'Ikan apa ini?', imagesrc, answer } });
+    assert.deepEqual((await check('ikan2', 'lele')).data, { correct: true, answer: 'lele' });
+    assert.deepEqual((await check('ikan1', 'lele')).data, { correct: false, answer: 'cupang' });
+
+    const hash = bcrypt.hashSync('rahasia123', 4);
+    await api.db.credentials.insertOne({ username: 'tari', email: 'tari@example.com', password: hash, verified: true, history: [] });
+    const login = await api.request('POST', '/api/login', { body: { username: 'tari', password: 'rahasia123' } });
+    const res = await api.request('POST', '/api/submitQuiz', {
+      headers: { Authorization: `Bearer ${login.data.token}` },
+      body: { name: 'ikan-tebak', answers: [
+        { question: 'Ikan apa ini?', imagesrc: 'ikan1', answer: 'cupang' },
+        { question: 'Ikan apa ini?', imagesrc: 'ikan2', answer: 'lele' },
+      ] },
+    });
+    assert.deepEqual(res.data, { score: 2, total: 2 });
+  });
+
   describe('scores and history', () => {
     const q1 = 'Hewan apa yang bernapas dengan insang?';
     const q2 = 'Mamalia laut terbesar?';

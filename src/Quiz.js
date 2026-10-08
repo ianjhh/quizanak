@@ -100,6 +100,7 @@ function Quiz({ quizName }){
         axios.post('/api/checkAnswer', {
             name: quizName,
             question: quizList[currentQuestion-1].question,
+            imagesrc: quizList[currentQuestion-1].imagesrc,
             answer: answer
         })
         .then(function (response) {
@@ -114,6 +115,7 @@ function Quiz({ quizName }){
         setUserAnswers(function (previous) {
             return previous.concat([{
                 question: quizList[currentQuestion-1].question,
+                imagesrc: quizList[currentQuestion-1].imagesrc,
                 answer: answer
             }]);
         });
