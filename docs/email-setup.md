@@ -1,11 +1,12 @@
 # Sending verification emails
 
-The API emails a 6-digit code to every new account. It can send through three
+The API emails a 6-digit code to every new account. It can send through four
 services and tries them in this order, using the first one that works:
 
 | Option | Works on Render's free tier | Delivers to any address | Needs your own domain |
 | --- | --- | --- | --- |
-| Gmail API (recommended) | Yes, it uses HTTPS | Yes | No |
+| Mail relay, a Google Apps Script (recommended) | Yes, it uses HTTPS | Yes, up to 100 emails a day | No |
+| Gmail API | Yes, it uses HTTPS | Yes | No |
 | Resend | Yes, it uses HTTPS | Only after you verify a domain | Yes |
 | SMTP (Gmail App Password) | No, Render blocks outgoing SMTP | Yes | No |
 
@@ -16,7 +17,35 @@ At startup the API logs whether each configured option works, for example
 `Email transport ready: Gmail API`, and every failed send is logged with the
 reason. Check the Render logs first when codes don't arrive.
 
-## Gmail API (recommended)
+## Mail relay with Google Apps Script (recommended)
+
+A small script runs inside the Gmail account you send from, and the API calls it
+over HTTPS. It needs no Google Cloud project and never expires. About 5 minutes:
+
+1. Sign in to the Gmail account that should send the codes (for KuisAnak,
+   `kuisanak.id@gmail.com`) and open <https://script.google.com>.
+2. Click **New project**. Delete the sample code, paste the contents of
+   [`backend/apps-script/mailer.gs`](../backend/apps-script/mailer.gs), and
+   replace `PASTE_THE_SAME_SECRET_AS_MAIL_RELAY_SECRET` with a long random
+   string. You can make one with
+   `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"`.
+   Click **Save**.
+3. Click **Deploy → New deployment**. Next to **Select type**, click the gear
+   and choose **Web app**. Set **Execute as: Me** and **Who has access:
+   Anyone**, then click **Deploy**.
+4. Google asks you to authorize the script. Choose the account, click
+   **Advanced → Go to (project name) (unsafe)** (it is your own script) and
+   **Allow**. It only gets permission to send email as you.
+5. Copy the **Web app URL**, which ends in `/exec`.
+6. In Render, open the API service → **Environment** and add
+   `MAIL_RELAY_URL` (the URL) and `MAIL_RELAY_SECRET` (the same random
+   string as in the script). Save, and the service redeploys.
+
+The API logs `Email transport ready: Mail relay (Apps Script)` at startup when
+it works. If you change the script later, use **Deploy → Manage deployments →
+Edit → New version** so the URL stays the same.
+
+## Gmail API
 
 You need a Gmail account to send from, and about 15 minutes.
 

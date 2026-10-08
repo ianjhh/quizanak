@@ -1,12 +1,15 @@
 const nodemailer = require('nodemailer');
 
-// Verification emails can go out three ways, tried in this order:
+// Verification emails can go out four ways, tried in this order:
 //
-// 1. Gmail API over HTTPS, using a Google OAuth refresh token. Works on hosts
-//    that block SMTP (such as Render's free tier) and delivers to any address.
-// 2. Resend's HTTPS API. Until a domain is verified in Resend, it only
+// 1. A Google Apps Script web app in the sender's Gmail account (the "mail
+//    relay", backend/apps-script/mailer.gs). HTTPS, so it works on hosts that
+//    block SMTP (such as Render's free tier), and it never expires.
+// 2. Gmail API over HTTPS, using a Google OAuth refresh token. Also works on
+//    Render, but tokens of an OAuth app in "Testing" mode expire after 7 days.
+// 3. Resend's HTTPS API. Until a domain is verified in Resend, it only
 //    delivers to the Resend account owner's own address.
-// 3. SMTP through Nodemailer: Gmail with an App Password, or a custom relay.
+// 4. SMTP through Nodemailer: Gmail with an App Password, or a custom relay.
 //
 // When none is configured (local development) the code is printed to the log.
 
@@ -104,6 +107,39 @@ function gmailApiTransport({ user, google }, fetchImpl) {
   };
 }
 
+// The relay only takes an address and a code and writes the email itself, so even
+// someone who learned the secret could not send other content from the account.
+function relayTransport({ relay }, fetchImpl) {
+  async function call(options) {
+    const response = await fetchImpl(relay.url, { redirect: 'follow', ...options });
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data) {
+      throw new Error(`the mail relay answered ${response.status} without JSON. Check MAIL_RELAY_URL: it must be `
+        + 'the web app URL ending in /exec, deployed with access "Anyone".');
+    }
+    return data;
+  }
+  return {
+    name: 'Mail relay (Apps Script)',
+    async check() {
+      const data = await call({ method: 'GET' });
+      if (!data.ok) {
+        throw new Error(`the mail relay is not ready: ${data.error || 'unknown error'}`);
+      }
+    },
+    async send({ to, code }) {
+      const data = await call({
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ secret: relay.secret, to, code }),
+      });
+      if (!data.ok) {
+        throw new Error(`the mail relay refused the message: ${data.error || 'unknown error'}`);
+      }
+    },
+  };
+}
+
 function resendTransport({ resend }, fetchImpl) {
   return {
     name: 'Resend',
@@ -148,8 +184,11 @@ function smtpTransport({ user, pass, smtp }) {
 }
 
 function createMailer(emailConfig, { fetch: fetchImpl = fetch, timeoutMs = SEND_TIMEOUT_MS } = {}) {
-  const { google, resend, pass, smtp } = emailConfig;
+  const { relay, google, resend, pass, smtp } = emailConfig;
   const transports = [];
+  if (relay.url && relay.secret) {
+    transports.push(relayTransport(emailConfig, fetchImpl));
+  }
   if (google.clientId && google.clientSecret && google.refreshToken) {
     transports.push(gmailApiTransport(emailConfig, fetchImpl));
   }
@@ -170,7 +209,7 @@ function createMailer(emailConfig, { fetch: fetchImpl = fetch, timeoutMs = SEND_
         console.log(`No email transport is configured. Verification code for ${maskEmail(to)}: ${code}`);
         return false;
       }
-      const message = { to, ...verificationEmail(code) };
+      const message = { to, code, ...verificationEmail(code) };
       for (const transport of transports) {
         try {
           await withTimeout(transport.send(message), timeoutMs, transport.name);

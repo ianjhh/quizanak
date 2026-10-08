@@ -36,7 +36,7 @@ The project covers the full stack: a React single-page app, a REST API built wit
 | Layer | Technologies |
 | --- | --- |
 | Frontend | React 18, React Router 6, React-Bootstrap (Bootstrap 5), Axios |
-| Backend | Node.js, Express 4, JSON Web Tokens, bcryptjs, Gmail API, Resend, Nodemailer |
+| Backend | Node.js, Express 4, JSON Web Tokens, bcryptjs, Google Apps Script, Gmail API, Resend, Nodemailer |
 | Data | MongoDB Atlas (official Node.js driver), Redis with the RedisBloom module (optional) |
 | Testing & CI | Jest, React Testing Library, Node's built-in test runner, Jenkins |
 | Hosting | Netlify (frontend), Render (API) |
@@ -48,12 +48,12 @@ flowchart LR
     Browser["React SPA<br/>(Netlify)"] -->|"REST + JWT"| API["Express API<br/>(Render)"]
     API --> Mongo[("MongoDB Atlas<br/>accounts, quizzes, facts")]
     API -.->|optional| Redis[("Redis<br/>email Bloom filter")]
-    API -->|"verification codes<br/>over HTTPS"| Mail["Gmail API<br/>or Resend"]
+    API -->|"verification codes<br/>over HTTPS"| Mail["Apps Script relay,<br/>Gmail API or Resend"]
 ```
 
 ## Technical highlights
 
-- **Email delivery on a restricted host.** Render's free tier blocks outbound SMTP, so verification codes go out through the Gmail API over HTTPS using an OAuth refresh token, with Resend and SMTP as fallbacks. Every attempt has a timeout, the result is reported to the user, and at startup the API logs whether each configured transport actually works.
+- **Email delivery on a restricted host.** Render's free tier blocks outbound SMTP, so verification codes go out over HTTPS through a small Google Apps Script in the sender's Gmail account, with the Gmail API, Resend and SMTP as fallbacks. Every attempt has a timeout, the result is reported to the user, and at startup the API logs whether each configured transport actually works.
 - **Server-side grading.** The browser never receives the answers. Each answer is checked by the API for instant feedback, and the final score is computed and stored on the server for the signed-in user.
 - **Sessions that work across sites.** The frontend and API live on different domains, where Safari and iOS block third-party cookies. The API returns its JWT in the response as well as in an httpOnly cookie, and the app sends it back as a Bearer header.
 - **Bloom filter for email checks.** When Redis is configured, the API keeps a RedisBloom filter of registered emails, so most "is this email free?" checks skip MongoDB. If Redis is down, checks fall back to MongoDB instead of blocking sign-up.
@@ -66,7 +66,7 @@ flowchart LR
 - Node.js 18 or later (the API uses the built-in `fetch` and test runner)
 - A MongoDB database, such as a free Atlas cluster
 - Optional: Redis with the RedisBloom module (Redis Stack or Redis Cloud)
-- Optional: Gmail API credentials or a Resend key for sending email ([setup guide](docs/email-setup.md)). Without them, verification codes are printed to the API log.
+- Optional: the Apps Script mail relay, Gmail API credentials or a Resend key for sending email ([setup guide](docs/email-setup.md)). Without them, verification codes are printed to the API log.
 
 ### Setup
 
@@ -112,7 +112,7 @@ quizanak/
 │   ├── src/
 │   │   ├── app.js          # Express app, CORS, error handling
 │   │   ├── routes/         # auth, quizzes, facts
-│   │   ├── mailer.js       # Gmail API, Resend and SMTP transports
+│   │   ├── mailer.js       # Apps Script relay, Gmail API, Resend and SMTP transports
 │   │   ├── emailBloom.js   # optional Redis Bloom filter
 │   │   └── session.js, verification.js, config.js, db.js
 │   ├── scripts/seed.js     # starter content

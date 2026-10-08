@@ -115,6 +115,39 @@ describe('mailer', () => {
     assert.ok(logs.some((line) => line.includes('did not answer')));
   });
 
+  const RELAY_ENV = { MAIL_RELAY_URL: 'https://script.google.com/macros/s/abc/exec', MAIL_RELAY_SECRET: 's3cret' };
+
+  test('sends through the Apps Script mail relay first, with only the address and the code', async () => {
+    const fetch = fakeFetch(() => [200, { ok: true }]);
+    const mailer = createMailer(emailConfig({ ...RELAY_ENV, ...GMAIL_ENV }), { fetch });
+    assert.deepEqual(mailer.transports, ['Mail relay (Apps Script)', 'Gmail API']);
+
+    assert.equal(await mailer.sendVerificationCode('dewi@example.com', '482913'), true);
+
+    assert.equal(fetch.calls.length, 1);
+    const [call] = fetch.calls;
+    assert.equal(call.url, RELAY_ENV.MAIL_RELAY_URL);
+    assert.equal(call.options.method, 'POST');
+    assert.deepEqual(JSON.parse(call.options.body), { secret: 's3cret', to: 'dewi@example.com', code: '482913' });
+  });
+
+  test('falls back to the Gmail API when the relay refuses', async () => {
+    const fetch = fakeFetch((url) => (url.startsWith('https://script.google.com')
+      ? [200, { ok: false, error: 'wrong secret' }]
+      : googleOk(url)));
+    const mailer = createMailer(emailConfig({ ...RELAY_ENV, ...GMAIL_ENV }), { fetch });
+    assert.equal(await mailer.sendVerificationCode('dewi@example.com', '482913'), true);
+    assert.ok(logs.some((line) => line.includes('Mail relay (Apps Script)') && line.includes('wrong secret')));
+    assert.ok(logs.includes('Verification email sent to d***@example.com via Gmail API.'));
+  });
+
+  test('explains a relay URL that does not answer with JSON', async () => {
+    const fetch = async () => new Response('<html>Sign in</html>', { status: 200 });
+    const mailer = createMailer(emailConfig(RELAY_ENV), { fetch });
+    await mailer.checkConfiguration();
+    assert.ok(logs.some((line) => line.includes('is not working') && line.includes('MAIL_RELAY_URL')));
+  });
+
   test('prints the code to the log when no transport is configured', async () => {
     const mailer = createMailer(emailConfig({}), { fetch: fakeFetch(() => [500, {}]) });
     assert.deepEqual(mailer.transports, []);

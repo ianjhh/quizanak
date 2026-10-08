@@ -66,6 +66,11 @@ function loadConfig(env = process.env) {
         port: parseInt(env.EMAIL_PORT) || 587,
         secure: env.EMAIL_SECURE === 'true',
       },
+      // A Google Apps Script web app in the sender's Gmail account (docs/email-setup.md).
+      relay: {
+        url: env.MAIL_RELAY_URL ? env.MAIL_RELAY_URL.trim() : undefined,
+        secret: env.MAIL_RELAY_SECRET ? env.MAIL_RELAY_SECRET.trim() : undefined,
+      },
       resend: {
         apiKey: env.RESEND_API_KEY ? env.RESEND_API_KEY.trim() : undefined,
         from: env.RESEND_FROM || 'KuisAnak <onboarding@resend.dev>',
